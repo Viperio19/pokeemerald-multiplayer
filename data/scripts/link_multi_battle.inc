@@ -1,0 +1,97 @@
+LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge::
+	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_LINK_MULTIS
+	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_OPEN
+	msgbox BattleFrontier_BattleTowerLobby_Text_PleaseSelectTwoMons2, MSGBOX_DEFAULT
+	fadescreen FADE_TO_BLACK
+	setvar VAR_0x8004, FRONTIER_LVL_OPEN
+	setvar VAR_0x8005, FRONTIER_MULTI_PARTY_SIZE
+	special ChoosePartyForBattleFrontier
+	waitstate
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
+	msgbox BattleFrontier_BattleTowerLobby_Text_OkayToSaveBeforeEntering, MSGBOX_YESNO
+	switch VAR_RESULT
+	case NO, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
+	case YES, LinkMultiBattle_EventScript_SaveBeforeLinkMultisChallenge
+	case MULTI_B_PRESSED, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
+
+LinkMultiBattle_EventScript_SaveBeforeLinkMultisChallenge::
+	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
+	setvar VAR_TEMP_CHALLENGE_STATUS, 0
+	tower_init
+	tower_set TOWER_DATA_WIN_STREAK_ACTIVE, TRUE
+	frontier_set FRONTIER_DATA_PAUSED, FALSE
+	special LoadPlayerParty
+	closemessage
+	delay 2
+	call Common_EventScript_SaveGame
+	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_CancelChallengeSaveFailed
+	specialvar VAR_RESULT, IsWirelessAdapterConnected
+	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleTowerLobby_EventScript_TryWirelessLink
+	goto LinkMultiBattle_EventScript_TryCableLink
+	end
+
+LinkMultiBattle_EventScript_TryCableLink::
+	setvar VAR_0x8004, USING_BATTLE_TOWER
+	message gText_PleaseWaitForLink
+	waitmessage
+	setvar VAR_0x8005, 0
+	special TryBattleLinkup
+	waitstate
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_CableLinkSuccessful
+	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady
+	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, BattleFrontier_BattleTowerLobby_EventScript_AbortLinkDifferentSelections
+	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, BattleFrontier_BattleTowerLobby_EventScript_AbortLinkIncorrectNumberOfPlayers
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, BattleFrontier_BattleTowerLobby_EventScript_CancelChallenge
+	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, CableClub_EventScript_AbortLinkConnectionError
+	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, BattleFrontier_BattleTowerLobby_EventScript_AbortLink
+	end
+
+LinkMultiBattle_EventScript_CableLinkSuccessful::
+	setvar VAR_BRAVO_TRAINER_BATTLE_TOWER_ON, FALSE
+	message BattleFrontier_BattleTowerLobby_Text_SaveGameBeforeShowingIn
+	waitmessage
+	@ tower_save CHALLENGE_STATUS_SAVING
+	@ special SaveForBattleTowerLink
+	@ waitstate
+	playse SE_SAVE
+	waitse
+	special TrySetBattleTowerLinkType
+	goto LinkMultiBattle_EventScript_EnterElevator
+	end
+
+LinkMultiBattle_EventScript_EnterElevator::
+	special SavePlayerParty
+	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_PARTY_ORDER
+	call BattleFrontier_BattleTowerLobby_EventScript_GetPartySize
+	special CallFrontierUtilFunc
+	setvar VAR_RESULT, 0
+LinkMultiBattle_EventScript_WaitForLinkOpponentLoad::
+	tower_loadlinkopponents
+	delay 1
+	goto_if_ne VAR_RESULT, 6, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
+	clearflag FLAG_CANCEL_BATTLE_ROOM_CHALLENGE
+	setvar VAR_TEMP_CHALLENGE_STATUS, 0
+	goto LinkMultiBattle_EventScript_EnterRoom
+	end
+
+LinkMultiBattle_EventScript_EnterRoom::
+	setvar VAR_TEMP_0, 1
+	frontier_get FRONTIER_DATA_BATTLE_NUM
+	goto LinkMultiBattle_EventScript_OpponentsEnter
+
+LinkMultiBattle_EventScript_OpponentsEnter::
+	tower_setopponent
+	goto LinkMultiBattle_EventScript_DoTowerBattle
+
+LinkMultiBattle_EventScript_DoTowerBattle::
+	closemessage
+	setvar VAR_TEMP_2, 0
+	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
+	special HealPlayerParty
+	setvar VAR_0x8004, SPECIAL_BATTLE_TOWER
+	setvar VAR_0x8005, 0
+	special DoLinkMultiBattle
+	waitstate
+	frontier_get FRONTIER_DATA_BATTLE_OUTCOME
+	return
