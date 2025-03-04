@@ -1210,7 +1210,7 @@ static void RecordedOpponentHandleDrawTrainerPic(void)
         else // first mon
             xPos = 200;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
         {
             if (gActiveBattler == 1)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_A);

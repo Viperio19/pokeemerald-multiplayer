@@ -2089,16 +2089,99 @@ static void FillSpecialTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount, u
     }
 }
 
+static void FillSpecialSingleTrainerParty(u16 trainerId, u16 trainerNum)
+{
+    s32 i, j;
+    u8 fixedIV = 0;
+    u32 nameHash = 0;
+    u32 personalityValue;
+    u8 id;
+
+    for (i = 0; i < gTrainers[trainerNum].partySize; i++)
+    {
+        id = i % 2 == 0 ? (i / 2) + 3 : (i / 2);
+        switch (gTrainers[trainerNum].partyFlags)
+        {
+        case 0:
+        {
+            const struct TrainerMonNoItemDefaultMoves *partyData = gTrainers[trainerNum].party.NoItemDefaultMoves;
+
+            for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
+                nameHash += gSpeciesNames[partyData[i].species][j];
+
+            personalityValue += nameHash << 8;
+            fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+            CreateMon(&gEnemyParty[id], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+            break;
+        }
+        case F_TRAINER_PARTY_CUSTOM_MOVESET:
+        {
+            const struct TrainerMonNoItemCustomMoves *partyData = gTrainers[trainerNum].party.NoItemCustomMoves;
+
+            for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
+                nameHash += gSpeciesNames[partyData[i].species][j];
+
+            personalityValue += nameHash << 8;
+            fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+            CreateMon(&gEnemyParty[id], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+
+            for (j = 0; j < MAX_MON_MOVES; j++)
+            {
+                SetMonData(&gEnemyParty[id], MON_DATA_MOVE1 + j, &partyData[i].moves[j]);
+                SetMonData(&gEnemyParty[id], MON_DATA_PP1 + j, &gBattleMoves[partyData[i].moves[j]].pp);
+            }
+            break;
+        }
+        case F_TRAINER_PARTY_HELD_ITEM:
+        {
+            const struct TrainerMonItemDefaultMoves *partyData = gTrainers[trainerNum].party.ItemDefaultMoves;
+
+            for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
+                nameHash += gSpeciesNames[partyData[i].species][j];
+
+            personalityValue += nameHash << 8;
+            fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+            CreateMon(&gEnemyParty[id], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+
+            SetMonData(&gEnemyParty[id], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
+            break;
+        }
+        case F_TRAINER_PARTY_CUSTOM_MOVESET | F_TRAINER_PARTY_HELD_ITEM:
+        {
+            const struct TrainerMonItemCustomMoves *partyData = gTrainers[trainerNum].party.ItemCustomMoves;
+
+            for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
+                nameHash += gSpeciesNames[partyData[i].species][j];
+
+            personalityValue += nameHash << 8;
+            fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+            CreateMon(&gEnemyParty[id], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+
+            SetMonData(&gEnemyParty[id], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
+
+            for (j = 0; j < MAX_MON_MOVES; j++)
+            {
+                SetMonData(&gEnemyParty[id], MON_DATA_MOVE1 + j, &partyData[i].moves[j]);
+                SetMonData(&gEnemyParty[id], MON_DATA_PP1 + j, &gBattleMoves[partyData[i].moves[j]].pp);
+            }
+            break;
+        }
+        }
+    }
+}
+
 void DoLinkMultiBattle(void)
 {
     s32 i;
+    u16 trainerNum1 = VarGet(VAR_UNUSED_0x404E);
 
     gBattleScripting.specialTrainerBattleType = gSpecialVar_0x8004;
-    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI;
 
     ZeroEnemyPartyMons();
-    FillSpecialTrainerParty(gTrainerBattleOpponent_A, 0, 3, VarGet(VAR_UNUSED_0x404E));
-    FillSpecialTrainerParty(gTrainerBattleOpponent_B, 3, 3, VarGet(VAR_UNUSED_0x404E));
+    FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A, trainerNum1);
+    // FillSpecialTrainerParty(gTrainerBattleOpponent_A, 0, 3, VarGet(VAR_UNUSED_0x404E));
+    // FillSpecialTrainerParty(gTrainerBattleOpponent_B, 3, 3, VarGet(VAR_UNUSED_0x404E));
 
     CreateTask(Task_StartBattleAfterTransition, 1);
     PlayMapChosenOrBattleBGM(0);

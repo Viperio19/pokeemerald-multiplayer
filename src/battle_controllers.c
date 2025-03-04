@@ -228,7 +228,7 @@ static void InitSinglePlayerBtlControllers(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+            if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
             {
                 gBattleMainFunc = BeginBattleIntro;
 
@@ -449,7 +449,7 @@ static void InitLinkBtlControllers(void)
             gBattlersCount = MAX_BATTLERS_COUNT;
         }
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+    else if (gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
         {
@@ -751,7 +751,7 @@ static void Task_HandleSendLinkBuffersData(u8 taskId)
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+            if (gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
                 numPlayers = 2;
             else
                 numPlayers = (gBattleTypeFlags & BATTLE_TYPE_MULTI) ? 4 : 2;

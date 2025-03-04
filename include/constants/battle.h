@@ -84,6 +84,9 @@
                                              | BATTLE_TYPE_KYOGRE_GROUDON | BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_REGI            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE        \
                                              | BATTLE_TYPE_GROUDON | BATTLE_TYPE_KYOGRE | BATTLE_TYPE_RAYQUAZA))
+#define BATTLE_TYPE_TOWER_OR_LINK_MULTI     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_TOWER_LINK_MULTI)
+
+#define BATTLE_TYPE_LINK_MULTI_NO_TOWER(flags) (flags & BATTLE_TYPE_TOWER_LINK_MULTI && !(flags & BATTLE_TYPE_BATTLE_TOWER)) 
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1

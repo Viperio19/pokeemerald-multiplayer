@@ -683,7 +683,9 @@ static void CB2_InitBattleInternal(void)
     SetVBlankCallback(VBlankCB_Battle);
     SetUpBattleVarsAndBirchZigzagoon();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+    if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+        SetMainCallback2(CB2_HandleStartMultiPartnerBattle);
+    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
         SetMainCallback2(CB2_HandleStartMultiPartnerBattle);
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         SetMainCallback2(CB2_HandleStartMultiPartnerBattle);
@@ -692,7 +694,7 @@ static void CB2_InitBattleInternal(void)
     else
         SetMainCallback2(CB2_HandleStartBattle);
 
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)))
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TOWER_LINK_MULTI)))
     {
         CreateNPCTrainerParty(&gEnemyParty[0], gTrainerBattleOpponent_A, TRUE);
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
@@ -843,7 +845,7 @@ static void SetAllPlayersBerryData(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+            if (gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
                 numPlayers = 2;
             else
                 numPlayers = 4;
@@ -1396,7 +1398,9 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         // Finish, start battle
         if (BattleInitAllSprites(&gBattleCommunication[SPRITES_INIT_STATE1], &gBattleCommunication[SPRITES_INIT_STATE2]))
         {
-            TrySetLinkBattleTowerEnemyPartyLevel();
+            if (!BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+                TrySetLinkBattleTowerEnemyPartyLevel();
+            
             gPreBattleCallback1 = gMain.callback1;
             gMain.callback1 = BattleMainCB1;
             SetMainCallback2(BattleMainCB2);
@@ -1438,7 +1442,7 @@ static void CB2_PreInitMultiBattle(void)
     u32 *savedBattleTypeFlags;
     void (**savedCallback)(void);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+    if (gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
     {
         numPlayers = 2;
         blockMask = 3;
