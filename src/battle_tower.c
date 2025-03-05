@@ -61,6 +61,7 @@ static void BattleTowerNop2(void);
 static void LoadMultiPartnerCandidatesData(void);
 static void ShowPartnerCandidateMessage(void);
 static void LoadLinkMultiOpponentsData(void);
+static void LoadLinkMultiOpponentsDataFromVar(void);
 static void TowerTryCloseLink(void);
 static void SetMultiPartnerGfx(void);
 static void SetTowerInterviewData(void);
@@ -817,6 +818,7 @@ static void (* const sBattleTowerFuncs[])(void) =
     [BATTLE_TOWER_FUNC_TRY_CLOSE_LINK]      = TowerTryCloseLink,
     [BATTLE_TOWER_FUNC_SET_PARTNER_GFX]     = SetMultiPartnerGfx,
     [BATTLE_TOWER_FUNC_SET_INTERVIEW_DATA]  = SetTowerInterviewData,
+    [BATTLE_TOWER_FUNC_LOAD_VAR_OPPONENTS]  = LoadLinkMultiOpponentsDataFromVar,
 };
 
 static const u32 sWinStreakFlags[][2] =
@@ -2176,16 +2178,14 @@ void DoLinkMultiBattle(void)
     u16 trainerNum1 = VarGet(VAR_UNUSED_0x404E);
 
     gBattleScripting.specialTrainerBattleType = gSpecialVar_0x8004;
-    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI | BATTLE_TYPE_LINK_MULTI_2_VS_1;
 
     ZeroEnemyPartyMons();
     FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A, trainerNum1);
     // FillSpecialTrainerParty(gTrainerBattleOpponent_A, 0, 3, VarGet(VAR_UNUSED_0x404E));
     // FillSpecialTrainerParty(gTrainerBattleOpponent_B, 3, 3, VarGet(VAR_UNUSED_0x404E));
 
-    CreateTask(Task_StartBattleAfterTransition, 1);
-    PlayMapChosenOrBattleBGM(0);
-    BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_B_TOWER));
+    DoTrainerBattle();
 }
 
 void DoSpecialTrainerBattle(void)
@@ -2819,6 +2819,68 @@ static void LoadLinkMultiOpponentsData(void)
             gTrainerBattleOpponent_B = gSaveBlock2Ptr->frontier.trainerIds[battleNum * 2 + 1];
             SetBattleFacilityTrainerGfxId(gTrainerBattleOpponent_A, 0);
             SetBattleFacilityTrainerGfxId(gTrainerBattleOpponent_B, 1);
+            if (gReceivedRemoteLinkPlayers && gWirelessCommType == 0)
+                gSpecialVar_Result = 4;
+            else
+                gSpecialVar_Result = 6;
+        }
+        break;
+    case 4:
+        SetCloseLinkCallback();
+        gSpecialVar_Result = 5;
+        break;
+    case 5:
+        if (gReceivedRemoteLinkPlayers == 0)
+        {
+            gSpecialVar_Result = 6;
+        }
+        break;
+    case 6:
+        return;
+    }
+}
+
+static void LoadLinkMultiOpponentsDataFromVar(void)
+{
+    gTrainerBattleOpponent_A = gSpecialVar_0x8007;
+    gTrainerBattleOpponent_B = gSpecialVar_0x8007;
+
+    switch (gSpecialVar_Result)
+    {
+    case 0:
+        if (IsLinkTaskFinished())
+        {
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gTrainerBattleOpponent_A, sizeof(gTrainerBattleOpponent_A));
+            gSpecialVar_Result = 1;
+        }
+        break;
+    case 1:
+        if ((GetBlockReceivedStatus() & 3) == 3)
+        {
+            ResetBlockReceivedFlags();
+            if (gBlockRecvBuffer[0][0] > gBlockRecvBuffer[1][0])
+                gTrainerBattleOpponent_A = gBlockRecvBuffer[0][0];
+            else
+                gTrainerBattleOpponent_A = gBlockRecvBuffer[1][0];
+            gSpecialVar_Result = 2;
+        }
+        break;
+    case 2:
+        if (IsLinkTaskFinished())
+        {
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gTrainerBattleOpponent_B, sizeof(gTrainerBattleOpponent_B));
+            gSpecialVar_Result = 3;
+        }
+        break;
+    case 3:
+        if ((GetBlockReceivedStatus() & 3) == 3)
+        {
+            ResetBlockReceivedFlags();
+            if (gBlockRecvBuffer[0][0] > gBlockRecvBuffer[1][0])
+                gTrainerBattleOpponent_B = gBlockRecvBuffer[0][0];
+            else
+                gTrainerBattleOpponent_B = gBlockRecvBuffer[1][0];
+
             if (gReceivedRemoteLinkPlayers && gWirelessCommType == 0)
                 gSpecialVar_Result = 4;
             else

@@ -883,7 +883,7 @@ void SetBattleEndCallbacks(void)
 {
     if (!gPaletteFade.active)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+        if (gBattleTypeFlags & BATTLE_TYPE_LINK && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
         {
             if (IsLinkTaskFinished())
             {

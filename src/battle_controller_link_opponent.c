@@ -1225,12 +1225,19 @@ static void LinkOpponentHandleDrawTrainerPic(void)
         else // first mon
             xPos = 200;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
+        if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         {
             if (gActiveBattler == B_POSITION_OPPONENT_LEFT)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_A);
             else
                 trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_B);
+        }
+        else if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+        {
+            if (gActiveBattler == B_POSITION_OPPONENT_LEFT)
+                trainerPicId = gTrainers[gTrainerBattleOpponent_A].trainerPic;
+            else
+                trainerPicId = gTrainers[gTrainerBattleOpponent_B].trainerPic;
         }
         else
         {

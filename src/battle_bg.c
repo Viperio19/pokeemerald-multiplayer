@@ -765,7 +765,7 @@ void DrawMainBattleBackground(void)
         LZDecompressVram(gBattleTerrainTilemap_Building, (void *)(BG_SCREEN_ADDR(26)));
         LoadCompressedPalette(gBattleTerrainPalette_Frontier, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_GROUDON)
+    else if (BATTLE_TYPE_IS_GROUDON(gBattleTypeFlags))
     {
         LZDecompressVram(gBattleTerrainTiles_Cave, (void *)(BG_CHAR_ADDR(2)));
         LZDecompressVram(gBattleTerrainTilemap_Cave, (void *)(BG_SCREEN_ADDR(26)));
@@ -1013,6 +1013,37 @@ static void DrawLinkBattleVsScreenOutcomeText(void)
     }
 }
 
+void InitLinkMultiBattleVsScreen(u8 taskId)
+{
+    struct LinkPlayer *linkPlayer;
+    u8 *name;
+    s32 i, palId;
+
+    switch (gTasks[taskId].data[0])
+    {
+    case 0:
+        palId = AllocSpritePalette(TAG_VS_LETTERS);
+        gPlttBufferUnfaded[OBJ_PLTT_ID(palId) + 15] = gPlttBufferFaded[OBJ_PLTT_ID(palId) + 15] = RGB_WHITE;
+        gBattleStruct->linkBattleVsSpriteId_V = CreateSprite(&sVsLetter_V_SpriteTemplate, 111, 80, 0);
+        gBattleStruct->linkBattleVsSpriteId_S = CreateSprite(&sVsLetter_S_SpriteTemplate, 129, 80, 0);
+        gSprites[gBattleStruct->linkBattleVsSpriteId_V].invisible = TRUE;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_S].invisible = TRUE;
+        gTasks[taskId].data[0]++;
+        break;
+    case 1:
+        PlaySE(SE_M_HARDEN);
+        DestroyTask(taskId);
+        gSprites[gBattleStruct->linkBattleVsSpriteId_S].oam.tileNum += 0x40;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_V].data[0] = 0;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_S].data[0] = 1;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_V].data[1] = gSprites[gBattleStruct->linkBattleVsSpriteId_V].x;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_S].data[1] = gSprites[gBattleStruct->linkBattleVsSpriteId_S].x;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_V].data[2] = 0;
+        gSprites[gBattleStruct->linkBattleVsSpriteId_S].data[2] = 0;
+        break;
+    }
+}
+
 void InitLinkBattleVsScreen(u8 taskId)
 {
     struct LinkPlayer *linkPlayer;
@@ -1159,7 +1190,7 @@ void DrawBattleEntryBackground(void)
             CopyBgTilemapBufferToVram(2);
         }
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_GROUDON)
+    else if (BATTLE_TYPE_IS_GROUDON(gBattleTypeFlags))
     {
         LZDecompressVram(gBattleTerrainAnimTiles_Cave, (void *)(BG_CHAR_ADDR(1)));
         LZDecompressVram(gBattleTerrainAnimTilemap_Cave, (void *)(BG_SCREEN_ADDR(28)));
@@ -1227,7 +1258,7 @@ bool8 LoadChosenBattleElement(u8 caseId)
         {
             LZDecompressVram(gBattleTerrainTiles_Building, (void *)(BG_CHAR_ADDR(2)));
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_GROUDON)
+        else if (BATTLE_TYPE_IS_GROUDON(gBattleTypeFlags))
         {
             LZDecompressVram(gBattleTerrainTiles_Cave, (void *)(BG_CHAR_ADDR(2)));
         }

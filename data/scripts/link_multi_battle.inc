@@ -18,7 +18,6 @@ LinkMultiBattle_EventScript_SaveBeforeLinkMultisChallenge::
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	tower_init
-	tower_set TOWER_DATA_WIN_STREAK_ACTIVE, TRUE
 	frontier_set FRONTIER_DATA_PAUSED, FALSE
 	special LoadPlayerParty
 	closemessage
@@ -67,7 +66,7 @@ LinkMultiBattle_EventScript_EnterElevator::
 	special CallFrontierUtilFunc
 	setvar VAR_RESULT, 0
 LinkMultiBattle_EventScript_WaitForLinkOpponentLoad::
-	tower_loadlinkopponents
+	tower_loadvaropponents
 	delay 1
 	goto_if_ne VAR_RESULT, 6, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
 	clearflag FLAG_CANCEL_BATTLE_ROOM_CHALLENGE
@@ -81,14 +80,12 @@ LinkMultiBattle_EventScript_EnterRoom::
 	goto LinkMultiBattle_EventScript_OpponentsEnter
 
 LinkMultiBattle_EventScript_OpponentsEnter::
-	tower_setopponent
 	goto LinkMultiBattle_EventScript_DoTowerBattle
 
 LinkMultiBattle_EventScript_DoTowerBattle::
 	closemessage
 	setvar VAR_TEMP_2, 0
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
-	special HealPlayerParty
 	setvar VAR_0x8004, SPECIAL_BATTLE_TOWER
 	setvar VAR_0x8005, 0
 	special DoLinkMultiBattle

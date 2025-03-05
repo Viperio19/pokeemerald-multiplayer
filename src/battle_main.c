@@ -1199,12 +1199,23 @@ static void CB2_HandleStartMultiPartnerBattle(void)
                 gLinkPlayers[1].id = 2;
                 gLinkPlayers[2].id = 1;
                 gLinkPlayers[3].id = 3;
-                GetFrontierTrainerName(gLinkPlayers[2].name, gTrainerBattleOpponent_A);
-                GetFrontierTrainerName(gLinkPlayers[3].name, gTrainerBattleOpponent_B);
-                GetBattleTowerTrainerLanguage(&language, gTrainerBattleOpponent_A);
-                gLinkPlayers[2].language = language;
-                GetBattleTowerTrainerLanguage(&language, gTrainerBattleOpponent_B);
-                gLinkPlayers[3].language = language;
+
+                if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+                {
+                    StringCopy(gLinkPlayers[2].name, gTrainers[gTrainerBattleOpponent_A].trainerName);
+                    StringCopy(gLinkPlayers[3].name, gTrainers[gTrainerBattleOpponent_B].trainerName);
+                    gLinkPlayers[2].language = gGameLanguage;
+                    gLinkPlayers[3].language = gGameLanguage;
+                }
+                else
+                {
+                    GetFrontierTrainerName(gLinkPlayers[2].name, gTrainerBattleOpponent_A);
+                    GetFrontierTrainerName(gLinkPlayers[3].name, gTrainerBattleOpponent_B);
+                    GetBattleTowerTrainerLanguage(&language, gTrainerBattleOpponent_A);
+                    gLinkPlayers[2].language = language;
+                    GetBattleTowerTrainerLanguage(&language, gTrainerBattleOpponent_B);
+                    gLinkPlayers[3].language = language;
+                }
 
                 if (IsLinkTaskFinished())
                 {
@@ -1237,7 +1248,12 @@ static void CB2_HandleStartMultiPartnerBattle(void)
             ResetBlockReceivedFlags();
             FindLinkBattleMaster(2, playerMultiplayerId);
             SetAllPlayersBerryData();
-            taskId = CreateTask(InitLinkBattleVsScreen, 0);
+
+            if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+                taskId = CreateTask(InitLinkMultiBattleVsScreen, 0);
+            else
+                taskId = CreateTask(InitLinkBattleVsScreen, 0);
+
             gTasks[taskId].data[1] = 0x10E;
             gTasks[taskId].data[2] = 0x5A;
             gTasks[taskId].data[5] = 0;
@@ -3473,14 +3489,14 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
             if (GetBattlerPosition(gActiveBattler) == B_POSITION_PLAYER_RIGHT
-             || GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT)
+             || (GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI_2_VS_1)))
             {
                 BtlController_EmitDrawTrainerPic(BUFFER_A);
                 MarkBattlerForControllerExec(gActiveBattler);
             }
         }
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT)
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI_2_VS_1))
         {
             BtlController_EmitDrawTrainerPic(BUFFER_A);
             MarkBattlerForControllerExec(gActiveBattler);

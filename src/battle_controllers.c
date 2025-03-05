@@ -228,7 +228,7 @@ static void InitSinglePlayerBtlControllers(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
+            if (gBattleTypeFlags & BATTLE_TYPE_MULTI && BATTLE_TYPE_TOWER_OR_LINK_2_OPPONENTS(gBattleTypeFlags))
             {
                 gBattleMainFunc = BeginBattleIntro;
 
