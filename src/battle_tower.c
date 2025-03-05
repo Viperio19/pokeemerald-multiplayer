@@ -2091,7 +2091,7 @@ static void FillSpecialTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount, u
     }
 }
 
-static void FillSpecialSingleTrainerParty(u16 trainerId, u16 trainerNum)
+static void FillSpecialSingleTrainerParty(u16 trainerNum)
 {
     s32 i, j;
     u8 fixedIV = 0;
@@ -2174,14 +2174,11 @@ static void FillSpecialSingleTrainerParty(u16 trainerId, u16 trainerNum)
 
 void DoLinkMultiBattle(void)
 {
-    s32 i;
-    u16 trainerNum1 = VarGet(VAR_UNUSED_0x404E);
-
     gBattleScripting.specialTrainerBattleType = gSpecialVar_0x8004;
     gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI | BATTLE_TYPE_LINK_MULTI_2_VS_1;
 
     ZeroEnemyPartyMons();
-    FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A, trainerNum1);
+    FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A);
     // FillSpecialTrainerParty(gTrainerBattleOpponent_A, 0, 3, VarGet(VAR_UNUSED_0x404E));
     // FillSpecialTrainerParty(gTrainerBattleOpponent_B, 3, 3, VarGet(VAR_UNUSED_0x404E));
 
