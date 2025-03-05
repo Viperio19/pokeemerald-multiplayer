@@ -1348,7 +1348,7 @@ static void OpponentHandleTrainerSlide(void)
             trainerPicId = GetTrainerHillTrainerFrontSpriteId(gTrainerBattleOpponent_A);
         }
     }
-    else if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    else if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
         {

@@ -88,7 +88,8 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
 	setvar VAR_0x8004, SPECIAL_BATTLE_TOWER
 	setvar VAR_0x8005, 0
+	setflag FLAG_NO_REMATCH_AFTER_LINK_BATTLE
 	special DoLinkMultiBattle
 	waitstate
-	frontier_get FRONTIER_DATA_BATTLE_OUTCOME
+	special LoadPlayerParty
 	return

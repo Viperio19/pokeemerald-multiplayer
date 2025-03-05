@@ -1990,7 +1990,10 @@ void BufferStringBattle(u16 stringID)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
                 {
-                    stringPtr = sText_TwoTrainersWantToBattle;
+                    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI_2_VS_1)
+                        stringPtr = sText_Trainer1WantsToBattle;
+                    else
+                        stringPtr = sText_TwoTrainersWantToBattle;
                 }
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 {

@@ -1317,6 +1317,14 @@ static void LinkOpponentHandleTrainerSlide(void)
     else
         trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_B);
 
+    if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    {
+        if (gActiveBattler == 1)
+            trainerPicId = gTrainers[gTrainerBattleOpponent_A].trainerPic;
+        else
+            trainerPicId = gTrainers[gTrainerBattleOpponent_B].trainerPic;      
+    }
+
     DecompressTrainerFrontPic(trainerPicId, gActiveBattler);
     SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, GetBattlerPosition(gActiveBattler));
     gBattlerSpriteIds[gActiveBattler] = CreateSprite(&gMultiuseSpriteTemplate, 176, (8 - gTrainerFrontPicCoords[trainerPicId].size) * 4 + 40, 0x1E);

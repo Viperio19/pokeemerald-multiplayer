@@ -27,6 +27,7 @@ extern const u8 BattleScript_LocalBattleLostPrintWhiteOut[];
 extern const u8 BattleScript_LocalBattleLostEnd[];
 extern const u8 BattleScript_CheckDomeDrew[];
 extern const u8 BattleScript_FlushMessageBox[];
+extern const u8 BattleScript_LinkMultiBattleWonOrLost[];
 extern const u8 BattleScript_LinkBattleWonOrLost[];
 extern const u8 BattleScript_FrontierTrainerBattleWon[];
 extern const u8 BattleScript_SmokeBallEscape[];
