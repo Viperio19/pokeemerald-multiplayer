@@ -756,6 +756,7 @@
 	.macro trainerbattle_multilink trainer:req, intro_text:req, lose_text:req, event_script=FALSE, music=TRUE
 	setvar VAR_0x8007 \trainer
 	call LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge
+	special LoadPlayerParty
 	.endm
 
 	@ Starts a double trainer battle. Takes a trainer, intro text, loss text, text for when you have too few pokemon
