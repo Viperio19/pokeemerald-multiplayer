@@ -4453,6 +4453,10 @@ BattleScript_ActionSelectionItemsCantBeUsed::
 	printselectionstring STRINGID_ITEMSCANTBEUSEDNOW
 	endselectionscript
 
+BattleScript_ActionSelectionCantRunFromTrainer::
+	printselectionstring STRINGID_NORUNNINGFROMTRAINERS
+	endselectionscript
+
 BattleScript_FlushMessageBox::
 	printstring STRINGID_EMPTYSTRING3
 	return

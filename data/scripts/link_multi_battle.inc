@@ -91,5 +91,6 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	setflag FLAG_NO_REMATCH_AFTER_LINK_BATTLE
 	special DoLinkMultiBattle
 	waitstate
-	special LoadPlayerParty
+	tower_closelink
+	special LoadPlayerPartyAfterLinkMultiBattle
 	return

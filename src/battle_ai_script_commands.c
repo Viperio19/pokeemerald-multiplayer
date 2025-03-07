@@ -290,10 +290,10 @@ void BattleAI_HandleItemUseBeforeAISetup(u8 defaultScoreMoves)
 
     // Items are allowed to use in ONLY trainer battles.
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_BATTLE_TOWER
+        && (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_BATTLE_TOWER
                                | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_FRONTIER
                                | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED_LINK)
-            )
+            ) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
        )
     {
         for (i = 0; i < MAX_TRAINER_ITEMS; i++)

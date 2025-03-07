@@ -3267,14 +3267,14 @@ static void Cmd_getexp(void)
     switch (gBattleScripting.getexpState)
     {
     case 0: // check if should receive exp at all
-        if (GetBattlerSide(gBattlerFainted) != B_SIDE_OPPONENT || (gBattleTypeFlags &
+        if (GetBattlerSide(gBattlerFainted) != B_SIDE_OPPONENT || ((gBattleTypeFlags &
              (BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
               | BATTLE_TYPE_TRAINER_HILL
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
-              | BATTLE_TYPE_EREADER_TRAINER)))
+              | BATTLE_TYPE_EREADER_TRAINER)) && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)))
         {
             gBattleScripting.getexpState = 6; // goto last case
         }
@@ -4679,11 +4679,11 @@ static void Cmd_switchinanim(void)
     gActiveBattler = GetBattlerForBattleScript(gBattlescriptCurrInstr[1]);
 
     if (GetBattlerSide(gActiveBattler) == B_SIDE_OPPONENT
-        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK
+        && (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
                                  | BATTLE_TYPE_EREADER_TRAINER
                                  | BATTLE_TYPE_RECORDED_LINK
                                  | BATTLE_TYPE_TRAINER_HILL
-                                 | BATTLE_TYPE_FRONTIER)))
+                                 | BATTLE_TYPE_FRONTIER)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)))
         HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
 
     gAbsentBattlerFlags &= ~(gBitTable[gActiveBattler]);
@@ -7472,7 +7472,7 @@ static void Cmd_tryconversiontypechange(void)
 
 static void Cmd_givepaydaymoney(void)
 {
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) && gPaydayMoney != 0)
+    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)) && gPaydayMoney != 0)
     {
         u32 bonusMoney = gPaydayMoney * gBattleStruct->moneyMultiplier;
         AddMoney(&gSaveBlock1Ptr->money, bonusMoney);
