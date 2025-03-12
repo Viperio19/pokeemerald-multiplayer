@@ -474,7 +474,7 @@ static void FinishLinkup(u16 *linkupStatus, u32 taskId)
     {
         if (gLinkType == LINKTYPE_BATTLE_TOWER_50 || gLinkType == LINKTYPE_BATTLE_TOWER_OPEN)
         {
-            if (AreBattleTowerLinkSpeciesSame(trainerCards[0].monSpecies, trainerCards[1].monSpecies))
+            if (AreBattleTowerLinkSpeciesSame(trainerCards[0].monSpecies, trainerCards[1].monSpecies) && !FlagGet(FLAG_ALLOW_DUPLICATE_POKEMON))
             {
                 // Unsuccessful battle tower linkup
                 *linkupStatus = LINKUP_FAILED_BATTLE_TOWER;

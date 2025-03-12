@@ -404,6 +404,7 @@ void CloseLink(void)
         LinkRfu_Shutdown();
     sLinkOpen = FALSE;
     DisableSerial();
+    FlagClear(FLAG_ALLOW_DUPLICATE_POKEMON);
 }
 
 static void TestBlockTransfer(u8 nothing, u8 is, u8 used)

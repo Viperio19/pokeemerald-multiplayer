@@ -5,7 +5,7 @@ LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge::
 	fadescreen FADE_TO_BLACK
 	setvar VAR_0x8004, FRONTIER_LVL_OPEN
 	setvar VAR_0x8005, FRONTIER_MULTI_PARTY_SIZE
-	special ChoosePartyForBattleFrontier
+	special ChooseHalfPartyForBattle
 	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
 	msgbox BattleFrontier_BattleTowerLobby_Text_OkayToSaveBeforeEntering, MSGBOX_YESNO
@@ -35,6 +35,7 @@ LinkMultiBattle_EventScript_TryCableLink::
 	message gText_PleaseWaitForLink
 	waitmessage
 	setvar VAR_0x8005, 0
+	setflag FLAG_ALLOW_DUPLICATE_POKEMON
 	special TryBattleLinkup
 	waitstate
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_CableLinkSuccessful
@@ -62,7 +63,7 @@ LinkMultiBattle_EventScript_CableLinkSuccessful::
 LinkMultiBattle_EventScript_EnterElevator::
 	special SavePlayerParty
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_PARTY_ORDER
-	call BattleFrontier_BattleTowerLobby_EventScript_GetPartySize
+	setvar VAR_0x8005, MULTI_PARTY_SIZE
 	special CallFrontierUtilFunc
 	setvar VAR_RESULT, 0
 LinkMultiBattle_EventScript_WaitForLinkOpponentLoad::
@@ -92,5 +93,7 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	special DoLinkMultiBattle
 	waitstate
 	tower_closelink
+	special CloseLink
 	special LoadPlayerPartyAfterLinkMultiBattle
+	special SavePlayerParty
 	return
