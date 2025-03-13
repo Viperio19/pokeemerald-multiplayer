@@ -107,7 +107,11 @@ EventScript_ShowTrainerIntroMsg::
 	waitbuttonpress
 	special TryPrepareSecondApproachingTrainer
 	goto_if_eq VAR_RESULT, TRUE, EventScript_TrainerApproach
-	goto EventScript_DoTrainerBattle
+	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
+	switch VAR_RESULT
+	case YES, LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge
+	case NO, EventScript_DoTrainerBattle
+	case MULTI_B_PRESSED, EventScript_DoTrainerBattle
 
 EventScript_DoTrainerBattle::
 	dotrainerbattle
@@ -129,3 +133,7 @@ Std_MsgboxAutoclose::
 	waitbuttonpress
 	release
 	return
+
+EventScript_Text_BattleWithOtherPlayer:
+	.string "Do you want to battle together\n"
+	.string "with another player?$"

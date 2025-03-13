@@ -850,6 +850,7 @@ static const u8 sBattleTowerPartySizes2[] =
     [FRONTIER_MODE_DOUBLES]     = FRONTIER_DOUBLES_PARTY_SIZE,
     [FRONTIER_MODE_MULTIS]      = FRONTIER_MULTI_PARTY_SIZE,
     [FRONTIER_MODE_LINK_MULTIS] = FRONTIER_MULTI_PARTY_SIZE,
+    [NOT_FRONTIER_MODE_LINK_MULTIS] = MULTI_PARTY_SIZE,
 };
 
 // Trainer ID ranges for possible frontier trainers to encounter on particular challenges
@@ -887,6 +888,7 @@ static const u8 sBattleTowerPartySizes[FRONTIER_MODE_COUNT] =
     [FRONTIER_MODE_DOUBLES]     = FRONTIER_DOUBLES_PARTY_SIZE,
     [FRONTIER_MODE_MULTIS]      = FRONTIER_MULTI_PARTY_SIZE,
     [FRONTIER_MODE_LINK_MULTIS] = FRONTIER_MULTI_PARTY_SIZE,
+    [NOT_FRONTIER_MODE_LINK_MULTIS] = MULTI_PARTY_SIZE,
 };
 
 static const u16 sRecordTrainerSpeechWon[] =

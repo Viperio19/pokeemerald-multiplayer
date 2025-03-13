@@ -24,7 +24,8 @@
 #define FRONTIER_MODE_DOUBLES      1
 #define FRONTIER_MODE_MULTIS       2
 #define FRONTIER_MODE_LINK_MULTIS  3
-#define FRONTIER_MODE_COUNT        4
+#define NOT_FRONTIER_MODE_LINK_MULTIS  4
+#define FRONTIER_MODE_COUNT        5
 
 // Challenge Statuses
 #define CHALLENGE_STATUS_SAVING   1
