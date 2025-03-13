@@ -114,6 +114,8 @@ EventScript_ShowTrainerIntroMsg::
 	case MULTI_B_PRESSED, EventScript_DoTrainerBattle
 
 EventScript_DoTrainerBattle::
+	message EventScript_Text_InitiatingSoloBattle
+	waitmessage
 	dotrainerbattle
 	@ Below battle mode check only needed in FRLG
 	specialvar VAR_RESULT, GetTrainerBattleMode
@@ -137,3 +139,6 @@ Std_MsgboxAutoclose::
 EventScript_Text_BattleWithOtherPlayer:
 	.string "Do you want to battle together\n"
 	.string "with another player?$"
+
+EventScript_Text_InitiatingSoloBattle:
+	.string "Initiating solo battle.$"

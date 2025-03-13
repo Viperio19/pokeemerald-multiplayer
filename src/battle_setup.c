@@ -1837,11 +1837,8 @@ u16 GetLastBeatenRematchTrainerId(u16 trainerId)
 
 bool8 ShouldTryRematchBattle(void)
 {
-    if (FlagGet(FLAG_NO_REMATCH_AFTER_LINK_BATTLE))
-    {
-        FlagClear(FLAG_NO_REMATCH_AFTER_LINK_BATTLE);
+    if (VarGet(VAR_FRONTIER_BATTLE_MODE) == NOT_FRONTIER_MODE_LINK_MULTIS)
         return FALSE;
-    }
     if (IsFirstTrainerIdReadyForRematch(gRematchTable, gTrainerBattleOpponent_A))
         return TRUE;
 

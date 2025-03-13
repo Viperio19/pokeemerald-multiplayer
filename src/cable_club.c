@@ -474,7 +474,7 @@ static void FinishLinkup(u16 *linkupStatus, u32 taskId)
     {
         if (gLinkType == LINKTYPE_BATTLE_TOWER_50 || gLinkType == LINKTYPE_BATTLE_TOWER_OPEN)
         {
-            if (AreBattleTowerLinkSpeciesSame(trainerCards[0].monSpecies, trainerCards[1].monSpecies) && VarGet(VAR_FRONTIER_BATTLE_MODE) != NOT_FRONTIER_MODE_LINK_MULTIS)
+            if (AreBattleTowerLinkSpeciesSame(trainerCards[0].monSpecies, trainerCards[1].monSpecies))
             {
                 // Unsuccessful battle tower linkup
                 *linkupStatus = LINKUP_FAILED_BATTLE_TOWER;
@@ -596,6 +596,9 @@ void TryBattleLinkup(void)
             gLinkType = LINKTYPE_BATTLE_TOWER_OPEN;
 
         break;
+    case USING_LINK_MULTI:
+        minPlayers = 2;
+        gLinkType = LINKTYPE_LINK_MULTI;
     }
 
     CreateLinkupTask(minPlayers, maxPlayers);
@@ -742,6 +745,9 @@ u8 CreateTask_ReestablishCableClubLink(void)
             gLinkType = LINKTYPE_BATTLE_TOWER_50;
         else
             gLinkType = LINKTYPE_BATTLE_TOWER_OPEN;
+        break;
+    case USING_LINK_MULTI:
+        gLinkType = LINKTYPE_LINK_MULTI;
         break;
     case USING_TRADE_CENTER:
         gLinkType = LINKTYPE_TRADE;
