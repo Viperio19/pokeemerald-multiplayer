@@ -66,7 +66,9 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	special CloseLink
 	special LoadPlayerPartyAfterLinkMultiBattle
 	special SavePlayerParty
-	return
+	gotobeatenscript
+	releaseall
+	end
 
 LinkMultiBattle_EventScript_TryWirelessLink::
 	setvar VAR_0x8004, LINK_GROUP_BATTLE_TOWER

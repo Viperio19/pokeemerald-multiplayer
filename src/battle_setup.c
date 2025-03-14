@@ -37,6 +37,7 @@
 #include "mirage_tower.h"
 #include "field_screen_effect.h"
 #include "data.h"
+#include "item.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
 #include "constants/game_stat.h"
@@ -1321,6 +1322,11 @@ void BattleSetup_StartTrainerBattle(void)
         DoTrainerBattle();
 
     ScriptContext_Stop();
+}
+
+void BattleSetup_SetCBEndTrainerBattle(void)
+{
+    gMain.savedCallback = CB2_EndTrainerBattle;
 }
 
 static void CB2_EndTrainerBattle(void)

@@ -2176,8 +2176,9 @@ static void FillSpecialSingleTrainerParty(u16 trainerNum)
 
 void DoLinkMultiBattle(void)
 {
-    gBattleScripting.specialTrainerBattleType = gSpecialVar_0x8004;
     gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI | BATTLE_TYPE_LINK_MULTI_2_VS_1;
+
+    BattleSetup_SetCBEndTrainerBattle();
 
     ZeroEnemyPartyMons();
     FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A);
