@@ -146,7 +146,7 @@ LilycoveCity_EventScript_Woman1::
 	end
 
 LilycoveCity_EventScript_CitySign::
-	call LinkMultiBattle_EventScript_DoLink
+	msgbox LilycoveCity_Text_CitySign, MSGBOX_SIGN
 	end
 
 LilycoveCity_EventScript_ContestHallSign::

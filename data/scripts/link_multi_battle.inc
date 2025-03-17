@@ -6,12 +6,6 @@ LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge::
 	special ChooseHalfPartyForBattle
 	waitstate
 	goto_if_eq VAR_RESULT, 0, LinkMultiBattle_EventScript_DoRegularBattle
-	goto LinkMultiBattle_EventScript_LinkAlreadyExists
-	specialvar VAR_RESULT, IsWirelessAdapterConnected
-	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_TryWirelessLink
-	goto LinkMultiBattle_EventScript_TryCableLink
-
-LinkMultiBattle_EventScript_DoLink::
 	specialvar VAR_RESULT, IsWirelessAdapterConnected
 	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_TryWirelessLink
 	goto LinkMultiBattle_EventScript_TryCableLink
@@ -35,20 +29,7 @@ LinkMultiBattle_EventScript_TryCableLink::
 	end
 
 LinkMultiBattle_EventScript_CableLinkSuccessful::
-	message LinkMultiBattle_Text_InitiatingLinkBattle
-	waitmessage
-	closemessage
-	releaseall
-	end
-
-LinkMultiBattle_EventScript_CableLinkSuccessfulOld::
 	special TrySetBattleTowerLinkType
-	goto LinkMultiBattle_EventScript_PrepareParty
-	end
-
-LinkMultiBattle_EventScript_LinkAlreadyExists::
-	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	special LoadPlayerParty
 	goto LinkMultiBattle_EventScript_PrepareParty
 	end
 
@@ -81,9 +62,8 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	waitmessage
 	special DoLinkMultiBattle
 	waitstate
-	@ tower_closelink
-	@ special CloseLink
-	setflag FLAG_UNUSED_0x020
+	tower_closelink
+	special CloseLink
 	special LoadPlayerPartyAfterLinkMultiBattle
 	special SavePlayerParty
 	gotobeatenscript

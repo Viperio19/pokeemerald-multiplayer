@@ -4,7 +4,6 @@
 #include "task.h"
 #include "constants/cable_club.h"
 
-void CreateLinkupTask(u8 minPlayers, u8 maxPlayers);
 void CreateTask_EnterCableClubSeat(TaskFunc taskFunc);
 u8 CreateTask_ReestablishCableClubLink(void);
 void CB2_ReturnFromCableClubBattle(void);
