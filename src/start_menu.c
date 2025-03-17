@@ -43,6 +43,9 @@
 #include "trainer_card.h"
 #include "window.h"
 #include "union_room.h"
+#include "cable_club.h"
+#include "field_message_box.h"
+#include "script_pokemon_util.h"
 #include "constants/battle_frontier.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -57,6 +60,7 @@ enum
     MENU_ACTION_PLAYER,
     MENU_ACTION_SAVE,
     MENU_ACTION_OPTION,
+    MENU_ACTION_LINK,
     MENU_ACTION_EXIT,
     MENU_ACTION_RETIRE_SAFARI,
     MENU_ACTION_PLAYER_LINK,
@@ -98,11 +102,15 @@ static bool8 StartMenuPokeNavCallback(void);
 static bool8 StartMenuPlayerNameCallback(void);
 static bool8 StartMenuSaveCallback(void);
 static bool8 StartMenuOptionCallback(void);
+static bool8 StartMenuLinkCallback(void);
 static bool8 StartMenuExitCallback(void);
 static bool8 StartMenuSafariZoneRetireCallback(void);
 static bool8 StartMenuLinkModePlayerNameCallback(void);
 static bool8 StartMenuBattlePyramidRetireCallback(void);
 static bool8 StartMenuBattlePyramidBagCallback(void);
+
+//Linking callback stuff
+static bool8 LinkCallback(void);
 
 // Menu callbacks
 static bool8 SaveStartCallback(void);
@@ -119,6 +127,9 @@ static u8 SaveConfirmInputCallback(void);
 static u8 SaveFileExistsCallback(void);
 static u8 SaveConfirmOverwriteDefaultNoCallback(void);
 static u8 SaveConfirmOverwriteCallback(void);
+static u8 SaveCheckHealCallback(void);
+static u8 SaveHealConfirmNoCallback(void);
+static u8 SaveHealInputCallback(void);
 static u8 SaveOverwriteInputCallback(void);
 static u8 SaveSavingMessageCallback(void);
 static u8 SaveDoSaveCallback(void);
@@ -188,6 +199,7 @@ static const struct MenuAction sStartMenuItems[] =
     [MENU_ACTION_PLAYER]          = {gText_MenuPlayer,  {.u8_void = StartMenuPlayerNameCallback}},
     [MENU_ACTION_SAVE]            = {gText_MenuSave,    {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_OPTION]          = {gText_MenuOption,  {.u8_void = StartMenuOptionCallback}},
+    [MENU_ACTION_LINK]            = {gText_MenuLink, {.u8_void = StartMenuLinkCallback}},
     [MENU_ACTION_EXIT]            = {gText_MenuExit,    {.u8_void = StartMenuExitCallback}},
     [MENU_ACTION_RETIRE_SAFARI]   = {gText_MenuRetire,  {.u8_void = StartMenuSafariZoneRetireCallback}},
     [MENU_ACTION_PLAYER_LINK]     = {gText_MenuPlayer,  {.u8_void = StartMenuLinkModePlayerNameCallback}},
@@ -333,6 +345,7 @@ static void BuildNormalStartMenu(void)
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_SAVE);
     AddStartMenuAction(MENU_ACTION_OPTION);
+    AddStartMenuAction(MENU_ACTION_LINK);
     AddStartMenuAction(MENU_ACTION_EXIT);
 }
 
@@ -344,6 +357,7 @@ static void BuildSafariZoneStartMenu(void)
     AddStartMenuAction(MENU_ACTION_BAG);
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_OPTION);
+    AddStartMenuAction(MENU_ACTION_LINK);
     AddStartMenuAction(MENU_ACTION_EXIT);
 }
 
@@ -618,7 +632,8 @@ static bool8 HandleStartMenuInput(void)
         if (gMenuCallback != StartMenuSaveCallback
             && gMenuCallback != StartMenuExitCallback
             && gMenuCallback != StartMenuSafariZoneRetireCallback
-            && gMenuCallback != StartMenuBattlePyramidRetireCallback)
+            && gMenuCallback != StartMenuBattlePyramidRetireCallback
+            && gMenuCallback != StartMenuLinkCallback)
         {
            FadeScreen(FADE_TO_BLACK, 0);
         }
@@ -742,6 +757,22 @@ static bool8 StartMenuOptionCallback(void)
     }
 
     return FALSE;
+}
+
+static bool8 StartMenuLinkCallback(void)
+{
+    gMenuCallback = LinkCallback;
+    ScriptContext_SetupScript(EventScript_FieldPoison);
+    return FALSE;
+}
+
+static bool8 LinkCallback(void)
+{
+    StartMenuExitCallback();
+    HideFieldMessageBox();
+    RemoveExtraStartMenuWindows();
+    HideStartMenu();
+    return TRUE;
 }
 
 static bool8 StartMenuExitCallback(void)
