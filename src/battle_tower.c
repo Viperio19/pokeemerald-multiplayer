@@ -2842,12 +2842,18 @@ static void LoadLinkMultiOpponentsData(void)
 
 static void LoadLinkMultiOpponentsDataFromVar(void)
 {
-    u32 a = gSpecialVar_Result;
     u8 result;
-    DebugPrintf("gSpecialVar_Result = %d.", a);
+    DebugPrintf("gSpecialVar_Result = %d.", gSpecialVar_Result);
     switch (gSpecialVar_Result)
     {
     case 0:
+        if (IsLinkTaskFinished())
+        {
+            SetLinkStandbyCallback();
+            gSpecialVar_Result = 1;
+        }
+        break;
+    case 1:
         if (IsLinkTaskFinished())
         {
             gSpecialVar_0x8007 = gTrainerBattleOpponent_A;
@@ -2855,10 +2861,10 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
             result = BitmaskAllOtherLinkPlayers();
             DebugPrintf("BitmaskAllOtherLinkPlayers() = %d.", result);
             SendBlock(result, &gTrainerBattleOpponent_A, sizeof(gTrainerBattleOpponent_A));
-            gSpecialVar_Result = 1;
+            gSpecialVar_Result = 2;
         }
         break;
-    case 1:
+    case 2:
         result = GetBlockReceivedStatus() & 3;
         DebugPrintf("(GetBlockReceivedStatus() & 3) = %d.", result);
         if (result == 3)
@@ -2868,17 +2874,17 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
                 gTrainerBattleOpponent_A = gBlockRecvBuffer[0][0];
             else
                 gTrainerBattleOpponent_A = gBlockRecvBuffer[1][0];
-            gSpecialVar_Result = 2;
-        }
-        break;
-    case 2:
-        if (IsLinkTaskFinished())
-        {
-            SendBlock(BitmaskAllOtherLinkPlayers(), &gTrainerBattleOpponent_B, sizeof(gTrainerBattleOpponent_B));
             gSpecialVar_Result = 3;
         }
         break;
     case 3:
+        if (IsLinkTaskFinished())
+        {
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gTrainerBattleOpponent_B, sizeof(gTrainerBattleOpponent_B));
+            gSpecialVar_Result = 4;
+        }
+        break;
+    case 4:
         if ((GetBlockReceivedStatus() & 3) == 3)
         {
             ResetBlockReceivedFlags();
@@ -2886,18 +2892,18 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
                 gTrainerBattleOpponent_B = gBlockRecvBuffer[0][0];
             else
                 gTrainerBattleOpponent_B = gBlockRecvBuffer[1][0];
-            gSpecialVar_Result = 4;
-        }
-        break;
-    case 4:
-        if (IsLinkTaskFinished())
-        {
-            gSpecialVar_0x8009 = gTrainerBattleOpponent_A != gSpecialVar_0x8007;
-            SendBlock(BitmaskAllOtherLinkPlayers(), &gSpecialVar_0x8009, sizeof(gSpecialVar_0x8009));
             gSpecialVar_Result = 5;
         }
         break;
     case 5:
+        if (IsLinkTaskFinished())
+        {
+            gSpecialVar_0x8009 = gTrainerBattleOpponent_A != gSpecialVar_0x8007;
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gSpecialVar_0x8009, sizeof(gSpecialVar_0x8009));
+            gSpecialVar_Result = 6;
+        }
+        break;
+    case 6:
         if ((GetBlockReceivedStatus() & 3) == 3)
         {
             ResetBlockReceivedFlags();
@@ -2905,18 +2911,18 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
                 gSpecialVar_0x8009 = gBlockRecvBuffer[0][0];
             else
                 gSpecialVar_0x8009 = gBlockRecvBuffer[1][0];
-            gSpecialVar_Result = 6;
-        }
-        break;
-    case 6:
-        if (IsLinkTaskFinished())
-        {
-            gSpecialVar_0x8009 = gSpecialVar_0x8009 || gTrainerBattleOpponent_B != gSpecialVar_0x8008;
-            SendBlock(BitmaskAllOtherLinkPlayers(), &gSpecialVar_0x8009, sizeof(gSpecialVar_0x8009));
             gSpecialVar_Result = 7;
         }
         break;
     case 7:
+        if (IsLinkTaskFinished())
+        {
+            gSpecialVar_0x8009 = gSpecialVar_0x8009 || gTrainerBattleOpponent_B != gSpecialVar_0x8008;
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gSpecialVar_0x8009, sizeof(gSpecialVar_0x8009));
+            gSpecialVar_Result = 8;
+        }
+        break;
+    case 8:
         if ((GetBlockReceivedStatus() & 3) == 3)
         {
             ResetBlockReceivedFlags();
@@ -2926,16 +2932,16 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
                 gSpecialVar_0x8009 = gBlockRecvBuffer[1][0];
 
             if (gReceivedRemoteLinkPlayers && gWirelessCommType == 0)
-                gSpecialVar_Result = 8;
+                gSpecialVar_Result = 9;
             else
-                gSpecialVar_Result = 10;
+                gSpecialVar_Result = 11;
         }
         break;
-    case 8:
-        SetCloseLinkCallback();
-        gSpecialVar_Result = 9;
-        break;
     case 9:
+        SetCloseLinkCallback();
+        gSpecialVar_Result = 10;
+        break;
+    case 10:
         if (gReceivedRemoteLinkPlayers == 0)
         {
             if (gSpecialVar_0x8009)
@@ -2943,10 +2949,10 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
                 gTrainerBattleOpponent_A = gSpecialVar_0x8007;
                 gTrainerBattleOpponent_B = gSpecialVar_0x8008;
             }
-            gSpecialVar_Result = 10;
+            gSpecialVar_Result = 11;
         }
         break;
-    case 10:
+    case 11:
         return;
     }
 }

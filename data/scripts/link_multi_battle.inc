@@ -6,13 +6,15 @@ LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge::
 	special ChooseHalfPartyForBattle
 	waitstate
 	goto_if_eq VAR_RESULT, 0, LinkMultiBattle_EventScript_DoRegularBattle
+	special BattleTowerReconnectLink
+	goto LinkMultiBattle_EventScript_PrepareParty
+
+LinkMultiBattle_EventScript_DoLink::
 	specialvar VAR_RESULT, IsWirelessAdapterConnected
 	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_TryWirelessLink
 	goto LinkMultiBattle_EventScript_TryCableLink
 
 LinkMultiBattle_EventScript_TryCableLink::
-	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	special LoadPlayerParty
 	message gText_PleaseWaitForLink
 	waitmessage
 	setvar VAR_0x8004, USING_LINK_MULTI
@@ -20,20 +22,31 @@ LinkMultiBattle_EventScript_TryCableLink::
 	special TryBattleLinkup
 	waitstate
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_CableLinkSuccessful
-	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, LinkMultiBattle_EventScript_DoRegularBattle
-	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, LinkMultiBattle_EventScript_DoRegularBattle
-	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, LinkMultiBattle_EventScript_DoRegularBattle
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, LinkMultiBattle_EventScript_DoRegularBattle
-	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, LinkMultiBattle_EventScript_DoRegularBattle
-	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_DoRegularBattle
+	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_CableLinkFailed
 	end
 
 LinkMultiBattle_EventScript_CableLinkSuccessful::
-	special TrySetBattleTowerLinkType
-	goto LinkMultiBattle_EventScript_PrepareParty
+	message LinkMultiBattle_Text_LinkConnectionEstablished
+	waitmessage
+	closemessage
+	releaseall
+	end
+
+LinkMultiBattle_EventScript_CableLinkFailed::
+	message LinkMultiBattle_Text_LinkConnectionFailed
+	waitmessage
+	closemessage
+	releaseall
 	end
 
 LinkMultiBattle_EventScript_PrepareParty::
+	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
+	special LoadPlayerParty
 	special SavePlayerParty
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_PARTY_ORDER
 	setvar VAR_0x8005, MULTI_PARTY_SIZE
@@ -62,8 +75,9 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	waitmessage
 	special DoLinkMultiBattle
 	waitstate
-	tower_closelink
-	special CloseLink
+	@ tower_closelink
+	@ special CloseLink
+	setflag FLAG_UNUSED_0x020
 	special LoadPlayerPartyAfterLinkMultiBattle
 	special SavePlayerParty
 	gotobeatenscript
@@ -82,8 +96,8 @@ LinkMultiBattle_EventScript_ChooseLeader::
 	switch VAR_RESULT
 	case 0, LinkMultiBattle_EventScript_TryJoinGroup
 	case 1, LinkMultiBattle_EventScript_TryBecomeLeader
-	case 2, LinkMultiBattle_EventScript_DoRegularBattle
-	case MULTI_B_PRESSED, LinkMultiBattle_EventScript_DoRegularBattle
+	case 2, LinkMultiBattle_EventScript_CableLinkFailed
+	case MULTI_B_PRESSED, LinkMultiBattle_EventScript_CableLinkFailed
 	end
 
 LinkMultiBattle_EventScript_TryBecomeLeader::
@@ -91,7 +105,7 @@ LinkMultiBattle_EventScript_TryBecomeLeader::
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_WirelessLinkSuccessful
 	goto_if_eq VAR_RESULT, LINKUP_FAILED, LinkMultiBattle_EventScript_ChooseLeader
 	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, LinkMultiBattle_EventScript_TryBecomeLeader
-	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_DoRegularBattle
+	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_CableLinkFailed
 	release
 	return
 
@@ -100,12 +114,12 @@ LinkMultiBattle_EventScript_TryJoinGroup::
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_WirelessLinkSuccessful
 	goto_if_eq VAR_RESULT, LINKUP_FAILED, LinkMultiBattle_EventScript_ChooseLeader
 	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, LinkMultiBattle_EventScript_TryJoinGroup
-	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_DoRegularBattle
+	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_CableLinkFailed
 	release
 	return
 
 LinkMultiBattle_EventScript_WirelessLinkSuccessful::
-	goto LinkMultiBattle_EventScript_PrepareParty
+	goto LinkMultiBattle_EventScript_CableLinkSuccessful
 	end
 
 LinkMultiBattle_Text_SelectedDifferentTrainer:
@@ -114,3 +128,9 @@ LinkMultiBattle_Text_SelectedDifferentTrainer:
 
 LinkMultiBattle_Text_InitiatingLinkBattle:
 	.string "Initiating link battle.$"
+
+LinkMultiBattle_Text_LinkConnectionEstablished:
+	.string "Link established!$"
+
+LinkMultiBattle_Text_LinkConnectionFailed:
+	.string "Link failed.$"
