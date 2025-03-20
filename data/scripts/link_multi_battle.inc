@@ -9,41 +9,6 @@ LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge::
 	special BattleTowerReconnectLink
 	goto LinkMultiBattle_EventScript_PrepareParty
 
-LinkMultiBattle_EventScript_DoLink::
-	specialvar VAR_RESULT, IsWirelessAdapterConnected
-	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_TryWirelessLink
-	goto LinkMultiBattle_EventScript_TryCableLink
-
-LinkMultiBattle_EventScript_TryCableLink::
-	message gText_PleaseWaitForLink
-	waitmessage
-	setvar VAR_0x8004, USING_LINK_MULTI
-	setvar VAR_0x8005, 0
-	special TryBattleLinkup
-	waitstate
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_CableLinkSuccessful
-	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, LinkMultiBattle_EventScript_CableLinkFailed
-	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, LinkMultiBattle_EventScript_CableLinkFailed
-	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, LinkMultiBattle_EventScript_CableLinkFailed
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, LinkMultiBattle_EventScript_CableLinkFailed
-	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, LinkMultiBattle_EventScript_CableLinkFailed
-	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_CableLinkFailed
-	end
-
-LinkMultiBattle_EventScript_CableLinkSuccessful::
-	message LinkMultiBattle_Text_LinkConnectionEstablished
-	waitmessage
-	closemessage
-	releaseall
-	end
-
-LinkMultiBattle_EventScript_CableLinkFailed::
-	message LinkMultiBattle_Text_LinkConnectionFailed
-	waitmessage
-	closemessage
-	releaseall
-	end
-
 LinkMultiBattle_EventScript_PrepareParty::
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
 	special LoadPlayerParty
@@ -81,6 +46,41 @@ LinkMultiBattle_EventScript_DoTowerBattle::
 	special LoadPlayerPartyAfterLinkMultiBattle
 	special SavePlayerParty
 	gotobeatenscript
+	releaseall
+	end
+
+EventScript_SetUpLinkMultiBattleConnection::
+	specialvar VAR_RESULT, IsWirelessAdapterConnected
+	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_TryWirelessLink
+	goto LinkMultiBattle_EventScript_TryCableLink
+
+LinkMultiBattle_EventScript_TryCableLink::
+	message gText_PleaseWaitForLink
+	waitmessage
+	setvar VAR_0x8004, USING_LINK_MULTI
+	setvar VAR_0x8005, 0
+	special TryBattleLinkup
+	waitstate
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, LinkMultiBattle_EventScript_CableLinkSuccessful
+	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, LinkMultiBattle_EventScript_CableLinkFailed
+	goto_if_eq VAR_RESULT, LINKUP_FAILED_BATTLE_TOWER, LinkMultiBattle_EventScript_CableLinkFailed
+	end
+
+LinkMultiBattle_EventScript_CableLinkSuccessful::
+	message LinkMultiBattle_Text_LinkConnectionEstablished
+	waitmessage
+	closemessage
+	releaseall
+	end
+
+LinkMultiBattle_EventScript_CableLinkFailed::
+	message LinkMultiBattle_Text_LinkConnectionFailed
+	waitmessage
+	closemessage
 	releaseall
 	end
 
