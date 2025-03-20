@@ -1,4 +1,4 @@
-LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge::
+LinkMultiBattle_EventScript_TryLinkMultiBattle::
 	setvar VAR_FRONTIER_BATTLE_MODE, NOT_FRONTIER_MODE_LINK_MULTIS
 	fadescreen FADE_TO_BLACK
 	setvar VAR_0x8004, FRONTIER_LVL_OPEN
@@ -18,12 +18,13 @@ LinkMultiBattle_EventScript_PrepareParty::
 	special CallFrontierUtilFunc
 	setvar VAR_RESULT, 0
 	setvar VAR_0x8009, FALSE
+	message gText_PleaseWaitForLink
 LinkMultiBattle_EventScript_WaitForLinkOpponentLoad::
 	tower_loadvaropponents
 	delay 1
 	goto_if_lt VAR_RESULT, 10, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
 	goto_if_eq VAR_0x8009, TRUE, LinkMultiBattle_EventScript_SelectedDifferentTrainer
-	goto LinkMultiBattle_EventScript_DoTowerBattle
+	goto LinkMultiBattle_EventScript_DoLinkMultiBattle
 	end
 
 LinkMultiBattle_EventScript_SelectedDifferentTrainer::
@@ -31,18 +32,14 @@ LinkMultiBattle_EventScript_SelectedDifferentTrainer::
 	goto LinkMultiBattle_EventScript_DoRegularBattle
 
 LinkMultiBattle_EventScript_DoRegularBattle::
-	special CloseLink
 	special LoadPlayerParty
 	goto EventScript_DoTrainerBattle
 
-LinkMultiBattle_EventScript_DoTowerBattle::
+LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	message LinkMultiBattle_Text_InitiatingLinkBattle
 	waitmessage
 	special DoLinkMultiBattle
 	waitstate
-	@ tower_closelink
-	@ special CloseLink
-	setflag FLAG_UNUSED_0x020
 	special LoadPlayerPartyAfterLinkMultiBattle
 	special SavePlayerParty
 	gotobeatenscript
@@ -73,6 +70,7 @@ LinkMultiBattle_EventScript_TryCableLink::
 LinkMultiBattle_EventScript_CableLinkSuccessful::
 	message LinkMultiBattle_Text_LinkConnectionEstablished
 	waitmessage
+	delay 60
 	closemessage
 	releaseall
 	end
@@ -80,6 +78,7 @@ LinkMultiBattle_EventScript_CableLinkSuccessful::
 LinkMultiBattle_EventScript_CableLinkFailed::
 	message LinkMultiBattle_Text_LinkConnectionFailed
 	waitmessage
+	delay 60
 	closemessage
 	releaseall
 	end

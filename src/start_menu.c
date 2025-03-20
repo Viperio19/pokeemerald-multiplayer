@@ -337,8 +337,16 @@ static void BuildNormalStartMenu(void)
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_SAVE);
     AddStartMenuAction(MENU_ACTION_OPTION);
-    AddStartMenuAction(MENU_ACTION_LINK);
-    AddStartMenuAction(MENU_ACTION_EXIT);
+
+    if (FlagGet(FLAG_SYS_POKEMON_GET) == TRUE)
+    {
+        AddStartMenuAction(MENU_ACTION_LINK);
+    }
+
+    if (sNumStartMenuActions < 8)
+    {
+        AddStartMenuAction(MENU_ACTION_EXIT);
+    }
 }
 
 static void BuildSafariZoneStartMenu(void)

@@ -107,9 +107,11 @@ EventScript_ShowTrainerIntroMsg::
 	waitbuttonpress
 	special TryPrepareSecondApproachingTrainer
 	goto_if_eq VAR_RESULT, TRUE, EventScript_TrainerApproach
+	specialvar VAR_RESULT, IsLinkConnectionEstablished
+	goto_if_eq VAR_RESULT, FALSE, EventScript_DoTrainerBattle
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
-	case YES, LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge
+	case YES, LinkMultiBattle_EventScript_TryLinkMultiBattle
 	case NO, EventScript_DoTrainerBattle
 	case MULTI_B_PRESSED, EventScript_DoTrainerBattle
 
