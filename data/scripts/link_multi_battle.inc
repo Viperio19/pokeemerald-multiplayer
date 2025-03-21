@@ -22,7 +22,8 @@ LinkMultiBattle_EventScript_PrepareParty::
 LinkMultiBattle_EventScript_WaitForLinkOpponentLoad::
 	tower_loadvaropponents
 	delay 1
-	goto_if_lt VAR_RESULT, 10, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
+	goto_if_lt VAR_RESULT, 11, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
+	goto_if_eq VAR_RESULT, 12, LinkMultiBattle_EventScript_DoRegularBattle
 	goto_if_eq VAR_0x8009, TRUE, LinkMultiBattle_EventScript_SelectedDifferentTrainer
 	goto LinkMultiBattle_EventScript_DoLinkMultiBattle
 	end

@@ -2842,8 +2842,10 @@ static void LoadLinkMultiOpponentsData(void)
 
 static void LoadLinkMultiOpponentsDataFromVar(void)
 {
-    u8 result;
-    DebugPrintf("gSpecialVar_Result = %d.", gSpecialVar_Result);
+    if (JOY_NEW(B_BUTTON) && gSpecialVar_Result < 11) {
+        gSpecialVar_Result = 12;
+    }
+
     switch (gSpecialVar_Result)
     {
     case 0:
@@ -2858,16 +2860,12 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
         {
             gSpecialVar_0x8007 = gTrainerBattleOpponent_A;
             gSpecialVar_0x8008 = gTrainerBattleOpponent_B;
-            result = BitmaskAllOtherLinkPlayers();
-            DebugPrintf("BitmaskAllOtherLinkPlayers() = %d.", result);
-            SendBlock(result, &gTrainerBattleOpponent_A, sizeof(gTrainerBattleOpponent_A));
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gTrainerBattleOpponent_A, sizeof(gTrainerBattleOpponent_A));
             gSpecialVar_Result = 2;
         }
         break;
     case 2:
-        result = GetBlockReceivedStatus() & 3;
-        DebugPrintf("(GetBlockReceivedStatus() & 3) = %d.", result);
-        if (result == 3)
+        if ((GetBlockReceivedStatus() & 3) == 3)
         {
             ResetBlockReceivedFlags();
             if (gBlockRecvBuffer[0][0] > gBlockRecvBuffer[1][0])
@@ -2952,7 +2950,7 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
             gSpecialVar_Result = 11;
         }
         break;
-    case 11:
+    default:
         return;
     }
 }
