@@ -3274,7 +3274,7 @@ static void Cmd_getexp(void)
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
-              | BATTLE_TYPE_EREADER_TRAINER)) && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)))
+              | BATTLE_TYPE_EREADER_TRAINER)) && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)))
         {
             gBattleScripting.getexpState = 6; // goto last case
         }
@@ -3534,13 +3534,30 @@ static void Cmd_getexp(void)
 static void Cmd_checkteamslost(void)
 {
     u16 HP_count = 0;
+    u16 HP_count_partner = 1;
     s32 i;
 
     if (gBattleControllerExecFlags)
         return;
 
     // Get total HP for the player's party to determine if the player has lost
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId == TRAINER_STEVEN_PARTNER)
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
+    {
+        for (i = 0; i < MULTI_PARTY_SIZE; i++)
+        {
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+                HP_count += GetMonData(&gPlayerParty[i], MON_DATA_HP);
+        }
+
+        HP_count_partner = 0;
+
+        for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+        {
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+                HP_count_partner += GetMonData(&gPlayerParty[i], MON_DATA_HP);
+        }
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId == TRAINER_STEVEN_PARTNER)
     {
         // In multi battle with Steven, skip his Pokémon
         for (i = 0; i < MULTI_PARTY_SIZE; i++)
@@ -3560,7 +3577,7 @@ static void Cmd_checkteamslost(void)
             }
         }
     }
-    if (HP_count == 0)
+    if (HP_count == 0 || HP_count_partner == 0)
         gBattleOutcome |= B_OUTCOME_LOST;
     HP_count = 0;
 
@@ -4683,7 +4700,7 @@ static void Cmd_switchinanim(void)
                                  | BATTLE_TYPE_EREADER_TRAINER
                                  | BATTLE_TYPE_RECORDED_LINK
                                  | BATTLE_TYPE_TRAINER_HILL
-                                 | BATTLE_TYPE_FRONTIER)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)))
+                                 | BATTLE_TYPE_FRONTIER)) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
         HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
 
     gAbsentBattlerFlags &= ~(gBitTable[gActiveBattler]);
@@ -7472,7 +7489,7 @@ static void Cmd_tryconversiontypechange(void)
 
 static void Cmd_givepaydaymoney(void)
 {
-    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)) && gPaydayMoney != 0)
+    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI) && gPaydayMoney != 0)
     {
         u32 bonusMoney = gPaydayMoney * gBattleStruct->moneyMultiplier;
         AddMoney(&gSaveBlock1Ptr->money, bonusMoney);

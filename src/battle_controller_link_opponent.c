@@ -1312,17 +1312,19 @@ static void LinkOpponentHandleTrainerSlide(void)
 {
     u32 trainerPicId;
 
-    if (gActiveBattler == 1)
-        trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_A);
-    else
-        trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_B);
-
-    if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
     {
         if (gActiveBattler == 1)
             trainerPicId = gTrainers[gTrainerBattleOpponent_A].trainerPic;
         else
             trainerPicId = gTrainers[gTrainerBattleOpponent_B].trainerPic;      
+    }
+    else
+    {
+        if (gActiveBattler == 1)
+            trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_A);
+        else
+            trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_B);
     }
 
     DecompressTrainerFrontPic(trainerPicId, gActiveBattler);

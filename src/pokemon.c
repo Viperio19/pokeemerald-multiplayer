@@ -2701,7 +2701,7 @@ static u16 GetDeoxysStat(struct Pokemon *mon, s32 statId)
     u16 statValue = 0;
     u8 nature;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_LINK_IN_BATTLE && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK_IN_BATTLE && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
         || GetMonData(mon, MON_DATA_SPECIES, NULL) != SPECIES_DEOXYS)
         return 0;
 
@@ -3407,7 +3407,7 @@ u8 CountAliveMonsInBattle(u8 caseId)
 
 static bool8 ShouldGetStatBadgeBoost(u16 badgeFlag, u8 battlerId)
 {
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER) && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER) && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
         return FALSE;
     else if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
         return FALSE;
@@ -6407,7 +6407,7 @@ u16 GetBattleBGM(void)
     {
         return MUS_VS_REGI;
     }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    else if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
     {
         return MUS_VS_TRAINER;
     }

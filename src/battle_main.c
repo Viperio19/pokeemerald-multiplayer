@@ -683,7 +683,7 @@ static void CB2_InitBattleInternal(void)
     SetVBlankCallback(VBlankCB_Battle);
     SetUpBattleVarsAndBirchZigzagoon();
 
-    if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
         SetMainCallback2(CB2_HandleStartMultiPartnerBattle);
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_TOWER_OR_LINK_MULTI)
         SetMainCallback2(CB2_HandleStartMultiPartnerBattle);
@@ -1200,7 +1200,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
                 gLinkPlayers[2].id = 1;
                 gLinkPlayers[3].id = 3;
 
-                if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+                if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
                 {
                     StringCopy(gLinkPlayers[2].name, gTrainers[gTrainerBattleOpponent_A].trainerName);
                     StringCopy(gLinkPlayers[3].name, gTrainers[gTrainerBattleOpponent_B].trainerName);
@@ -1249,7 +1249,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
             FindLinkBattleMaster(2, playerMultiplayerId);
             SetAllPlayersBerryData();
 
-            if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+            if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
                 taskId = CreateTask(InitLinkMultiBattleVsScreen, 0);
             else
                 taskId = CreateTask(InitLinkBattleVsScreen, 0);
@@ -1414,7 +1414,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         // Finish, start battle
         if (BattleInitAllSprites(&gBattleCommunication[SPRITES_INIT_STATE1], &gBattleCommunication[SPRITES_INIT_STATE2]))
         {
-            if (!BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+            if (!(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
                 TrySetLinkBattleTowerEnemyPartyLevel();
             
             gPreBattleCallback1 = gMain.callback1;
@@ -3463,7 +3463,7 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
-                                      | BATTLE_TYPE_TRAINER_HILL)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)))
+                                      | BATTLE_TYPE_TRAINER_HILL)) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
             {
                 HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
             }
@@ -3476,7 +3476,7 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
-                                      | BATTLE_TYPE_TRAINER_HILL)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+                                      | BATTLE_TYPE_TRAINER_HILL)) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
                 {
                     HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
                 }
@@ -3489,14 +3489,14 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
             if (GetBattlerPosition(gActiveBattler) == B_POSITION_PLAYER_RIGHT
-             || (GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI_2_VS_1)))
+             || (GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)))
             {
                 BtlController_EmitDrawTrainerPic(BUFFER_A);
                 MarkBattlerForControllerExec(gActiveBattler);
             }
         }
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI_2_VS_1))
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
         {
             BtlController_EmitDrawTrainerPic(BUFFER_A);
             MarkBattlerForControllerExec(gActiveBattler);
@@ -3713,7 +3713,7 @@ static void BattleIntroRecordMonsToDex(void)
                                       | BATTLE_TYPE_FRONTIER
                                       | BATTLE_TYPE_LINK
                                       | BATTLE_TYPE_RECORDED_LINK
-                                      | BATTLE_TYPE_TRAINER_HILL)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags)))
+                                      | BATTLE_TYPE_TRAINER_HILL)) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
             {
                 HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[gActiveBattler].species), FLAG_SET_SEEN, gBattleMons[gActiveBattler].personality);
             }
@@ -4258,7 +4258,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     break;
                 case B_ACTION_RUN:
-                    if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+                    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
                     {
                         RecordedBattle_ClearBattlerAction(gActiveBattler, 1);
                         gSelectionBattleScripts[gActiveBattler] = BattleScript_ActionSelectionCantRunFromTrainer;
@@ -4672,7 +4672,8 @@ u8 GetWhoStrikesFirst(u8 battler1, u8 battler2, bool8 ignoreChosenMoves)
     }
 
     // badge boost
-    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
+     || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
         && FlagGet(FLAG_BADGE03_GET)
         && GetBattlerSide(battler1) == B_SIDE_PLAYER)
     {
@@ -4706,7 +4707,8 @@ u8 GetWhoStrikesFirst(u8 battler1, u8 battler2, bool8 ignoreChosenMoves)
     }
 
     // badge boost
-    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER)) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if ((!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
+     || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
         && FlagGet(FLAG_BADGE03_GET)
         && GetBattlerSide(battler2) == B_SIDE_PLAYER)
     {
@@ -4996,7 +4998,7 @@ static void HandleEndTurn_BattleWon(void)
 {
     gCurrentActionFuncId = 0;
 
-    if (BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
     {
         BattleStopLowHpSound();
         gSpecialVar_Result = gBattleOutcome;
@@ -5083,7 +5085,7 @@ static void HandleEndTurn_BattleLost(void)
 {
     gCurrentActionFuncId = 0;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
     {
         if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
         {
@@ -5233,7 +5235,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
     }
 
     FreeAllWindowBuffers();
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
     {
         FreeMonSpritesGfx();
         FreeBattleResources();
@@ -5280,13 +5282,13 @@ static void WaitForEvoSceneToFinish(void)
 
 static void ReturnFromBattleToOverworld(void)
 {
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) || BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) || gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
     {
         RandomlyGivePartyPokerus(gPlayerParty);
         PartySpreadPokerus(gPlayerParty);
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gReceivedRemoteLinkPlayers && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gReceivedRemoteLinkPlayers && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
         return;
 
     gSpecialVar_Result = gBattleOutcome;

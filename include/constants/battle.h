@@ -73,7 +73,7 @@
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
 #define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
 #define BATTLE_TYPE_SECRET_BASE        (1 << 27)
-#define BATTLE_TYPE_LINK_MULTI_2_VS_1  (1 << 28)
+#define BATTLE_TYPE_LINK_MULTI         (1 << 28)
 #define BATTLE_TYPE_KYOGRE             (1 << 29)
 #define BATTLE_TYPE_RAYQUAZA           (1 << 30)
 #define BATTLE_TYPE_RECORDED_IS_MASTER (1 << 31)
@@ -88,8 +88,7 @@
 #define BATTLE_TYPE_TOWER_OR_LINK_MULTI     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_TOWER_LINK_MULTI)
 
 #define BATTLE_TYPE_IS_GROUDON(flags)                (flags & BATTLE_TYPE_KYOGRE && flags & BATTLE_TYPE_RAYQUAZA)
-#define BATTLE_TYPE_LINK_MULTI_NO_TOWER(flags)       (flags & BATTLE_TYPE_TOWER_LINK_MULTI && !(flags & BATTLE_TYPE_BATTLE_TOWER)) 
-#define BATTLE_TYPE_TOWER_OR_LINK_2_OPPONENTS(flags) (flags & BATTLE_TYPE_TOWER_OR_LINK_MULTI && !(flags & BATTLE_TYPE_LINK_MULTI_2_VS_1)) 
+#define BATTLE_TYPE_LINK_MULTI_2_VS_1(flags)         (flags & BATTLE_TYPE_LINK_MULTI && !(flags & BATTLE_TYPE_TWO_OPPONENTS))
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1

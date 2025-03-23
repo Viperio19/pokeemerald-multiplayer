@@ -225,6 +225,14 @@ void LoadPlayerPartyAfterLinkMultiBattle(void)
         slot++;
     }
 
+    slot = PARTY_SIZE - 1;
+
+    while (GetMonData(&gSaveBlock1Ptr->playerParty[slot], MON_DATA_SPECIES, 0) == SPECIES_NONE)
+    {
+        gPlayerParty[slot] = gSaveBlock1Ptr->playerParty[slot];
+        slot--;
+    }
+
     gPlayerPartyCount = gSaveBlock1Ptr->playerPartyCount;
 }
 

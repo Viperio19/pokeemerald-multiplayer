@@ -2953,6 +2953,8 @@ BattleScript_LocalBattleLostPrintWhiteOut::
 	waitmessage B_WAIT_TIME_LONG
 	printstring STRINGID_PLAYERWHITEOUT2
 	waitmessage B_WAIT_TIME_LONG
+	jumpifnotbattletype BATTLE_TYPE_LINK_MULTI, BattleScript_LocalBattleLostEnd
+	endlinkbattle
 BattleScript_LocalBattleLostEnd::
 	end2
 BattleScript_CheckDomeDrew::

@@ -41,16 +41,25 @@ LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	waitmessage
 	special DoLinkMultiBattle
 	waitstate
-	special LoadPlayerPartyAfterLinkMultiBattle
 	special SavePlayerParty
 	gotobeatenscript
 	releaseall
 	end
 
 EventScript_SetUpLinkMultiBattleConnection::
+	specialvar VAR_RESULT, IsLinkConnectionEstablished
+	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_LinkIsAlreadyEstablished
 	specialvar VAR_RESULT, IsWirelessAdapterConnected
 	goto_if_eq VAR_RESULT, TRUE, LinkMultiBattle_EventScript_TryWirelessLink
 	goto LinkMultiBattle_EventScript_TryCableLink
+
+LinkMultiBattle_EventScript_LinkIsAlreadyEstablished::
+	message LinkMultiBattle_Text_LinkIsAlreadyEstablished
+	waitmessage
+	delay 60
+	closemessage
+	releaseall
+	end
 
 LinkMultiBattle_EventScript_TryCableLink::
 	message gText_PleaseWaitForLink
@@ -128,6 +137,9 @@ LinkMultiBattle_Text_SelectedDifferentTrainer:
 
 LinkMultiBattle_Text_InitiatingLinkBattle:
 	.string "Initiating link battle.$"
+
+LinkMultiBattle_Text_LinkIsAlreadyEstablished:
+	.string "Link is already established.$"
 
 LinkMultiBattle_Text_LinkConnectionEstablished:
 	.string "Link established!$"

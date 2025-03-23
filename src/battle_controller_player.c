@@ -28,6 +28,7 @@
 #include "text.h"
 #include "util.h"
 #include "window.h"
+#include "load_save.h"
 #include "constants/battle_anim.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -883,7 +884,7 @@ void SetBattleEndCallbacks(void)
 {
     if (!gPaletteFade.active)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK && !BATTLE_TYPE_LINK_MULTI_NO_TOWER(gBattleTypeFlags))
+        if (gBattleTypeFlags & BATTLE_TYPE_LINK && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
         {
             if (IsLinkTaskFinished())
             {
@@ -3139,6 +3140,7 @@ static void PlayerHandleEndLinkBattle(void)
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     PlayerBufferExecCompleted();
+    LoadPlayerPartyAfterLinkMultiBattle();
     gBattlerControllerFuncs[gActiveBattler] = SetBattleEndCallbacks;
 }
 

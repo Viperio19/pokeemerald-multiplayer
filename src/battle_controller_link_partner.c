@@ -24,6 +24,7 @@
 #include "text.h"
 #include "util.h"
 #include "window.h"
+#include "load_save.h"
 #include "constants/battle_anim.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
@@ -1689,6 +1690,7 @@ static void LinkPartnerHandleEndLinkBattle(void)
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     LinkPartnerBufferExecCompleted();
+    LoadPlayerPartyAfterLinkMultiBattle();
     gBattlerControllerFuncs[gActiveBattler] = SetBattleEndCallbacks;
 }
 
