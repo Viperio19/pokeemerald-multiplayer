@@ -1735,6 +1735,11 @@ static void Task_StartSendOutAnim(u8 taskId)
         gBattleBufferA[gActiveBattler][1] = gBattlerPartyIndexes[gActiveBattler];
         StartSendOutAnim(gActiveBattler, FALSE);
     }
+    else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+    {
+        gBattleBufferA[gActiveBattler][1] = gBattlerPartyIndexes[gActiveBattler];
+        StartSendOutAnim(gActiveBattler, FALSE);
+    }
     else
     {
         gBattleBufferA[gActiveBattler][1] = gBattlerPartyIndexes[gActiveBattler];

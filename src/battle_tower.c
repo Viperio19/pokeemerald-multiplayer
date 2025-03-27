@@ -2181,7 +2181,7 @@ void DoLinkMultiBattle(void)
     BattleSetup_SetCBEndTrainerBattle();
 
     ZeroEnemyPartyMons();
-    FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A);
+    // FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A);
     // FillSpecialTrainerParty(gTrainerBattleOpponent_A, 0, 3, VarGet(VAR_UNUSED_0x404E));
     // FillSpecialTrainerParty(gTrainerBattleOpponent_B, 3, 3, VarGet(VAR_UNUSED_0x404E));
 

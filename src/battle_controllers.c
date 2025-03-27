@@ -494,7 +494,11 @@ static void InitLinkBtlControllers(void)
         gBattlerPartyIndexes[0] = 0;
         gBattlerPartyIndexes[1] = 0;
         gBattlerPartyIndexes[2] = 3;
-        gBattlerPartyIndexes[3] = 3;
+        if (BATTLE_TYPE_LINK_MULTI_2_VS_1(gBattleTypeFlags))
+            gBattlerPartyIndexes[3] = 1; // let trainer in 2 VS 1 send out their second pokemon
+        else
+            gBattlerPartyIndexes[3] = 3;
+
     }
     else
     {

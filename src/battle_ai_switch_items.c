@@ -668,7 +668,7 @@ u8 GetMostSuitableMonToSwitchInto(void)
         battlerIn2 = gActiveBattler;
     }
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
+    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1(gBattleTypeFlags))
     {
         if ((gActiveBattler & BIT_FLANK) == B_FLANK_LEFT)
             firstId = 0, lastId = PARTY_SIZE / 2;

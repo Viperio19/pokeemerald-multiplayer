@@ -89,6 +89,8 @@
 
 #define BATTLE_TYPE_IS_GROUDON(flags)                (flags & BATTLE_TYPE_KYOGRE && flags & BATTLE_TYPE_RAYQUAZA)
 #define BATTLE_TYPE_LINK_MULTI_2_VS_1(flags)         (flags & BATTLE_TYPE_LINK_MULTI && !(flags & BATTLE_TYPE_TWO_OPPONENTS))
+#define BATTLE_TYPE_MULTI_NOT_LINK_SOLO(flags)       (flags & BATTLE_TYPE_MULTI && !BATTLE_TYPE_LINK_MULTI_2_VS_1(flags))
+#define BATTLE_TWO_VS_ONE_OPPONENT                   ((gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI && gTrainerBattleOpponent_B == 0xFFFF))
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1
