@@ -2178,13 +2178,10 @@ void DoLinkMultiBattle(void)
 {
     gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI | BATTLE_TYPE_LINK_MULTI;
 
+    if (gNoOfApproachingTrainers == 2)
+        gBattleTypeFlags |= BATTLE_TYPE_TWO_OPPONENTS;
+
     BattleSetup_SetCBEndTrainerBattle();
-
-    ZeroEnemyPartyMons();
-    // FillSpecialSingleTrainerParty(gTrainerBattleOpponent_A);
-    // FillSpecialTrainerParty(gTrainerBattleOpponent_A, 0, 3, VarGet(VAR_UNUSED_0x404E));
-    // FillSpecialTrainerParty(gTrainerBattleOpponent_B, 3, 3, VarGet(VAR_UNUSED_0x404E));
-
     DoTrainerBattle();
 }
 

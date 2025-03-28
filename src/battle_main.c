@@ -3496,7 +3496,7 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
             }
         }
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetBattlerPosition(gActiveBattler) == B_POSITION_OPPONENT_RIGHT)
         {
             BtlController_EmitDrawTrainerPic(BUFFER_A);
             MarkBattlerForControllerExec(gActiveBattler);
@@ -3691,7 +3691,7 @@ static void BattleIntroOpponent1SendsOutMonAnimation(void)
         {
             BtlController_EmitIntroTrainerBallThrow(BUFFER_A);
             MarkBattlerForControllerExec(gActiveBattler);
-            if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS))
+            if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && CalculateEnemyPartyCount() > 1)
             {
                 gBattleMainFunc = BattleIntroOpponent2SendsOutMonAnimation;
                 return;

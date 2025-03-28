@@ -64,7 +64,7 @@ static bool8 ShouldSwitchIfWonderGuard(void)
     }
 
     // Get party information.
-    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
+    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1)
     {
         if ((gActiveBattler & BIT_FLANK) == B_FLANK_LEFT)
             firstId = 0, lastId = PARTY_SIZE / 2;
@@ -160,7 +160,7 @@ static bool8 FindMonThatAbsorbsOpponentsMove(void)
     if (gBattleMons[gActiveBattler].ability == absorbingTypeAbility)
         return FALSE;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
+    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1)
     {
         if ((gActiveBattler & BIT_FLANK) == B_FLANK_LEFT)
             firstId = 0, lastId = PARTY_SIZE / 2;
@@ -358,7 +358,7 @@ static bool8 FindMonWithFlagsAndSuperEffective(u8 flags, u8 moduloPercent)
         battlerIn2 = gActiveBattler;
     }
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
+    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1)
     {
         if ((gActiveBattler & BIT_FLANK) == 0)
             firstId = 0, lastId = PARTY_SIZE / 2;
@@ -467,7 +467,7 @@ static bool8 ShouldSwitch(void)
         battlerIn2 = *activeBattlerPtr;
     }
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
+    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1)
     {
         if ((gActiveBattler & BIT_FLANK) == B_FLANK_LEFT)
             firstId = 0, lastId = PARTY_SIZE / 2;
@@ -558,7 +558,7 @@ void AI_TrySwitchOrUseItem(void)
                         battlerIn2 = GetBattlerAtPosition(BATTLE_PARTNER(battlerIdentity));
                     }
 
-                    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
+                    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1)
                     {
                         if ((gActiveBattler & BIT_FLANK) == B_FLANK_LEFT)
                             firstId = 0, lastId = PARTY_SIZE / 2;
@@ -668,7 +668,7 @@ u8 GetMostSuitableMonToSwitchInto(void)
         battlerIn2 = gActiveBattler;
     }
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1(gBattleTypeFlags))
+    if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI) && !BATTLE_TYPE_LINK_MULTI_2_VS_1)
     {
         if ((gActiveBattler & BIT_FLANK) == B_FLANK_LEFT)
             firstId = 0, lastId = PARTY_SIZE / 2;
