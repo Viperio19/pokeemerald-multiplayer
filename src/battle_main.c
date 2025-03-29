@@ -3137,6 +3137,10 @@ static void BattleStartClearSetData(void)
     gBattleStruct->wildVictorySong = 0;
     gBattleStruct->moneyMultiplier = 1;
 
+    // "faint" the opponent's second pokemon if there should not be a second pokemon in a link multi battle
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI && CalculateEnemyPartyCount() == 1)
+        gAbsentBattlerFlags |= gBitTable[B_POSITION_OPPONENT_RIGHT];
+
     for (i = 0; i < 8; i++)
     {
         *((u8 *)gBattleStruct->lastTakenMove + i) = MOVE_NONE;
