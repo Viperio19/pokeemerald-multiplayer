@@ -1755,8 +1755,8 @@ void CB2_ContinueSavedGame(void)
 
 static void FieldClearVBlankHBlankCallbacks(void)
 {
-    if (UsedPokemonCenterWarp() == TRUE)
-        CloseLink();
+    // if (UsedPokemonCenterWarp() == TRUE)
+    //     CloseLink();
 
     if (gWirelessCommType != 0)
     {
