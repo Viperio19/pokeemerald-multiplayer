@@ -6,12 +6,14 @@
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "battle_setup.h"
+#include "battle_script_commands.h"
 #include "battle_tower.h"
 #include "battle_tv.h"
 #include "bg.h"
 #include "data.h"
 #include "link.h"
 #include "main.h"
+#include "money.h"
 #include "m4a.h"
 #include "palette.h"
 #include "pokeball.h"
@@ -1684,6 +1686,16 @@ static void LinkPartnerHandleResetActionMoveSelection(void)
 
 static void LinkPartnerHandleEndLinkBattle(void)
 {
+    u32 moneyReward;
+
+    gBattleStruct->moneyMultiplier = 1;
+
+    moneyReward = GetTrainerMoneyToGive(gTrainerBattleOpponent_A);
+    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        moneyReward += GetTrainerMoneyToGive(gTrainerBattleOpponent_B);
+
+    AddMoney(&gSaveBlock1Ptr->money, moneyReward);
+
     RecordedBattle_RecordAllBattlerData(&gBattleBufferA[gActiveBattler][4]);
     gBattleOutcome = gBattleBufferA[gActiveBattler][1];
     gSaveBlock2Ptr->frontier.disableRecordBattle = gBattleBufferA[gActiveBattler][2];

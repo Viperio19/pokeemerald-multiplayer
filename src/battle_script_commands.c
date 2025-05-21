@@ -3269,14 +3269,14 @@ static void Cmd_getexp(void)
     case 0: // check if should receive exp at all
         if (GetBattlerSide(gBattlerFainted) != B_SIDE_OPPONENT
         || gSpeciesInfo[gBattleMons[gBattlerFainted].species].expYield == 0
-        || ((gBattleTypeFlags &
+        || (gBattleTypeFlags &
              (BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
               | BATTLE_TYPE_TRAINER_HILL
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_SAFARI
               | BATTLE_TYPE_BATTLE_TOWER
-              | BATTLE_TYPE_EREADER_TRAINER)) && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)))
+              | BATTLE_TYPE_EREADER_TRAINER)))
         {
             gBattleScripting.getexpState = 6; // goto last case
         }
@@ -5594,7 +5594,7 @@ static void Cmd_hitanimation(void)
     }
 }
 
-static u32 GetTrainerMoneyToGive(u16 trainerId)
+u32 GetTrainerMoneyToGive(u16 trainerId)
 {
     u32 i = 0;
     u32 lastMonLevel = 0;
