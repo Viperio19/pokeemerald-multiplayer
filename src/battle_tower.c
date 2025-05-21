@@ -61,6 +61,8 @@ static void BattleTowerNop2(void);
 static void LoadMultiPartnerCandidatesData(void);
 static void ShowPartnerCandidateMessage(void);
 static void LoadLinkMultiOpponentsData(void);
+static bool8 IsRustboroRival(u16 trainerId);
+static bool8 IsSameRivalBattle(void);
 static void LoadLinkMultiOpponentsDataFromVar(void);
 static void TowerTryCloseLink(void);
 static void SetMultiPartnerGfx(void);
@@ -2837,6 +2839,37 @@ static void LoadLinkMultiOpponentsData(void)
     }
 }
 
+static const u16 sRustboroRivals[] = {
+    TRAINER_BRENDAN_RUSTBORO_TREECKO,
+    TRAINER_BRENDAN_RUSTBORO_MUDKIP,
+    TRAINER_BRENDAN_RUSTBORO_TORCHIC,
+    TRAINER_MAY_RUSTBORO_TREECKO,
+    TRAINER_MAY_RUSTBORO_MUDKIP,
+    TRAINER_MAY_RUSTBORO_TORCHIC,
+};
+
+static bool8 IsRustboroRival(u16 trainerId) {
+    u8 i;
+    for (i = 0; i < 6; i++) {
+        if (trainerId == sRustboroRivals[i]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+static bool8 IsSameRivalBattle(void) {
+    if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_RIVAL && gTrainers[gSpecialVar_0x8007].trainerClass == TRAINER_CLASS_RIVAL
+     && ((gTrainerBattleOpponent_A - gSpecialVar_0x8007) % 3 == 0
+      || (TRAINER_BRENDAN_LILYCOVE_MUDKIP < gTrainerBattleOpponent_A && gTrainerBattleOpponent_A < TRAINER_MAY_LILYCOVE_TORCHIC
+       && TRAINER_BRENDAN_LILYCOVE_MUDKIP < gSpecialVar_0x8007 && gSpecialVar_0x8007 < TRAINER_MAY_LILYCOVE_TORCHIC)
+      || (IsRustboroRival(gTrainerBattleOpponent_A) && IsRustboroRival(gSpecialVar_0x8007)))) {
+        return TRUE;
+     }
+
+    return FALSE;
+}
+
 static void LoadLinkMultiOpponentsDataFromVar(void)
 {
     if (JOY_NEW(B_BUTTON) && gSpecialVar_Result < 11) {
@@ -2941,8 +2974,17 @@ static void LoadLinkMultiOpponentsDataFromVar(void)
         {
             if (gSpecialVar_0x8009)
             {
-                gTrainerBattleOpponent_A = gSpecialVar_0x8007;
-                gTrainerBattleOpponent_B = gSpecialVar_0x8008;
+                if (IsSameRivalBattle()) {
+                    gSpecialVar_0x8009 = FALSE;
+                    if (!IsLinkMaster()) {
+                        gTrainerBattleOpponent_A = gSpecialVar_0x8007;
+                        gTrainerBattleOpponent_B = gSpecialVar_0x8008;
+                    }
+
+                } else {
+                    gTrainerBattleOpponent_A = gSpecialVar_0x8007;
+                    gTrainerBattleOpponent_B = gSpecialVar_0x8008;
+                }
             }
             gSpecialVar_Result = 11;
         }

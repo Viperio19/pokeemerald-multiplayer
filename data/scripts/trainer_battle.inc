@@ -47,6 +47,18 @@ EventScript_DoNoIntroTrainerBattle::
 	applymovement VAR_LAST_TALKED, Movement_RevealTrainer
 	waitmovement 0
 	special PlayTrainerEncounterMusic
+	specialvar VAR_RESULT, IsLinkConnectionEstablished
+	goto_if_eq VAR_RESULT, FALSE, EventScript_DoNoIntroSoloBattle
+	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
+	switch VAR_RESULT
+	case YES, LinkMultiBattle_EventScript_TryLinkMultiBattle
+	case NO, EventScript_InitiateNoIntroSoloBattle
+	case MULTI_B_PRESSED, EventScript_InitiateNoIntroSoloBattle
+
+EventScript_InitiateNoIntroSoloBattle::
+	message EventScript_Text_InitiatingSoloBattle
+	waitmessage
+EventScript_DoNoIntroSoloBattle::
 	dotrainerbattle
 	gotopostbattlescript
 
@@ -112,12 +124,13 @@ EventScript_ShowTrainerIntroMsg::
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
 	case YES, LinkMultiBattle_EventScript_TryLinkMultiBattle
-	case NO, EventScript_DoTrainerBattle
-	case MULTI_B_PRESSED, EventScript_DoTrainerBattle
+	case NO, EventScript_InitiateSoloBattle
+	case MULTI_B_PRESSED, EventScript_InitiateSoloBattle
 
-EventScript_DoTrainerBattle::
+EventScript_InitiateSoloBattle::
 	message EventScript_Text_InitiatingSoloBattle
 	waitmessage
+EventScript_DoTrainerBattle::
 	dotrainerbattle
 	@ Below battle mode check only needed in FRLG
 	specialvar VAR_RESULT, GetTrainerBattleMode

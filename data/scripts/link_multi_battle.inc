@@ -34,7 +34,7 @@ LinkMultiBattle_EventScript_SelectedDifferentTrainer::
 
 LinkMultiBattle_EventScript_DoRegularBattle::
 	special LoadPlayerParty
-	goto EventScript_DoTrainerBattle
+	goto EventScript_InitiateSoloBattle
 
 LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	message LinkMultiBattle_Text_InitiatingLinkBattle
