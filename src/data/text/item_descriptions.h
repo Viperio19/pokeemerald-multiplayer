@@ -281,6 +281,11 @@ static const u8 sRareCandyDesc[] = _(
     "of a POKéMON by\n"
     "one.");
 
+static const u8 sRarerCandyDesc[] = _(
+    "A reusable candy\n"
+    "that raised a\n"
+    "POKéMON's level.");
+
 static const u8 sPPUpDesc[] = _(
     "Raises the maximum\n"
     "PP of a selected\n"

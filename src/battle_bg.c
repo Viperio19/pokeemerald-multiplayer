@@ -1032,7 +1032,7 @@ void InitLinkMultiBattleVsScreen(u8 taskId)
         gTasks[taskId].data[0]++;
         break;
     case 1:
-        PlaySE(SE_M_HARDEN);
+        // PlaySE(SE_M_HARDEN);
         DestroyTask(taskId);
         gSprites[gBattleStruct->linkBattleVsSpriteId_S].oam.tileNum += 0x40;
         gSprites[gBattleStruct->linkBattleVsSpriteId_V].data[0] = 0;

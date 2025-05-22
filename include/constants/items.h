@@ -417,7 +417,9 @@
 #define ITEM_MAGMA_EMBLEM 375
 #define ITEM_OLD_SEA_MAP 376
 
-#define ITEMS_COUNT 377
+#define ITEM_RARER_CANDY 377
+
+#define ITEMS_COUNT 378
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
 // Its icon is defined at ITEMS_COUNT as the "return to field" arrow
@@ -477,6 +479,6 @@
 #define ITEM_B_USE_OTHER    2
 
 // Check if the item is one that can be used on a Pokémon.
-#define ITEM_HAS_EFFECT(item) ((item) >= ITEM_POTION && (item) <= MAX_BERRY_INDEX)
+#define ITEM_HAS_EFFECT(item) ((item) >= ITEM_POTION && ((item) <= MAX_BERRY_INDEX || ((item) >= ITEM_RARER_CANDY && (item) < ITEMS_COUNT)))
 
 #endif  // GUARD_CONSTANTS_ITEMS_H

@@ -74,6 +74,7 @@ const u32 *const gItemIconTable[ITEMS_COUNT + 1][2] =
     [ITEM_CARBOS] = {gItemIcon_Vitamin, gItemIconPalette_Carbos},
     [ITEM_CALCIUM] = {gItemIcon_Vitamin, gItemIconPalette_Calcium},
     [ITEM_RARE_CANDY] = {gItemIcon_RareCandy, gItemIconPalette_RareCandy},
+    [ITEM_RARER_CANDY] = {gItemIcon_RareCandy, gItemIconPalette_RarerCandy},
     [ITEM_PP_UP] = {gItemIcon_PPUp, gItemIconPalette_PPUp},
     [ITEM_ZINC] = {gItemIcon_Vitamin, gItemIconPalette_Zinc},
     [ITEM_PP_MAX] = {gItemIcon_PPMax, gItemIconPalette_PPMax},
