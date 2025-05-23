@@ -1686,19 +1686,22 @@ static void LinkPartnerHandleResetActionMoveSelection(void)
 
 static void LinkPartnerHandleEndLinkBattle(void)
 {
-    u32 moneyReward;
-
-    gBattleStruct->moneyMultiplier = 1;
-
-    moneyReward = GetTrainerMoneyToGive(gTrainerBattleOpponent_A);
-    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-        moneyReward += GetTrainerMoneyToGive(gTrainerBattleOpponent_B);
-
-    AddMoney(&gSaveBlock1Ptr->money, moneyReward);
-
     RecordedBattle_RecordAllBattlerData(&gBattleBufferA[gActiveBattler][4]);
     gBattleOutcome = gBattleBufferA[gActiveBattler][1];
     gSaveBlock2Ptr->frontier.disableRecordBattle = gBattleBufferA[gActiveBattler][2];
+
+    if (gBattleOutcome == B_OUTCOME_WON) {
+        u32 moneyReward;
+
+        gBattleStruct->moneyMultiplier = 1;
+
+        moneyReward = GetTrainerMoneyToGive(gTrainerBattleOpponent_A);
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+            moneyReward += GetTrainerMoneyToGive(gTrainerBattleOpponent_B);
+
+        AddMoney(&gSaveBlock1Ptr->money, moneyReward);
+    }
+
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     LinkPartnerBufferExecCompleted();
