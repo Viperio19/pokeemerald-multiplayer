@@ -27,8 +27,9 @@
 
 #define tRandomizeTrainerPkmn data[1]
 #define tRandomizeWildPkmn data[2]
-#define tRandomizeStarterPkmn data[3]
-#define tRandomizeGiftPkmn data[4]
+#define tRandomizeLegendaryPkmn data[3]
+#define tRandomizeStarterPkmn data[4]
+#define tRandomizeGiftPkmn data[5]
 
 enum
 {
@@ -46,6 +47,7 @@ enum
 {
     MENUITEM_RANDOMIZETRAINERPKMN,
     MENUITEM_RANDOMIZEWILDPKMN,
+    MENUITEM_RANDOMIZELEGENDARYPKMN,
     MENUITEM_RANDOMIZESTARTERPKMN,
     MENUITEM_RANDOMIZEGIFTPKMN,
     MENUITEM_OPTIONS,
@@ -58,6 +60,10 @@ enum
     WIN_OPTIONS
 };
 
+#define XPOS_OPTIONMENU     104
+#define XPOS_RANDOMIZERMENU 100
+#define X_SPACE             8
+
 #define YPOS_TEXTSPEED    (MENUITEM_TEXTSPEED * 16)
 #define YPOS_BATTLESCENE  (MENUITEM_BATTLESCENE * 16)
 #define YPOS_BATTLESTYLE  (MENUITEM_BATTLESTYLE * 16)
@@ -67,6 +73,7 @@ enum
 
 #define YPOS_TRAINER      (MENUITEM_RANDOMIZETRAINERPKMN * 16)
 #define YPOS_WILD         (MENUITEM_RANDOMIZEWILDPKMN * 16)
+#define YPOS_LEGENDARY    (MENUITEM_RANDOMIZELEGENDARYPKMN * 16)
 #define YPOS_STARTER      (MENUITEM_RANDOMIZESTARTERPKMN * 16)
 #define YPOS_GIFT         (MENUITEM_RANDOMIZEGIFTPKMN * 16)
 #define YPOS_OPTIONS      (MENUITEM_OPTIONS * 16)
@@ -100,6 +107,8 @@ static u8 RandomizeTrainerPkmn_ProcessInput(u8 selection);
 static void RandomizeTrainerPkmn_DrawChoices(u8 selection);
 static u8 RandomizeWildPkmn_ProcessInput(u8 selection);
 static void RandomizeWildPkmn_DrawChoices(u8 selection);
+static u8 RandomizeLegendaryPkmn_ProcessInput(u8 selection);
+static void RandomizeLegendaryPkmn_DrawChoices(u8 selection);
 static u8 RandomizeStarterPkmn_ProcessInput(u8 selection);
 static void RandomizeStarterPkmn_DrawChoices(u8 selection);
 static u8 RandomizeGiftPkmn_ProcessInput(u8 selection);
@@ -129,11 +138,12 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
 
 static const u8 *const sRandomizerMenuItemsNames[MENUITEM_RANDOMIZERCOUNT] =
 {
-    [MENUITEM_RANDOMIZETRAINERPKMN] = gText_OptionMenuTrainers,
-    [MENUITEM_RANDOMIZEWILDPKMN]    = gText_OptionMenuWild,
-    [MENUITEM_RANDOMIZESTARTERPKMN] = gText_OptionMenuStarters,
-    [MENUITEM_RANDOMIZEGIFTPKMN]    = gText_OptionMenuGifts,
-    [MENUITEM_OPTIONS] = gText_Option,
+    [MENUITEM_RANDOMIZETRAINERPKMN]   = gText_OptionMenuTrainers,
+    [MENUITEM_RANDOMIZEWILDPKMN]      = gText_OptionMenuWild,
+    [MENUITEM_RANDOMIZELEGENDARYPKMN] = gText_OptionMenuLegendary,
+    [MENUITEM_RANDOMIZESTARTERPKMN]   = gText_OptionMenuStarters,
+    [MENUITEM_RANDOMIZEGIFTPKMN]      = gText_OptionMenuGifts,
+    [MENUITEM_OPTIONS]                = gText_Option,
 };
 
 static const struct WindowTemplate sOptionMenuWinTemplates[] =
@@ -385,11 +395,13 @@ static void CB2_InitRandomizerMenu(void)
         gTasks[taskId].tMenuSelection = 0;
         gTasks[taskId].tRandomizeTrainerPkmn = gSaveBlock2Ptr->randomizeTrainerPkmn;
         gTasks[taskId].tRandomizeWildPkmn = gSaveBlock2Ptr->randomizeWildPkmn;
+        gTasks[taskId].tRandomizeLegendaryPkmn = gSaveBlock2Ptr->randomizeLegendaryPkmn;
         gTasks[taskId].tRandomizeStarterPkmn = gSaveBlock2Ptr->randomizeStarterPkmn;
         gTasks[taskId].tRandomizeGiftPkmn = gSaveBlock2Ptr->randomizeGiftPkmn;
 
         RandomizeTrainerPkmn_DrawChoices(gTasks[taskId].tRandomizeTrainerPkmn);
         RandomizeWildPkmn_DrawChoices(gTasks[taskId].tRandomizeWildPkmn);
+        RandomizeLegendaryPkmn_DrawChoices(gTasks[taskId].tRandomizeLegendaryPkmn);
         RandomizeStarterPkmn_DrawChoices(gTasks[taskId].tRandomizeStarterPkmn);
         RandomizeGiftPkmn_DrawChoices(gTasks[taskId].tRandomizeGiftPkmn);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
@@ -588,6 +600,13 @@ static void Task_RandomizerMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tRandomizeWildPkmn)
                 RandomizeWildPkmn_DrawChoices(gTasks[taskId].tRandomizeWildPkmn);
             break;
+        case MENUITEM_RANDOMIZELEGENDARYPKMN:
+            previousOption = gTasks[taskId].tRandomizeLegendaryPkmn;
+            gTasks[taskId].tRandomizeLegendaryPkmn = RandomizeLegendaryPkmn_ProcessInput(gTasks[taskId].tRandomizeLegendaryPkmn);
+
+            if (previousOption != gTasks[taskId].tRandomizeLegendaryPkmn)
+                RandomizeLegendaryPkmn_DrawChoices(gTasks[taskId].tRandomizeLegendaryPkmn);
+            break;
         case MENUITEM_RANDOMIZESTARTERPKMN:
             previousOption = gTasks[taskId].tRandomizeStarterPkmn;
             gTasks[taskId].tRandomizeStarterPkmn = RandomizeStarterPkmn_ProcessInput(gTasks[taskId].tRandomizeStarterPkmn);
@@ -618,6 +637,7 @@ static void Task_RandomizerMenuToOptionMenu(u8 taskId)
 {
     gSaveBlock2Ptr->randomizeTrainerPkmn = gTasks[taskId].tRandomizeTrainerPkmn;
     gSaveBlock2Ptr->randomizeWildPkmn = gTasks[taskId].tRandomizeWildPkmn;
+    gSaveBlock2Ptr->randomizeLegendaryPkmn = gTasks[taskId].tRandomizeLegendaryPkmn;
     gSaveBlock2Ptr->randomizeStarterPkmn = gTasks[taskId].tRandomizeStarterPkmn;
     gSaveBlock2Ptr->randomizeGiftPkmn = gTasks[taskId].tRandomizeGiftPkmn;
 
@@ -639,6 +659,7 @@ static void Task_RandomizerMenuSave(u8 taskId)
 {
     gSaveBlock2Ptr->randomizeTrainerPkmn = gTasks[taskId].tRandomizeTrainerPkmn;
     gSaveBlock2Ptr->randomizeWildPkmn = gTasks[taskId].tRandomizeWildPkmn;
+    gSaveBlock2Ptr->randomizeLegendaryPkmn = gTasks[taskId].tRandomizeLegendaryPkmn;
     gSaveBlock2Ptr->randomizeStarterPkmn = gTasks[taskId].tRandomizeStarterPkmn;
     gSaveBlock2Ptr->randomizeGiftPkmn = gTasks[taskId].tRandomizeGiftPkmn;
 
@@ -713,14 +734,14 @@ static void TextSpeed_DrawChoices(u8 selection)
     styles[2] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_TextSpeedSlow, 104, YPOS_TEXTSPEED, styles[0]);
+    DrawOptionMenuChoice(gText_TextSpeedSlow, XPOS_OPTIONMENU, YPOS_TEXTSPEED, styles[0]);
 
     widthSlow = GetStringWidth(FONT_NORMAL, gText_TextSpeedSlow, 0);
     widthMid = GetStringWidth(FONT_NORMAL, gText_TextSpeedMid, 0);
     widthFast = GetStringWidth(FONT_NORMAL, gText_TextSpeedFast, 0);
 
     widthMid -= 94;
-    xMid = (widthSlow - widthMid - widthFast) / 2 + 104;
+    xMid = (widthSlow - widthMid - widthFast) / 2 + XPOS_OPTIONMENU;
     DrawOptionMenuChoice(gText_TextSpeedMid, xMid, YPOS_TEXTSPEED, styles[1]);
 
     DrawOptionMenuChoice(gText_TextSpeedFast, GetStringRightAlignXOffset(FONT_NORMAL, gText_TextSpeedFast, 198), YPOS_TEXTSPEED, styles[2]);
@@ -745,7 +766,7 @@ static void BattleScene_DrawChoices(u8 selection)
     styles[1] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_BattleSceneOn, 104, YPOS_BATTLESCENE, styles[0]);
+    DrawOptionMenuChoice(gText_BattleSceneOn, XPOS_OPTIONMENU, YPOS_BATTLESCENE, styles[0]);
     DrawOptionMenuChoice(gText_BattleSceneOff, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleSceneOff, 198), YPOS_BATTLESCENE, styles[1]);
 }
 
@@ -768,7 +789,7 @@ static void BattleStyle_DrawChoices(u8 selection)
     styles[1] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_BattleStyleShift, 104, YPOS_BATTLESTYLE, styles[0]);
+    DrawOptionMenuChoice(gText_BattleStyleShift, XPOS_OPTIONMENU, YPOS_BATTLESTYLE, styles[0]);
     DrawOptionMenuChoice(gText_BattleStyleSet, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleStyleSet, 198), YPOS_BATTLESTYLE, styles[1]);
 }
 
@@ -792,7 +813,7 @@ static void Sound_DrawChoices(u8 selection)
     styles[1] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_SoundMono, 104, YPOS_SOUND, styles[0]);
+    DrawOptionMenuChoice(gText_SoundMono, XPOS_OPTIONMENU, YPOS_SOUND, styles[0]);
     DrawOptionMenuChoice(gText_SoundStereo, GetStringRightAlignXOffset(FONT_NORMAL, gText_SoundStereo, 198), YPOS_SOUND, styles[1]);
 }
 
@@ -850,7 +871,7 @@ static void FrameType_DrawChoices(u8 selection)
 
     text[i] = EOS;
 
-    DrawOptionMenuChoice(gText_FrameType, 104, YPOS_FRAMETYPE, 0);
+    DrawOptionMenuChoice(gText_FrameType, XPOS_OPTIONMENU, YPOS_FRAMETYPE, 0);
     DrawOptionMenuChoice(text, 128, YPOS_FRAMETYPE, 1);
 }
 
@@ -887,14 +908,14 @@ static void ButtonMode_DrawChoices(u8 selection)
     styles[2] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_ButtonTypeNormal, 104, YPOS_BUTTONMODE, styles[0]);
+    DrawOptionMenuChoice(gText_ButtonTypeNormal, XPOS_OPTIONMENU, YPOS_BUTTONMODE, styles[0]);
 
     widthNormal = GetStringWidth(FONT_NORMAL, gText_ButtonTypeNormal, 0);
     widthLR = GetStringWidth(FONT_NORMAL, gText_ButtonTypeLR, 0);
     widthLA = GetStringWidth(FONT_NORMAL, gText_ButtonTypeLEqualsA, 0);
 
     widthLR -= 94;
-    xLR = (widthNormal - widthLR - widthLA) / 2 + 104;
+    xLR = (widthNormal - widthLR - widthLA) / 2 + XPOS_OPTIONMENU;
     DrawOptionMenuChoice(gText_ButtonTypeLR, xLR, YPOS_BUTTONMODE, styles[1]);
 
     DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(FONT_NORMAL, gText_ButtonTypeLEqualsA, 198), YPOS_BUTTONMODE, styles[2]);
@@ -902,71 +923,186 @@ static void ButtonMode_DrawChoices(u8 selection)
 
 static u8 RandomizeTrainerPkmn_ProcessInput(u8 selection)
 {
-    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    if (JOY_NEW(DPAD_RIGHT))
     {
-        selection ^= 1;
+        if (selection <= 1)
+            selection++;
+        else
+            selection = 0;
+
         sArrowPressed = TRUE;
     }
+    if (JOY_NEW(DPAD_LEFT))
+    {
+        if (selection != 0)
+            selection--;
+        else
+            selection = 2;
 
+        sArrowPressed = TRUE;
+    }
     return selection;
 }
 
 static void RandomizeTrainerPkmn_DrawChoices(u8 selection)
 {
-    u8 styles[2];
+    s32 widthNo, widthYes, xYes, xSimilarBST;
+    u8 styles[3];
 
     styles[0] = 0;
     styles[1] = 0;
+    styles[2] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_TRAINER, styles[0]);
-    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_TRAINER, styles[1]);
+    DrawOptionMenuChoice(gText_OptionMenuNo, XPOS_RANDOMIZERMENU, YPOS_TRAINER, styles[0]);
+
+    widthNo = GetStringWidth(FONT_NORMAL, gText_OptionMenuNo, 0);
+    widthYes = GetStringWidth(FONT_NORMAL, gText_OptionMenuYes, 0);
+
+    xYes = XPOS_RANDOMIZERMENU + widthNo + X_SPACE;
+    DrawOptionMenuChoice(gText_OptionMenuYes, xYes, YPOS_TRAINER, styles[1]);
+
+    xSimilarBST = xYes + widthYes + X_SPACE;
+
+    DrawOptionMenuChoice(gText_OptionMenuSimilarBST, xSimilarBST, YPOS_TRAINER, styles[2]);
 }
 
 static u8 RandomizeWildPkmn_ProcessInput(u8 selection)
 {
-    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    if (JOY_NEW(DPAD_RIGHT))
     {
-        selection ^= 1;
+        if (selection <= 1)
+            selection++;
+        else
+            selection = 0;
+
         sArrowPressed = TRUE;
     }
+    if (JOY_NEW(DPAD_LEFT))
+    {
+        if (selection != 0)
+            selection--;
+        else
+            selection = 2;
 
+        sArrowPressed = TRUE;
+    }
     return selection;
 }
 
 static void RandomizeWildPkmn_DrawChoices(u8 selection)
 {
-    u8 styles[2];
+    s32 widthNo, widthYes, xYes, xSimilarBST;
+    u8 styles[3];
 
     styles[0] = 0;
     styles[1] = 0;
+    styles[2] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_WILD, styles[0]);
-    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_WILD, styles[1]);
+    DrawOptionMenuChoice(gText_OptionMenuNo, XPOS_RANDOMIZERMENU, YPOS_WILD, styles[0]);
+
+    widthNo = GetStringWidth(FONT_NORMAL, gText_OptionMenuNo, 0);
+    widthYes = GetStringWidth(FONT_NORMAL, gText_OptionMenuYes, 0);
+
+    xYes = XPOS_RANDOMIZERMENU + widthNo + X_SPACE;
+    DrawOptionMenuChoice(gText_OptionMenuYes, xYes, YPOS_WILD, styles[1]);
+
+    xSimilarBST = xYes + widthYes + X_SPACE;
+
+    DrawOptionMenuChoice(gText_OptionMenuSimilarBST, xSimilarBST, YPOS_WILD, styles[2]);
+}
+
+static u8 RandomizeLegendaryPkmn_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_RIGHT))
+    {
+        if (selection <= 1)
+            selection++;
+        else
+            selection = 0;
+
+        sArrowPressed = TRUE;
+    }
+    if (JOY_NEW(DPAD_LEFT))
+    {
+        if (selection != 0)
+            selection--;
+        else
+            selection = 2;
+
+        sArrowPressed = TRUE;
+    }
+    return selection;
+}
+
+static void RandomizeLegendaryPkmn_DrawChoices(u8 selection)
+{
+    s32 widthNo, widthYes, xYes, xLegendary;
+    u8 styles[3];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[2] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_OptionMenuNo, XPOS_RANDOMIZERMENU, YPOS_LEGENDARY, styles[0]);
+
+    widthNo = GetStringWidth(FONT_NORMAL, gText_OptionMenuNo, 0);
+    widthYes = GetStringWidth(FONT_NORMAL, gText_OptionMenuYes, 0);
+
+    xYes = XPOS_RANDOMIZERMENU + widthNo + X_SPACE;
+    DrawOptionMenuChoice(gText_OptionMenuYes, xYes, YPOS_LEGENDARY, styles[1]);
+
+    xLegendary = xYes + widthYes + X_SPACE;
+
+    DrawOptionMenuChoice(gText_OptionMenuRandomLegendary, xLegendary, YPOS_LEGENDARY, styles[2]);
 }
 
 static u8 RandomizeStarterPkmn_ProcessInput(u8 selection)
 {
-    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    if (JOY_NEW(DPAD_RIGHT))
     {
-        selection ^= 1;
+        if (selection <= 1)
+            selection++;
+        else
+            selection = 0;
+
         sArrowPressed = TRUE;
     }
+    if (JOY_NEW(DPAD_LEFT))
+    {
+        if (selection != 0)
+            selection--;
+        else
+            selection = 2;
 
+        sArrowPressed = TRUE;
+    }
     return selection;
 }
 
 static void RandomizeStarterPkmn_DrawChoices(u8 selection)
 {
-    u8 styles[2];
+    s32 widthNo, widthYes, xYes, xThreeStage;
+    u8 styles[3];
 
     styles[0] = 0;
     styles[1] = 0;
+    styles[2] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_STARTER, styles[0]);
-    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_STARTER, styles[1]);
+    DrawOptionMenuChoice(gText_OptionMenuNo, XPOS_RANDOMIZERMENU, YPOS_STARTER, styles[0]);
+
+    widthNo = GetStringWidth(FONT_NORMAL, gText_OptionMenuNo, 0);
+    widthYes = GetStringWidth(FONT_NORMAL, gText_OptionMenuYes, 0);
+
+    xYes = XPOS_RANDOMIZERMENU + widthNo + X_SPACE;
+    DrawOptionMenuChoice(gText_OptionMenuYes, xYes, YPOS_STARTER, styles[1]);
+
+    xThreeStage = xYes + widthYes + X_SPACE;
+
+    DrawOptionMenuChoice(gText_OptionMenuThreeStage, xThreeStage, YPOS_STARTER, styles[2]);
 }
 
 static u8 RandomizeGiftPkmn_ProcessInput(u8 selection)
@@ -982,14 +1118,18 @@ static u8 RandomizeGiftPkmn_ProcessInput(u8 selection)
 
 static void RandomizeGiftPkmn_DrawChoices(u8 selection)
 {
+    s32 widthNo, xYes;
     u8 styles[2];
 
     styles[0] = 0;
     styles[1] = 0;
     styles[selection] = 1;
 
-    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_GIFT, styles[0]);
-    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_GIFT, styles[1]);
+    widthNo = GetStringWidth(FONT_NORMAL, gText_OptionMenuNo, 0);
+    xYes = XPOS_RANDOMIZERMENU + widthNo + X_SPACE;
+
+    DrawOptionMenuChoice(gText_OptionMenuNo, XPOS_RANDOMIZERMENU, YPOS_GIFT, styles[0]);
+    DrawOptionMenuChoice(gText_OptionMenuYes, xYes, YPOS_GIFT, styles[1]);
 }
 
 static void DrawOptionHeaderText(void)

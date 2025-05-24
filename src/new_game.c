@@ -97,10 +97,11 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
 
-    gSaveBlock2Ptr->randomizeTrainerPkmn = FALSE;
-    gSaveBlock2Ptr->randomizeWildPkmn = FALSE;
-    gSaveBlock2Ptr->randomizeStarterPkmn = FALSE;
-    gSaveBlock2Ptr->randomizeGiftPkmn = FALSE;
+    gSaveBlock2Ptr->randomizeTrainerPkmn = OPTIONS_RANDOM_NO;
+    gSaveBlock2Ptr->randomizeWildPkmn = OPTIONS_RANDOM_NO;
+    gSaveBlock2Ptr->randomizeLegendaryPkmn = OPTIONS_RANDOM_NO;
+    gSaveBlock2Ptr->randomizeStarterPkmn = OPTIONS_RANDOM_NO;
+    gSaveBlock2Ptr->randomizeGiftPkmn = OPTIONS_RANDOM_NO;
 }
 
 static void ClearPokedexFlags(void)

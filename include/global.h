@@ -514,11 +514,12 @@ struct SaveBlock2
              u16 optionsBattleStyle:1; // OPTIONS_BATTLE_STYLE_[SHIFT/SET]
              u16 optionsBattleSceneOff:1; // whether battle animations are disabled
              u16 regionMapZoom:1; // whether the map is zoomed in
-             u16 randomizeTrainerPkmn:1;
-             u16 randomizeWildPkmn:1;
-             u16 randomizeStarterPkmn:1;
-             u16 randomizeGiftPkmn:1;
-             //u16 padding2;
+             u16 randomizeTrainerPkmn:2;
+             u16 randomizeWildPkmn:2;
+             u16 randomizeLegendaryPkmn:2;
+             u16 randomizeStarterPkmn:2;
+             u16 randomizeGiftPkmn:2;
+             //u16 padding2:10;
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;
