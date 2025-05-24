@@ -1,5 +1,6 @@
 #include "global.h"
 #include "frontier_util.h"
+#include "battle_main.h"
 #include "battle_setup.h"
 #include "berry.h"
 #include "clock.h"
@@ -1687,6 +1688,10 @@ bool8 ScrCmd_givemon(struct ScriptContext *ctx)
     u32 unkParam2 = ScriptReadWord(ctx);
     u8 unkParam3 = ScriptReadByte(ctx);
 
+    if (gSaveBlock2Ptr->randomizeGiftPkmn == OPTIONS_RANDOM_YES) {
+        species = GetRandomSpecies(species, item);
+    }
+
     gSpecialVar_Result = ScriptGiveMon(species, level, item, unkParam1, unkParam2, unkParam3);
     return FALSE;
 }
@@ -1866,11 +1871,44 @@ bool8 ScrCmd_cleartrainerflag(struct ScriptContext *ctx)
     return FALSE;
 }
 
+static const u16 sLegendaryPokemon[] =
+{
+    SPECIES_ARTICUNO,
+    SPECIES_ZAPDOS,
+    SPECIES_MOLTRES,
+    SPECIES_MEWTWO,
+    SPECIES_MEW,
+    SPECIES_RAIKOU,
+    SPECIES_ENTEI,
+    SPECIES_SUICUNE,
+    SPECIES_LUGIA,
+    SPECIES_HO_OH,
+    SPECIES_CELEBI,
+    SPECIES_REGIROCK,
+    SPECIES_REGICE,
+    SPECIES_REGISTEEL,
+    SPECIES_KYOGRE,
+    SPECIES_GROUDON,
+    SPECIES_RAYQUAZA,
+    SPECIES_LATIAS,
+    SPECIES_LATIOS,
+    SPECIES_JIRACHI,
+    SPECIES_DEOXYS,
+};
+
 bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
 {
     u16 species = ScriptReadHalfword(ctx);
     u8 level = ScriptReadByte(ctx);
     u16 item = ScriptReadHalfword(ctx);
+
+    if (species >= SPECIES_REGIROCK) {
+        if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_SPECIAL) {
+            species = sLegendaryPokemon[((6 + item) * species ^ gSaveBlock2Ptr->playerTrainerId[0]) % (ARRAY_COUNT(sLegendaryPokemon) + 1)];
+        } else if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_YES) {
+            species = GetRandomSpecies(species, item);
+        }
+    } 
 
     CreateScriptedWildMon(species, level, item);
     return FALSE;

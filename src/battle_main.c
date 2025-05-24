@@ -1977,6 +1977,432 @@ static void SpriteCB_UnusedBattleInit_Main(struct Sprite *sprite)
     }
 }
 
+static const u16 sSpeciesSortedByBST[NUM_KNOWN_SPECIES] =
+{
+   SPECIES_SUNKERN,
+   SPECIES_AZURILL,
+   SPECIES_CATERPIE,
+   SPECIES_WEEDLE,
+   SPECIES_WURMPLE,
+   SPECIES_RALTS,
+   SPECIES_FEEBAS,
+   SPECIES_MAGIKARP,
+   SPECIES_CASCOON,
+   SPECIES_KAKUNA,
+   SPECIES_METAPOD,
+   SPECIES_PICHU,
+   SPECIES_SILCOON,
+   SPECIES_IGGLYBUFF,
+   SPECIES_TYROGUE,
+   SPECIES_WOOPER,
+   SPECIES_SENTRET,
+   SPECIES_CLEFFA,
+   SPECIES_LOTAD,
+   SPECIES_POOCHYENA,
+   SPECIES_SEEDOT,
+   SPECIES_SHEDINJA,
+   SPECIES_MAKUHITA,
+   SPECIES_WHISMUR,
+   SPECIES_ZIGZAGOON,
+   SPECIES_TOGEPI,
+   SPECIES_ZUBAT,
+   SPECIES_HOPPIP,
+   SPECIES_MARILL,
+   SPECIES_SLUGMA,
+   SPECIES_SMEARGLE,
+   SPECIES_SPINARAK,
+   SPECIES_SWINUB,
+   SPECIES_PIDGEY,
+   SPECIES_RATTATA,
+   SPECIES_SKITTY,
+   SPECIES_WYNAUT,
+   SPECIES_HOOTHOOT,
+   SPECIES_SPEAROW,
+   SPECIES_DIGLETT,
+   SPECIES_LEDYBA,
+   SPECIES_NINCADA,
+   SPECIES_SURSKIT,
+   SPECIES_JIGGLYPUFF,
+   SPECIES_TAILLOW,
+   SPECIES_WINGULL,
+   SPECIES_NIDORAN_M,
+   SPECIES_NIDORAN_F,
+   SPECIES_KIRLIA,
+   SPECIES_MAREEP,
+   SPECIES_MEDITITE,
+   SPECIES_SLAKOTH,
+   SPECIES_PARAS,
+   SPECIES_BARBOACH,
+   SPECIES_DITTO,
+   SPECIES_EKANS,
+   SPECIES_MEOWTH,
+   SPECIES_PINECO,
+   SPECIES_SPHEAL,
+   SPECIES_TRAPINCH,
+   SPECIES_DUSKULL,
+   SPECIES_ELECTRIKE,
+   SPECIES_HORSEA,
+   SPECIES_SHROOMISH,
+   SPECIES_SHUPPET,
+   SPECIES_VULPIX,
+   SPECIES_BAGON,
+   SPECIES_BALTOY,
+   SPECIES_BELDUM,
+   SPECIES_BELLSPROUT,
+   SPECIES_DRATINI,
+   SPECIES_GEODUDE,
+   SPECIES_LARVITAR,
+   SPECIES_PIKACHU,
+   SPECIES_POLIWAG,
+   SPECIES_REMORAID,
+   SPECIES_SANDSHREW,
+   SPECIES_SNORUNT,
+   SPECIES_SNUBBULL,
+   SPECIES_GULPIN,
+   SPECIES_CARVANHA,
+   SPECIES_MACHOP,
+   SPECIES_MANKEY,
+   SPECIES_NUMEL,
+   SPECIES_SHELLDER,
+   SPECIES_SMOOCHUM,
+   SPECIES_VENONAT,
+   SPECIES_CORPHISH,
+   SPECIES_CHARMANDER,
+   SPECIES_CYNDAQUIL,
+   SPECIES_ABRA,
+   SPECIES_DODUO,
+   SPECIES_GASTLY,
+   SPECIES_MUDKIP,
+   SPECIES_SWABLU,
+   SPECIES_TORCHIC,
+   SPECIES_TREECKO,
+   SPECIES_SQUIRTLE,
+   SPECIES_TOTODILE,
+   SPECIES_SLOWPOKE,
+   SPECIES_BULBASAUR,
+   SPECIES_CHIKORITA,
+   SPECIES_CUBONE,
+   SPECIES_GOLDEEN,
+   SPECIES_NATU,
+   SPECIES_ODDISH,
+   SPECIES_PSYDUCK,
+   SPECIES_CLEFAIRY,
+   SPECIES_EEVEE,
+   SPECIES_EXEGGCUTE,
+   SPECIES_GRIMER,
+   SPECIES_KRABBY,
+   SPECIES_MAGNEMITE,
+   SPECIES_SEEL,
+   SPECIES_DROWZEE,
+   SPECIES_ARON,
+   SPECIES_CHINCHOU,
+   SPECIES_DELIBIRD,
+   SPECIES_HOUNDOUR,
+   SPECIES_LUVDISC,
+   SPECIES_PHANPY,
+   SPECIES_SPOINK,
+   SPECIES_TEDDIURSA,
+   SPECIES_VOLTORB,
+   SPECIES_CACNEA,
+   SPECIES_TENTACOOL,
+   SPECIES_UNOWN,
+   SPECIES_KOFFING,
+   SPECIES_LOMBRE,
+   SPECIES_NUZLEAF,
+   SPECIES_SKIPLOOM,
+   SPECIES_STARYU,
+   SPECIES_VIBRAVA,
+   SPECIES_CLAMPERL,
+   SPECIES_RHYHORN,
+   SPECIES_PIDGEOTTO,
+   SPECIES_GROWLITHE,
+   SPECIES_FARFETCHD,
+   SPECIES_ANORITH,
+   SPECIES_KABUTO,
+   SPECIES_LILEEP,
+   SPECIES_OMANYTE,
+   SPECIES_AIPOM,
+   SPECIES_ELEKID,
+   SPECIES_LOUDRED,
+   SPECIES_SPINDA,
+   SPECIES_FLAAFFY,
+   SPECIES_MAGBY,
+   SPECIES_NIDORINA,
+   SPECIES_NIDORINO,
+   SPECIES_NOSEPASS,
+   SPECIES_CORSOLA,
+   SPECIES_DELCATTY,
+   SPECIES_MAWILE,
+   SPECIES_SABLEYE,
+   SPECIES_BEAUTIFLY,
+   SPECIES_BEEDRILL,
+   SPECIES_BUTTERFREE,
+   SPECIES_DUSTOX,
+   SPECIES_LICKITUNG,
+   SPECIES_ONIX,
+   SPECIES_POLIWHIRL,
+   SPECIES_ARIADOS,
+   SPECIES_GRAVELER,
+   SPECIES_LEDIAN,
+   SPECIES_WEEPINBELL,
+   SPECIES_YANMA,
+   SPECIES_GLOOM,
+   SPECIES_PORYGON,
+   SPECIES_ILLUMISE,
+   SPECIES_KADABRA,
+   SPECIES_ROSELIA,
+   SPECIES_VOLBEAT,
+   SPECIES_WAILMER,
+   SPECIES_BAYLEEF,
+   SPECIES_CHARMELEON,
+   SPECIES_COMBUSKEN,
+   SPECIES_CROCONAW,
+   SPECIES_DUGTRIO,
+   SPECIES_GROVYLE,
+   SPECIES_HAUNTER,
+   SPECIES_IVYSAUR,
+   SPECIES_MACHOKE,
+   SPECIES_MARSHTOMP,
+   SPECIES_MINUN,
+   SPECIES_MURKROW,
+   SPECIES_PARASECT,
+   SPECIES_PLUSLE,
+   SPECIES_QUILAVA,
+   SPECIES_TOGETIC,
+   SPECIES_WARTORTLE,
+   SPECIES_WOBBUFFET,
+   SPECIES_AZUMARILL,
+   SPECIES_MAGCARGO,
+   SPECIES_MEDICHAM,
+   SPECIES_PONYTA,
+   SPECIES_PUPITAR,
+   SPECIES_SEALEO,
+   SPECIES_SUDOWOODO,
+   SPECIES_RATICATE,
+   SPECIES_MASQUERAIN,
+   SPECIES_DUNSPARCE,
+   SPECIES_FURRET,
+   SPECIES_CASTFORM,
+   SPECIES_DRAGONAIR,
+   SPECIES_LINOONE,
+   SPECIES_METANG,
+   SPECIES_MIGHTYENA,
+   SPECIES_SHELGON,
+   SPECIES_CHIMECHO,
+   SPECIES_MAROWAK,
+   SPECIES_SUNFLORA,
+   SPECIES_WIGGLYTUFF,
+   SPECIES_GLIGAR,
+   SPECIES_LAIRON,
+   SPECIES_PELIPPER,
+   SPECIES_QUAGSIRE,
+   SPECIES_QWILFISH,
+   SPECIES_SNEASEL,
+   SPECIES_SWELLOW,
+   SPECIES_MISDREAVUS,
+   SPECIES_TANGELA,
+   SPECIES_ARBOK,
+   SPECIES_KECLEON,
+   SPECIES_LUNATONE,
+   SPECIES_PERSIAN,
+   SPECIES_SEADRA,
+   SPECIES_SOLROCK,
+   SPECIES_VIGOROTH,
+   SPECIES_FEAROW,
+   SPECIES_NOCTOWL,
+   SPECIES_CHANSEY,
+   SPECIES_GRANBULL,
+   SPECIES_JUMPLUFF,
+   SPECIES_PILOSWINE,
+   SPECIES_SANDSLASH,
+   SPECIES_SEAKING,
+   SPECIES_VENOMOTH,
+   SPECIES_BANETTE,
+   SPECIES_DUSCLOPS,
+   SPECIES_GIRAFARIG,
+   SPECIES_GOLBAT,
+   SPECIES_HITMONCHAN,
+   SPECIES_HITMONLEE,
+   SPECIES_HITMONTOP,
+   SPECIES_JYNX,
+   SPECIES_PRIMEAPE,
+   SPECIES_NINJASK,
+   SPECIES_SEVIPER,
+   SPECIES_ZANGOOSE,
+   SPECIES_BRELOOM,
+   SPECIES_CAMERUPT,
+   SPECIES_DODRIO,
+   SPECIES_LANTURN,
+   SPECIES_MR_MIME,
+   SPECIES_SHARPEDO,
+   SPECIES_TROPIUS,
+   SPECIES_ABSOL,
+   SPECIES_FORRETRESS,
+   SPECIES_MAGNETON,
+   SPECIES_MANTINE,
+   SPECIES_SKARMORY,
+   SPECIES_STANTLER,
+   SPECIES_SWALOT,
+   SPECIES_CRAWDAUNT,
+   SPECIES_WHISCASH,
+   SPECIES_PIDGEOT,
+   SPECIES_GRUMPIG,
+   SPECIES_TORKOAL,
+   SPECIES_XATU,
+   SPECIES_CLEFABLE,
+   SPECIES_HARIYAMA,
+   SPECIES_CACTURNE,
+   SPECIES_DEWGONG,
+   SPECIES_KINGLER,
+   SPECIES_MANECTRIC,
+   SPECIES_RAICHU,
+   SPECIES_BELLOSSOM,
+   SPECIES_ELECTRODE,
+   SPECIES_EXPLOUD,
+   SPECIES_GLALIE,
+   SPECIES_LUDICOLO,
+   SPECIES_OCTILLERY,
+   SPECIES_SHIFTRY,
+   SPECIES_VICTREEBEL,
+   SPECIES_VILEPLUME,
+   SPECIES_HYPNO,
+   SPECIES_GOLEM,
+   SPECIES_GOREBYSS,
+   SPECIES_HUNTAIL,
+   SPECIES_RELICANTH,
+   SPECIES_RHYDON,
+   SPECIES_ALAKAZAM,
+   SPECIES_ALTARIA,
+   SPECIES_ELECTABUZZ,
+   SPECIES_KANGASKHAN,
+   SPECIES_MILTANK,
+   SPECIES_SLOWBRO,
+   SPECIES_SLOWKING,
+   SPECIES_TAUROS,
+   SPECIES_WEEZING,
+   SPECIES_ARMALDO,
+   SPECIES_CRADILY,
+   SPECIES_KABUTOPS,
+   SPECIES_MAGMAR,
+   SPECIES_NIDOKING,
+   SPECIES_NIDOQUEEN,
+   SPECIES_OMASTAR,
+   SPECIES_AMPHAROS,
+   SPECIES_CLAYDOL,
+   SPECIES_DONPHAN,
+   SPECIES_GENGAR,
+   SPECIES_GOLDUCK,
+   SPECIES_HERACROSS,
+   SPECIES_HOUNDOOM,
+   SPECIES_MUK,
+   SPECIES_PINSIR,
+   SPECIES_POLITOED,
+   SPECIES_POLIWRATH,
+   SPECIES_RAPIDASH,
+   SPECIES_SCIZOR,
+   SPECIES_SCYTHER,
+   SPECIES_URSARING,
+   SPECIES_WAILORD,
+   SPECIES_MACHAMP,
+   SPECIES_NINETALES,
+   SPECIES_SHUCKLE,
+   SPECIES_STEELIX,
+   SPECIES_AERODACTYL,
+   SPECIES_PORYGON2,
+   SPECIES_TENTACRUEL,
+   SPECIES_GARDEVOIR,
+   SPECIES_EXEGGUTOR,
+   SPECIES_FLYGON,
+   SPECIES_STARMIE,
+   SPECIES_CLOYSTER,
+   SPECIES_ESPEON,
+   SPECIES_FLAREON,
+   SPECIES_JOLTEON,
+   SPECIES_MEGANIUM,
+   SPECIES_UMBREON,
+   SPECIES_VAPOREON,
+   SPECIES_VENUSAUR,
+   SPECIES_AGGRON,
+   SPECIES_BLASTOISE,
+   SPECIES_BLAZIKEN,
+   SPECIES_FERALIGATR,
+   SPECIES_SCEPTILE,
+   SPECIES_WALREIN,
+   SPECIES_CHARIZARD,
+   SPECIES_TYPHLOSION,
+   SPECIES_CROBAT,
+   SPECIES_LAPRAS,
+   SPECIES_SWAMPERT,
+   SPECIES_BLISSEY,
+   SPECIES_GYARADOS,
+   SPECIES_KINGDRA,
+   SPECIES_MILOTIC,
+   SPECIES_SNORLAX,
+   SPECIES_ARCANINE,
+   SPECIES_ARTICUNO,
+   SPECIES_ENTEI,
+   SPECIES_MOLTRES,
+   SPECIES_RAIKOU,
+   SPECIES_REGICE,
+   SPECIES_REGIROCK,
+   SPECIES_REGISTEEL,
+   SPECIES_SUICUNE,
+   SPECIES_ZAPDOS,
+   SPECIES_CELEBI,
+   SPECIES_DEOXYS,
+   SPECIES_DRAGONITE,
+   SPECIES_JIRACHI,
+   SPECIES_LATIAS,
+   SPECIES_LATIOS,
+   SPECIES_METAGROSS,
+   SPECIES_MEW,
+   SPECIES_SALAMENCE,
+   SPECIES_TYRANITAR,
+   SPECIES_GROUDON,
+   SPECIES_KYOGRE,
+   SPECIES_SLAKING,
+   SPECIES_HO_OH,
+   SPECIES_LUGIA,
+   SPECIES_MEWTWO,
+   SPECIES_RAYQUAZA,
+};
+
+u16 GetRandomSimilarStrengthSpecies(u16 species, u16 randomNoise1, u16 randomNoise2)
+{
+    u16 sortedIndex;
+    u16 offset;
+
+    for (sortedIndex = 0; sortedIndex < NUM_SPECIES; sortedIndex++) {
+        if (sSpeciesSortedByBST[sortedIndex] == species)
+            break;
+    }
+
+    // get a range from 1 - 21
+    offset = ((((6 + randomNoise2) * randomNoise1) ^ gSaveBlock2Ptr->playerTrainerId[0]) % 21) + 1;
+    
+    // 11 to 21 = +0 to +10
+    if (offset >= 11) {
+        offset -= 11;
+        return offset <= (384 - sortedIndex) ? sSpeciesSortedByBST[sortedIndex + offset]
+                                                    : sSpeciesSortedByBST[sortedIndex - offset];
+    }
+    // 1 to 10 = -1 to -10
+    else
+        return (offset <= sortedIndex) ? sSpeciesSortedByBST[sortedIndex - offset]
+                                      : sSpeciesSortedByBST[sortedIndex + offset];
+}
+
+u16 GetRandomSpecies(u16 species, u16 randomNoise)
+{
+    u16 result = ((6 + randomNoise) * species ^ gSaveBlock2Ptr->playerTrainerId[0]) % NUM_KNOWN_SPECIES + 1;
+
+    if (result > SPECIES_CELEBI) {
+        result += (SPECIES_OLD_UNOWN_Z - SPECIES_CELEBI);
+    }
+
+    return result;
+}
+
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)
 {
     u32 nameHash = 0;
@@ -1984,6 +2410,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
     u8 fixedIV;
     s32 i, j;
     u8 monsCount;
+    u16 species;
 
     if (trainerNum == TRAINER_SECRET_BASE)
         return 0;
@@ -2026,29 +2453,47 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
             {
                 const struct TrainerMonNoItemDefaultMoves *partyData = gTrainers[trainerNum].party.NoItemDefaultMoves;
 
-                for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
-                    nameHash += gSpeciesNames[partyData[i].species][j];
+                species = partyData[i].species;
+
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
+                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
+                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
+                    species = GetRandomSpecies(species, trainerNum);
+                }
+
+                for (j = 0; gSpeciesNames[species][j] != EOS; j++)
+                    nameHash += gSpeciesNames[species][j];
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
                 break;
             }
             case F_TRAINER_PARTY_CUSTOM_MOVESET:
             {
                 const struct TrainerMonNoItemCustomMoves *partyData = gTrainers[trainerNum].party.NoItemCustomMoves;
 
-                for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
-                    nameHash += gSpeciesNames[partyData[i].species][j];
+                species = partyData[i].species;
+
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
+                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
+                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
+                    species = GetRandomSpecies(species, trainerNum);
+                }
+
+                for (j = 0; gSpeciesNames[species][j] != EOS; j++)
+                    nameHash += gSpeciesNames[species][j];
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
 
-                for (j = 0; j < MAX_MON_MOVES; j++)
-                {
-                    SetMonData(&party[i], MON_DATA_MOVE1 + j, &partyData[i].moves[j]);
-                    SetMonData(&party[i], MON_DATA_PP1 + j, &gBattleMoves[partyData[i].moves[j]].pp);
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_NO) {
+                    for (j = 0; j < MAX_MON_MOVES; j++)
+                    {
+                        SetMonData(&party[i], MON_DATA_MOVE1 + j, &partyData[i].moves[j]);
+                        SetMonData(&party[i], MON_DATA_PP1 + j, &gBattleMoves[partyData[i].moves[j]].pp);
+                    }
                 }
                 break;
             }
@@ -2056,12 +2501,20 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
             {
                 const struct TrainerMonItemDefaultMoves *partyData = gTrainers[trainerNum].party.ItemDefaultMoves;
 
-                for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
-                    nameHash += gSpeciesNames[partyData[i].species][j];
+                species = partyData[i].species;
+
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
+                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
+                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
+                    species = GetRandomSpecies(species, trainerNum);
+                }
+
+                for (j = 0; gSpeciesNames[species][j] != EOS; j++)
+                    nameHash += gSpeciesNames[species][j];
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
 
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
                 break;
@@ -2070,19 +2523,29 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
             {
                 const struct TrainerMonItemCustomMoves *partyData = gTrainers[trainerNum].party.ItemCustomMoves;
 
-                for (j = 0; gSpeciesNames[partyData[i].species][j] != EOS; j++)
-                    nameHash += gSpeciesNames[partyData[i].species][j];
+                species = partyData[i].species;
+
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
+                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
+                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
+                    species = GetRandomSpecies(species, trainerNum);
+                }
+
+                for (j = 0; gSpeciesNames[species][j] != EOS; j++)
+                    nameHash += gSpeciesNames[species][j];
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
 
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
 
-                for (j = 0; j < MAX_MON_MOVES; j++)
-                {
-                    SetMonData(&party[i], MON_DATA_MOVE1 + j, &partyData[i].moves[j]);
-                    SetMonData(&party[i], MON_DATA_PP1 + j, &gBattleMoves[partyData[i].moves[j]].pp);
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_NO) {
+                    for (j = 0; j < MAX_MON_MOVES; j++)
+                    {
+                        SetMonData(&party[i], MON_DATA_MOVE1 + j, &partyData[i].moves[j]);
+                        SetMonData(&party[i], MON_DATA_PP1 + j, &gBattleMoves[partyData[i].moves[j]].pp);
+                    }
                 }
                 break;
             }

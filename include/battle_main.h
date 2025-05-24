@@ -76,6 +76,8 @@ void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
 bool8 TryRunFromBattle(u8 battlerId);
 void SpecialStatusesClear(void);
+u16 GetRandomSimilarStrengthSpecies(u16 species, u16 randomNoise1, u16 randomNoise2);
+u16 GetRandomSpecies(u16 species, u16 randomNoise);
 
 extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
 

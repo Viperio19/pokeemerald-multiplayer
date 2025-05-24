@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_main.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -347,12 +348,69 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
     .callback = SpriteCB_StarterPokemon
 };
 
+static const u16 sThreeStageStarters[] =
+{
+    SPECIES_BULBASAUR,
+    SPECIES_CHARMANDER,
+    SPECIES_SQUIRTLE,
+    SPECIES_CATERPIE,
+    SPECIES_WEEDLE,
+    SPECIES_PIDGEY,
+    SPECIES_PICHU,
+    SPECIES_NIDORAN_F,
+    SPECIES_NIDORAN_M,
+    SPECIES_CLEFFA,
+    SPECIES_IGGLYBUFF,
+    SPECIES_ZUBAT,
+    SPECIES_ODDISH,
+    SPECIES_POLIWAG,
+    SPECIES_ABRA,
+    SPECIES_MACHOP,
+    SPECIES_BELLSPROUT,
+    SPECIES_GEODUDE,
+    SPECIES_GASTLY,
+    SPECIES_HORSEA,
+    SPECIES_DRATINI,
+    SPECIES_CHIKORITA,
+    SPECIES_CYNDAQUIL,
+    SPECIES_TOTODILE,
+    SPECIES_MAREEP,
+    SPECIES_AZURILL,
+    SPECIES_HOPPIP,
+    SPECIES_LARVITAR,
+    SPECIES_TREECKO,
+    SPECIES_TORCHIC,
+    SPECIES_MUDKIP,
+    SPECIES_WURMPLE,
+    SPECIES_LOTAD,
+    SPECIES_SEEDOT,
+    SPECIES_RALTS,
+    SPECIES_SLAKOTH,
+    SPECIES_WHISMUR,
+    SPECIES_ARON,
+    SPECIES_TRAPINCH,
+    SPECIES_SPHEAL,
+    SPECIES_BAGON,
+    SPECIES_BELDUM,
+};
+
 // .text
 u16 GetStarterPokemon(u16 chosenStarterId)
 {
+    u16 species;
+
     if (chosenStarterId > STARTER_MON_COUNT)
         chosenStarterId = 0;
-    return sStarterMon[chosenStarterId];
+
+    species = sStarterMon[chosenStarterId];
+
+    if (gSaveBlock2Ptr->randomizeStarterPkmn == OPTIONS_RANDOM_SPECIAL) {
+        species = sThreeStageStarters[((6 + chosenStarterId) * species ^ gSaveBlock2Ptr->playerTrainerId[0]) % (ARRAY_COUNT(sThreeStageStarters) + 1)];
+    } else if (gSaveBlock2Ptr->randomizeStarterPkmn == OPTIONS_RANDOM_YES) {
+        species = GetRandomSpecies(species, chosenStarterId);
+    }
+
+    return species;
 }
 
 static void VblankCB_StarterChoose(void)

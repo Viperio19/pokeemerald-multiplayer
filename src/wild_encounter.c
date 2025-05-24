@@ -14,6 +14,7 @@
 #include "tv.h"
 #include "link.h"
 #include "script.h"
+#include "battle_main.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "constants/abilities.h"
@@ -423,6 +424,7 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, u8 ar
 {
     u8 wildMonIndex = 0;
     u8 level;
+    u16 species;
 
     switch (area)
     {
@@ -451,7 +453,15 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, u8 ar
     if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
         return FALSE;
 
-    CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
+    species = wildMonInfo->wildPokemon[wildMonIndex].species;
+
+    if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL) {
+        species = GetRandomSimilarStrengthSpecies(species, wildMonIndex, area);
+    } else if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_YES) {
+        species = GetRandomSpecies(species, wildMonIndex);
+    }
+
+    CreateWildMon(species, level);
     return TRUE;
 }
 
@@ -460,8 +470,16 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
     u8 wildMonIndex = ChooseWildMonIndex_Fishing(rod);
     u8 level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[wildMonIndex]);
 
-    CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
-    return wildMonInfo->wildPokemon[wildMonIndex].species;
+    u16 species = wildMonInfo->wildPokemon[wildMonIndex].species;
+
+    if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL) {
+        species = GetRandomSimilarStrengthSpecies(species, wildMonIndex, rod);
+    } else if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_YES) {
+        species = GetRandomSpecies(species, wildMonIndex);
+    }
+
+    CreateWildMon(species, level);
+    return species;
 }
 
 static bool8 SetUpMassOutbreakEncounter(u8 flags)

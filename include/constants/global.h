@@ -136,7 +136,7 @@
 
 #define OPTIONS_RANDOM_NO 0
 #define OPTIONS_RANDOM_YES 1
-#define OPTIONS_RANDOM_SPEICAL 2
+#define OPTIONS_RANDOM_SPECIAL 2
 
 #define DIR_NONE        0
 #define DIR_SOUTH       1
