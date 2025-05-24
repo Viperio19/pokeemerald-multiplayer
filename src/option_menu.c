@@ -17,12 +17,18 @@
 #include "constants/rgb.h"
 
 #define tMenuSelection data[0]
+
 #define tTextSpeed data[1]
 #define tBattleSceneOff data[2]
 #define tBattleStyle data[3]
 #define tSound data[4]
 #define tButtonMode data[5]
 #define tWindowFrameType data[6]
+
+#define tRandomizeTrainerPkmn data[1]
+#define tRandomizeWildPkmn data[2]
+#define tRandomizeStarterPkmn data[3]
+#define tRandomizeGiftPkmn data[4]
 
 enum
 {
@@ -32,8 +38,18 @@ enum
     MENUITEM_SOUND,
     MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
-    MENUITEM_CANCEL,
+    MENUITEM_RANDOMIZER,
     MENUITEM_COUNT,
+};
+
+enum
+{
+    MENUITEM_RANDOMIZETRAINERPKMN,
+    MENUITEM_RANDOMIZEWILDPKMN,
+    MENUITEM_RANDOMIZESTARTERPKMN,
+    MENUITEM_RANDOMIZEGIFTPKMN,
+    MENUITEM_OPTIONS,
+    MENUITEM_RANDOMIZERCOUNT,
 };
 
 enum
@@ -49,9 +65,23 @@ enum
 #define YPOS_BUTTONMODE   (MENUITEM_BUTTONMODE * 16)
 #define YPOS_FRAMETYPE    (MENUITEM_FRAMETYPE * 16)
 
+#define YPOS_TRAINER      (MENUITEM_RANDOMIZETRAINERPKMN * 16)
+#define YPOS_WILD         (MENUITEM_RANDOMIZEWILDPKMN * 16)
+#define YPOS_STARTER      (MENUITEM_RANDOMIZESTARTERPKMN * 16)
+#define YPOS_GIFT         (MENUITEM_RANDOMIZEGIFTPKMN * 16)
+#define YPOS_OPTIONS      (MENUITEM_OPTIONS * 16)
+
+static void CB2_InitRandomizerMenu(void);
 static void Task_OptionMenuFadeIn(u8 taskId);
+static void Task_RandomizerMenuFadeIn(u8 taskId);
 static void Task_OptionMenuProcessInput(u8 taskId);
+static void Task_OptionMenuToRandomizerMenu(u8 taskId);
+static void Task_OptionMenuFadeToRandomizerMenu(u8 taskId);
+static void Task_RandomizerMenuProcessInput(u8 taskId);
+static void Task_RandomizerMenuToOptionMenu(u8 taskId);
+static void Task_RandomizerMenuFadeToOptionMenu(u8 taskId);
 static void Task_OptionMenuSave(u8 taskId);
+static void Task_RandomizerMenuSave(u8 taskId);
 static void Task_OptionMenuFadeOut(u8 taskId);
 static void HighlightOptionMenuItem(u8 selection);
 static u8 TextSpeed_ProcessInput(u8 selection);
@@ -66,8 +96,18 @@ static u8 FrameType_ProcessInput(u8 selection);
 static void FrameType_DrawChoices(u8 selection);
 static u8 ButtonMode_ProcessInput(u8 selection);
 static void ButtonMode_DrawChoices(u8 selection);
-static void DrawHeaderText(void);
+static u8 RandomizeTrainerPkmn_ProcessInput(u8 selection);
+static void RandomizeTrainerPkmn_DrawChoices(u8 selection);
+static u8 RandomizeWildPkmn_ProcessInput(u8 selection);
+static void RandomizeWildPkmn_DrawChoices(u8 selection);
+static u8 RandomizeStarterPkmn_ProcessInput(u8 selection);
+static void RandomizeStarterPkmn_DrawChoices(u8 selection);
+static u8 RandomizeGiftPkmn_ProcessInput(u8 selection);
+static void RandomizeGiftPkmn_DrawChoices(u8 selection);
+static void DrawOptionHeaderText(void);
+static void DrawRandomizerHeaderText(void);
 static void DrawOptionMenuTexts(void);
+static void DrawRandomizerMenuTexts(void);
 static void DrawBgWindowFrames(void);
 
 EWRAM_DATA static bool8 sArrowPressed = FALSE;
@@ -84,7 +124,16 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_SOUND]       = gText_Sound,
     [MENUITEM_BUTTONMODE]  = gText_ButtonMode,
     [MENUITEM_FRAMETYPE]   = gText_Frame,
-    [MENUITEM_CANCEL]      = gText_OptionMenuCancel,
+    [MENUITEM_RANDOMIZER]  = gText_OptionMenuRandomizer,
+};
+
+static const u8 *const sRandomizerMenuItemsNames[MENUITEM_RANDOMIZERCOUNT] =
+{
+    [MENUITEM_RANDOMIZETRAINERPKMN] = gText_OptionMenuTrainers,
+    [MENUITEM_RANDOMIZEWILDPKMN]    = gText_OptionMenuWild,
+    [MENUITEM_RANDOMIZESTARTERPKMN] = gText_OptionMenuStarters,
+    [MENUITEM_RANDOMIZEGIFTPKMN]    = gText_OptionMenuGifts,
+    [MENUITEM_OPTIONS] = gText_Option,
 };
 
 static const struct WindowTemplate sOptionMenuWinTemplates[] =
@@ -209,7 +258,7 @@ void CB2_InitOptionMenu(void)
         break;
     case 6:
         PutWindowTilemap(WIN_HEADER);
-        DrawHeaderText();
+        DrawOptionHeaderText();
         gMain.state++;
         break;
     case 7:
@@ -255,18 +304,126 @@ void CB2_InitOptionMenu(void)
     }
 }
 
+static void CB2_InitRandomizerMenu(void)
+{
+    switch (gMain.state)
+    {
+    default:
+    case 0:
+        SetVBlankCallback(NULL);
+        gMain.state++;
+        break;
+    case 1:
+        DmaClearLarge16(3, (void *)(VRAM), VRAM_SIZE, 0x1000);
+        DmaClear32(3, OAM, OAM_SIZE);
+        DmaClear16(3, PLTT, PLTT_SIZE);
+        SetGpuReg(REG_OFFSET_DISPCNT, 0);
+        ResetBgsAndClearDma3BusyFlags(0);
+        InitBgsFromTemplates(0, sOptionMenuBgTemplates, ARRAY_COUNT(sOptionMenuBgTemplates));
+        ChangeBgX(0, 0, BG_COORD_SET);
+        ChangeBgY(0, 0, BG_COORD_SET);
+        ChangeBgX(1, 0, BG_COORD_SET);
+        ChangeBgY(1, 0, BG_COORD_SET);
+        ChangeBgX(2, 0, BG_COORD_SET);
+        ChangeBgY(2, 0, BG_COORD_SET);
+        ChangeBgX(3, 0, BG_COORD_SET);
+        ChangeBgY(3, 0, BG_COORD_SET);
+        InitWindows(sOptionMenuWinTemplates);
+        DeactivateAllTextPrinters();
+        SetGpuReg(REG_OFFSET_WIN0H, 0);
+        SetGpuReg(REG_OFFSET_WIN0V, 0);
+        SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG0);
+        SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG0 | WINOUT_WIN01_BG1 | WINOUT_WIN01_CLR);
+        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_DARKEN);
+        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+        SetGpuReg(REG_OFFSET_BLDY, 4);
+        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
+        ShowBg(0);
+        ShowBg(1);
+        gMain.state++;
+        break;
+    case 2:
+        ResetPaletteFade();
+        ScanlineEffect_Stop();
+        ResetTasks();
+        ResetSpriteData();
+        gMain.state++;
+        break;
+    case 3:
+        LoadBgTiles(1, GetWindowFrameTilesPal(gSaveBlock2Ptr->optionsWindowFrameType)->tiles, 0x120, 0x1A2);
+        gMain.state++;
+        break;
+    case 4:
+        LoadPalette(sOptionMenuBg_Pal, BG_PLTT_ID(0), sizeof(sOptionMenuBg_Pal));
+        LoadPalette(GetWindowFrameTilesPal(gSaveBlock2Ptr->optionsWindowFrameType)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        gMain.state++;
+        break;
+    case 5:
+        LoadPalette(sOptionMenuText_Pal, BG_PLTT_ID(1), sizeof(sOptionMenuText_Pal));
+        gMain.state++;
+        break;
+    case 6:
+        PutWindowTilemap(WIN_HEADER);
+        DrawRandomizerHeaderText();
+        gMain.state++;
+        break;
+    case 7:
+        gMain.state++;
+        break;
+    case 8:
+        PutWindowTilemap(WIN_OPTIONS);
+        DrawRandomizerMenuTexts();
+        gMain.state++;
+    case 9:
+        DrawBgWindowFrames();
+        gMain.state++;
+        break;
+    case 10:
+    {
+        u8 taskId = CreateTask(Task_RandomizerMenuFadeIn, 0);
+
+        gTasks[taskId].tMenuSelection = 0;
+        gTasks[taskId].tRandomizeTrainerPkmn = gSaveBlock2Ptr->randomizeTrainerPkmn;
+        gTasks[taskId].tRandomizeWildPkmn = gSaveBlock2Ptr->randomizeWildPkmn;
+        gTasks[taskId].tRandomizeStarterPkmn = gSaveBlock2Ptr->randomizeStarterPkmn;
+        gTasks[taskId].tRandomizeGiftPkmn = gSaveBlock2Ptr->randomizeGiftPkmn;
+
+        RandomizeTrainerPkmn_DrawChoices(gTasks[taskId].tRandomizeTrainerPkmn);
+        RandomizeWildPkmn_DrawChoices(gTasks[taskId].tRandomizeWildPkmn);
+        RandomizeStarterPkmn_DrawChoices(gTasks[taskId].tRandomizeStarterPkmn);
+        RandomizeGiftPkmn_DrawChoices(gTasks[taskId].tRandomizeGiftPkmn);
+        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
+
+        CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
+        gMain.state++;
+        break;
+    }
+    case 11:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        SetVBlankCallback(VBlankCB);
+        SetMainCallback2(MainCB2);
+        return;
+    }
+}
+
 static void Task_OptionMenuFadeIn(u8 taskId)
 {
     if (!gPaletteFade.active)
         gTasks[taskId].func = Task_OptionMenuProcessInput;
 }
 
+static void Task_RandomizerMenuFadeIn(u8 taskId)
+{
+    if (!gPaletteFade.active)
+        gTasks[taskId].func = Task_RandomizerMenuProcessInput;
+}
+
 static void Task_OptionMenuProcessInput(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON))
     {
-        if (gTasks[taskId].tMenuSelection == MENUITEM_CANCEL)
-            gTasks[taskId].func = Task_OptionMenuSave;
+        if (gTasks[taskId].tMenuSelection == MENUITEM_RANDOMIZER)
+            gTasks[taskId].func = Task_OptionMenuToRandomizerMenu;
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -277,12 +434,12 @@ static void Task_OptionMenuProcessInput(u8 taskId)
         if (gTasks[taskId].tMenuSelection > 0)
             gTasks[taskId].tMenuSelection--;
         else
-            gTasks[taskId].tMenuSelection = MENUITEM_CANCEL;
+            gTasks[taskId].tMenuSelection = MENUITEM_RANDOMIZER;
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     }
     else if (JOY_NEW(DPAD_DOWN))
     {
-        if (gTasks[taskId].tMenuSelection < MENUITEM_CANCEL)
+        if (gTasks[taskId].tMenuSelection < MENUITEM_RANDOMIZER)
             gTasks[taskId].tMenuSelection++;
         else
             gTasks[taskId].tMenuSelection = 0;
@@ -348,6 +505,29 @@ static void Task_OptionMenuProcessInput(u8 taskId)
     }
 }
 
+static void Task_OptionMenuToRandomizerMenu(u8 taskId)
+{
+    gSaveBlock2Ptr->optionsTextSpeed = gTasks[taskId].tTextSpeed;
+    gSaveBlock2Ptr->optionsBattleSceneOff = gTasks[taskId].tBattleSceneOff;
+    gSaveBlock2Ptr->optionsBattleStyle = gTasks[taskId].tBattleStyle;
+    gSaveBlock2Ptr->optionsSound = gTasks[taskId].tSound;
+    gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
+    gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
+
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_OptionMenuFadeToRandomizerMenu;
+}
+
+static void Task_OptionMenuFadeToRandomizerMenu(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        DestroyTask(taskId);
+        FreeAllWindowBuffers();
+        SetMainCallback2(CB2_InitRandomizerMenu);
+    }
+}
+
 static void Task_OptionMenuSave(u8 taskId)
 {
     gSaveBlock2Ptr->optionsTextSpeed = gTasks[taskId].tTextSpeed;
@@ -356,6 +536,111 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsSound = gTasks[taskId].tSound;
     gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
+
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_OptionMenuFadeOut;
+}
+
+static void Task_RandomizerMenuProcessInput(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        if (gTasks[taskId].tMenuSelection == MENUITEM_OPTIONS)
+            gTasks[taskId].func = Task_RandomizerMenuToOptionMenu;
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        gTasks[taskId].func = Task_RandomizerMenuSave;
+    }
+    else if (JOY_NEW(DPAD_UP))
+    {
+        if (gTasks[taskId].tMenuSelection > 0)
+            gTasks[taskId].tMenuSelection--;
+        else
+            gTasks[taskId].tMenuSelection = MENUITEM_OPTIONS;
+        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
+    }
+    else if (JOY_NEW(DPAD_DOWN))
+    {
+        if (gTasks[taskId].tMenuSelection < MENUITEM_OPTIONS)
+            gTasks[taskId].tMenuSelection++;
+        else
+            gTasks[taskId].tMenuSelection = 0;
+        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
+    }
+    else
+    {
+        u8 previousOption;
+
+        switch (gTasks[taskId].tMenuSelection)
+        {
+        case MENUITEM_RANDOMIZETRAINERPKMN:
+            previousOption = gTasks[taskId].tRandomizeTrainerPkmn;
+            gTasks[taskId].tRandomizeTrainerPkmn = RandomizeTrainerPkmn_ProcessInput(gTasks[taskId].tRandomizeTrainerPkmn);
+
+            if (previousOption != gTasks[taskId].tRandomizeTrainerPkmn)
+                RandomizeTrainerPkmn_DrawChoices(gTasks[taskId].tRandomizeTrainerPkmn);
+            break;
+        case MENUITEM_RANDOMIZEWILDPKMN:
+            previousOption = gTasks[taskId].tRandomizeWildPkmn;
+            gTasks[taskId].tRandomizeWildPkmn = RandomizeWildPkmn_ProcessInput(gTasks[taskId].tRandomizeWildPkmn);
+
+            if (previousOption != gTasks[taskId].tRandomizeWildPkmn)
+                RandomizeWildPkmn_DrawChoices(gTasks[taskId].tRandomizeWildPkmn);
+            break;
+        case MENUITEM_RANDOMIZESTARTERPKMN:
+            previousOption = gTasks[taskId].tRandomizeStarterPkmn;
+            gTasks[taskId].tRandomizeStarterPkmn = RandomizeStarterPkmn_ProcessInput(gTasks[taskId].tRandomizeStarterPkmn);
+
+            if (previousOption != gTasks[taskId].tRandomizeStarterPkmn)
+                RandomizeStarterPkmn_DrawChoices(gTasks[taskId].tRandomizeStarterPkmn);
+            break;
+        case MENUITEM_RANDOMIZEGIFTPKMN:
+            previousOption = gTasks[taskId].tRandomizeGiftPkmn;
+            gTasks[taskId].tRandomizeGiftPkmn = RandomizeGiftPkmn_ProcessInput(gTasks[taskId].tRandomizeGiftPkmn);
+
+            if (previousOption != gTasks[taskId].tRandomizeGiftPkmn)
+                RandomizeGiftPkmn_DrawChoices(gTasks[taskId].tRandomizeGiftPkmn);
+            break;
+        default:
+            return;
+        }
+
+        if (sArrowPressed)
+        {
+            sArrowPressed = FALSE;
+            CopyWindowToVram(WIN_OPTIONS, COPYWIN_GFX);
+        }
+    }
+}
+
+static void Task_RandomizerMenuToOptionMenu(u8 taskId)
+{
+    gSaveBlock2Ptr->randomizeTrainerPkmn = gTasks[taskId].tRandomizeTrainerPkmn;
+    gSaveBlock2Ptr->randomizeWildPkmn = gTasks[taskId].tRandomizeWildPkmn;
+    gSaveBlock2Ptr->randomizeStarterPkmn = gTasks[taskId].tRandomizeStarterPkmn;
+    gSaveBlock2Ptr->randomizeGiftPkmn = gTasks[taskId].tRandomizeGiftPkmn;
+
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_RandomizerMenuFadeToOptionMenu;
+}
+
+static void Task_RandomizerMenuFadeToOptionMenu(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        DestroyTask(taskId);
+        FreeAllWindowBuffers();
+        SetMainCallback2(CB2_InitOptionMenu);
+    }
+}
+
+static void Task_RandomizerMenuSave(u8 taskId)
+{
+    gSaveBlock2Ptr->randomizeTrainerPkmn = gTasks[taskId].tRandomizeTrainerPkmn;
+    gSaveBlock2Ptr->randomizeWildPkmn = gTasks[taskId].tRandomizeWildPkmn;
+    gSaveBlock2Ptr->randomizeStarterPkmn = gTasks[taskId].tRandomizeStarterPkmn;
+    gSaveBlock2Ptr->randomizeGiftPkmn = gTasks[taskId].tRandomizeGiftPkmn;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;
@@ -615,10 +900,109 @@ static void ButtonMode_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(FONT_NORMAL, gText_ButtonTypeLEqualsA, 198), YPOS_BUTTONMODE, styles[2]);
 }
 
-static void DrawHeaderText(void)
+static u8 RandomizeTrainerPkmn_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void RandomizeTrainerPkmn_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_TRAINER, styles[0]);
+    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_TRAINER, styles[1]);
+}
+
+static u8 RandomizeWildPkmn_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void RandomizeWildPkmn_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_WILD, styles[0]);
+    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_WILD, styles[1]);
+}
+
+static u8 RandomizeStarterPkmn_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void RandomizeStarterPkmn_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_STARTER, styles[0]);
+    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_STARTER, styles[1]);
+}
+
+static u8 RandomizeGiftPkmn_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void RandomizeGiftPkmn_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(gText_OptionMenuNo, 104, YPOS_GIFT, styles[0]);
+    DrawOptionMenuChoice(gText_OptionMenuYes, GetStringRightAlignXOffset(FONT_NORMAL, gText_OptionMenuYes, 198), YPOS_GIFT, styles[1]);
+}
+
+static void DrawOptionHeaderText(void)
 {
     FillWindowPixelBuffer(WIN_HEADER, PIXEL_FILL(1));
     AddTextPrinterParameterized(WIN_HEADER, FONT_NORMAL, gText_Option, 8, 1, TEXT_SKIP_DRAW, NULL);
+    CopyWindowToVram(WIN_HEADER, COPYWIN_FULL);
+}
+
+static void DrawRandomizerHeaderText(void)
+{
+    FillWindowPixelBuffer(WIN_HEADER, PIXEL_FILL(1));
+    AddTextPrinterParameterized(WIN_HEADER, FONT_NORMAL, gText_OptionMenuRandomizer, 8, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(WIN_HEADER, COPYWIN_FULL);
 }
 
@@ -629,6 +1013,16 @@ static void DrawOptionMenuTexts(void)
     FillWindowPixelBuffer(WIN_OPTIONS, PIXEL_FILL(1));
     for (i = 0; i < MENUITEM_COUNT; i++)
         AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sOptionMenuItemsNames[i], 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
+    CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
+}
+
+static void DrawRandomizerMenuTexts(void)
+{
+    u8 i;
+
+    FillWindowPixelBuffer(WIN_OPTIONS, PIXEL_FILL(1));
+    for (i = 0; i < MENUITEM_COUNT; i++)
+        AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sRandomizerMenuItemsNames[i], 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }
 
