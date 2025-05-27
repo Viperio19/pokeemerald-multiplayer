@@ -519,7 +519,8 @@ struct SaveBlock2
              u16 randomizeLegendaryPkmn:2;
              u16 randomizeStarterPkmn:2;
              u16 randomizeGiftPkmn:1;
-             //u16 padding2:11;
+             u16 randomizerSeed:8;
+             //u16 padding2:3;
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;

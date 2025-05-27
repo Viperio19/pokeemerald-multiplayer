@@ -538,3 +538,4 @@ gSpecials::
 	def_special TrySetBattleTowerLinkType
 	def_special DoLinkMultiBattle
 	def_special IsLinkConnectionEstablished
+	def_special MixRandomizers

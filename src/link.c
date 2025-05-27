@@ -2367,3 +2367,41 @@ void ResetRecvBuffer(void)
         }
     }
 }
+
+void MixRandomizers(void)
+{
+    if (JOY_NEW(B_BUTTON)) {
+        gSpecialVar_Result = 3;
+    }
+
+    switch (gSpecialVar_Result)
+    {
+    case 0:
+        if (IsLinkTaskFinished())
+        {
+            SetLinkStandbyCallback();
+            gSpecialVar_Result = 1;
+        }
+        break;
+    case 1:
+        if (IsLinkTaskFinished())
+        {
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gSaveBlock2Ptr->playerTrainerId[0], sizeof(gSaveBlock2Ptr->playerTrainerId[0]));
+            gSpecialVar_Result = 2;
+        }
+        break;
+    case 2:
+        if ((GetBlockReceivedStatus() & 3) == 3)
+        {
+            ResetBlockReceivedFlags();
+            if (gBlockRecvBuffer[0][0] > gBlockRecvBuffer[1][0])
+                gSaveBlock2Ptr->randomizerSeed = gBlockRecvBuffer[0][0] ^ gSaveBlock2Ptr->playerTrainerId[0];
+            else
+                gSaveBlock2Ptr->randomizerSeed = gBlockRecvBuffer[1][0] ^ gSaveBlock2Ptr->playerTrainerId[0];
+            gSpecialVar_Result = 3;
+        }
+        break;
+    case 3:
+        return;
+    }
+}

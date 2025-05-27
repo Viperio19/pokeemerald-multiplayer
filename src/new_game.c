@@ -85,6 +85,7 @@ static void InitPlayerTrainerId(void)
 {
     u32 trainerId = (Random() << 16) | GetGeneratedTrainerIdLower();
     SetTrainerId(trainerId, gSaveBlock2Ptr->playerTrainerId);
+    gSaveBlock2Ptr->randomizerSeed = gSaveBlock2Ptr->playerTrainerId[0];
 }
 
 // L=A isnt set here for some reason.

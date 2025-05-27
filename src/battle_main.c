@@ -2378,7 +2378,7 @@ u16 GetRandomSimilarStrengthSpecies(u16 species, u16 randomNoise1, u16 randomNoi
     }
 
     // get a range from 1 - 21
-    offset = ((((6 + randomNoise2) * randomNoise1) ^ gSaveBlock2Ptr->playerTrainerId[0]) % 21) + 1;
+    offset = ((((6 + randomNoise2) * randomNoise1) ^ gSaveBlock2Ptr->randomizerSeed) % 21) + 1;
     
     // 11 to 21 = +0 to +10
     if (offset >= 11) {
@@ -2394,7 +2394,7 @@ u16 GetRandomSimilarStrengthSpecies(u16 species, u16 randomNoise1, u16 randomNoi
 
 u16 GetRandomSpecies(u16 species, u16 randomNoise)
 {
-    u16 result = ((6 + randomNoise) * species ^ gSaveBlock2Ptr->playerTrainerId[0]) % NUM_KNOWN_SPECIES + 1;
+    u16 result = ((6 + randomNoise) * species ^ gSaveBlock2Ptr->randomizerSeed) % NUM_KNOWN_SPECIES + 1;
 
     if (result > SPECIES_CELEBI) {
         result += (SPECIES_OLD_UNOWN_Z - SPECIES_CELEBI);

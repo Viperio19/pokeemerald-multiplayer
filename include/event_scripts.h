@@ -612,6 +612,6 @@ extern const u8 EventScript_TradeCenter_Chair0[];
 extern const u8 EventScript_ConfirmLeaveCableClubRoom[];
 extern const u8 EventScript_TerminateLink[];
 
-extern const u8 EventScript_SetUpLinkMultiBattleConnection[];
+extern const u8 EventScript_OpenLinkMenu[];
 
 #endif // GUARD_EVENT_SCRIPTS_H

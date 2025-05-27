@@ -191,7 +191,7 @@ static const struct MenuAction sStartMenuItems[] =
     [MENU_ACTION_PLAYER]          = {gText_MenuPlayer,  {.u8_void = StartMenuPlayerNameCallback}},
     [MENU_ACTION_SAVE]            = {gText_MenuSave,    {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_OPTION]          = {gText_MenuOption,  {.u8_void = StartMenuOptionCallback}},
-    [MENU_ACTION_LINK]            = {gText_MenuLink, {.u8_void = StartMenuLinkCallback}},
+    [MENU_ACTION_LINK]            = {gText_MenuLink,    {.u8_void = StartMenuLinkCallback}},
     [MENU_ACTION_EXIT]            = {gText_MenuExit,    {.u8_void = StartMenuExitCallback}},
     [MENU_ACTION_RETIRE_SAFARI]   = {gText_MenuRetire,  {.u8_void = StartMenuSafariZoneRetireCallback}},
     [MENU_ACTION_PLAYER_LINK]     = {gText_MenuPlayer,  {.u8_void = StartMenuLinkModePlayerNameCallback}},
@@ -762,7 +762,7 @@ static bool8 StartMenuOptionCallback(void)
 static bool8 StartMenuLinkCallback(void)
 {
     StartMenuExitCallback();
-    ScriptContext_SetupScript(EventScript_SetUpLinkMultiBattleConnection);
+    ScriptContext_SetupScript(EventScript_OpenLinkMenu);
     return TRUE;
 }
 
