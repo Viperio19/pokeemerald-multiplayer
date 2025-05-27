@@ -2386,7 +2386,7 @@ void MixRandomizers(void)
     case 1:
         if (IsLinkTaskFinished())
         {
-            SendBlock(BitmaskAllOtherLinkPlayers(), &gSaveBlock2Ptr->playerTrainerId[0], sizeof(gSaveBlock2Ptr->playerTrainerId[0]));
+            SendBlock(BitmaskAllOtherLinkPlayers(), &gSaveBlock2Ptr->playerTrainerId[1], sizeof(gSaveBlock2Ptr->playerTrainerId[1]));
             gSpecialVar_Result = 2;
         }
         break;
@@ -2394,10 +2394,7 @@ void MixRandomizers(void)
         if ((GetBlockReceivedStatus() & 3) == 3)
         {
             ResetBlockReceivedFlags();
-            if (gBlockRecvBuffer[0][0] > gBlockRecvBuffer[1][0])
-                gSaveBlock2Ptr->randomizerSeed = gBlockRecvBuffer[0][0] ^ gSaveBlock2Ptr->playerTrainerId[0];
-            else
-                gSaveBlock2Ptr->randomizerSeed = gBlockRecvBuffer[1][0] ^ gSaveBlock2Ptr->playerTrainerId[0];
+            gSaveBlock2Ptr->randomizerSeed = gBlockRecvBuffer[0][0] ^ gBlockRecvBuffer[1][0];
             gSpecialVar_Result = 3;
         }
         break;
