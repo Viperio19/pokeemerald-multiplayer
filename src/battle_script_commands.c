@@ -3010,6 +3010,8 @@ static void Cmd_tryfaintmon(void)
                 if (gBattleResults.playerFaintCounter < 255)
                     gBattleResults.playerFaintCounter++;
                 AdjustFriendshipOnBattleFaint(gActiveBattler);
+                if (FlagGet(FLAG_SOULLINK_ENABLED))
+                    SetMonDeadMetLocation(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]]);
             }
             else
             {
