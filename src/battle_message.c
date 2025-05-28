@@ -430,6 +430,8 @@ static const u8 sText_SpAtk2[] = _("SP. ATK");
 static const u8 sText_SpDef2[] = _("SP. DEF");
 static const u8 sText_Accuracy[] = _("accuracy");
 static const u8 sText_Evasiveness[] = _("evasiveness");
+static const u8 sText_LinkedPkmnFaints[] = _("{B_BUFF1} is linked with\n{B_DEF_NAME_WITH_PREFIX} and fainted!");
+static const u8 sText_PkmnIsLinked[] = _("{B_ATK_NAME_WITH_PREFIX} is linked\nwith {B_DEF_NAME_WITH_PREFIX}!");
 
 const u8 * const gStatNamesTable[NUM_BATTLE_STATS] =
 {
@@ -885,6 +887,8 @@ const u8 * const gBattleStringsTable[BATTLESTRINGS_COUNT - BATTLESTRINGS_TABLE_S
     [STRINGID_PKMNBOXLANETTESPCFULL - BATTLESTRINGS_TABLE_START] = gText_PkmnTransferredLanettesPCBoxFull,
     [STRINGID_TRAINER1WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer1WinText,
     [STRINGID_TRAINER2WINTEXT - BATTLESTRINGS_TABLE_START] = sText_Trainer2WinText,
+    [STRINGID_LINKEDPKMNFAINTS - BATTLESTRINGS_TABLE_START] = sText_LinkedPkmnFaints,
+    [STRINGID_PKMNISLINKED - BATTLESTRINGS_TABLE_START] = sText_PkmnIsLinked,
 };
 
 const u16 gMissStringIds[] =

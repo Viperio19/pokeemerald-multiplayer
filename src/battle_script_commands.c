@@ -3026,6 +3026,35 @@ static void Cmd_tryfaintmon(void)
                 gBattleMoveDamage = gBattleMons[battlerId].hp;
                 gBattlescriptCurrInstr = BattleScript_DestinyBondTakesLife;
             }
+
+            if (FlagGet(FLAG_SOULLINK_ENABLED) && GetBattlerSide(gActiveBattler) == B_SIDE_PLAYER) {
+                u8 metLocation = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_MET_LOCATION, FALSE);
+
+                if (metLocation == GetMonData(&gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(gActiveBattler)]], MON_DATA_MET_LOCATION, FALSE)
+                 && gBattleMons[BATTLE_PARTNER(gActiveBattler)].hp != 0) {
+                    gBattlerAttacker = BATTLE_PARTNER(gActiveBattler);
+                    BattleScriptPush(gBattlescriptCurrInstr);
+                    gBattleMoveDamage = gBattleMons[battlerId].hp;
+                    gBattlescriptCurrInstr = BattleScript_LinkedPokemonFaintsOnScreen;
+                } else {
+                    u8 i;
+                    for (i = 0; i < PARTY_SIZE; i++) {
+                        if (i != gBattlerPartyIndexes[B_POSITION_PLAYER_LEFT] && i != gBattlerPartyIndexes[B_POSITION_PLAYER_RIGHT]
+                         && metLocation == GetMonData(&gPlayerParty[i], MON_DATA_MET_LOCATION, FALSE)) {
+                            u16 zero = 0;
+                            SetMonData(&gPlayerParty[i], MON_DATA_HP, &zero);
+
+                            GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, gBattleTextBuff1);
+                            StringGet_Nickname(gBattleTextBuff1);
+                            BattleScriptPush(gBattlescriptCurrInstr);
+                            gBattleMoveDamage = gBattleMons[battlerId].hp;
+                            gBattlescriptCurrInstr = BattleScript_LinkedPokemonFaintsOffScreen;
+                            break;
+                        }
+                    }
+                }
+            }
+
             if ((gStatuses3[gBattlerTarget] & STATUS3_GRUDGE)
              && !(gHitMarker & HITMARKER_GRUDGE)
              && GetBattlerSide(gBattlerAttacker) != GetBattlerSide(gBattlerTarget)
