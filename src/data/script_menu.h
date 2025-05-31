@@ -780,6 +780,13 @@ static const struct MenuAction MultichoiceList_LinkMenu[] =
     {gText_Exit},
 };
 
+static const struct MenuAction MultichoiceList_OutsidePokemonCenter[] =
+{
+    {gText_HealParty},
+    {gText_UsePC},
+    {gText_Exit},
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -908,6 +915,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_FALLARBOR_TENT_RULES]       = MULTICHOICE(MultichoiceList_FallarborTentRules),
     [MULTI_TAG_MATCH_TYPE]             = MULTICHOICE(MultichoiceList_TagMatchType),
     [MULTI_LINK_MENU]                  = MULTICHOICE(MultichoiceList_LinkMenu),
+    [MULTI_OUTSIDE_POKEMON_CENTER]     = MULTICHOICE(MultichoiceList_OutsidePokemonCenter),
 };
 
 const u8 *const gStdStrings[] =

@@ -1,3 +1,7 @@
+LinkMultiBattle_EventScript_TryNoIntroLinkMultiBattle::
+	setflag FLAG_NO_INTRO_MUTLI_BATTLE
+	goto LinkMultiBattle_EventScript_TryLinkMultiBattle
+
 LinkMultiBattle_EventScript_TryLinkMultiBattle::
 	setvar VAR_FRONTIER_BATTLE_MODE, NOT_FRONTIER_MODE_LINK_MULTIS
 	fadescreen FADE_TO_BLACK
@@ -22,8 +26,8 @@ LinkMultiBattle_EventScript_PrepareParty::
 LinkMultiBattle_EventScript_WaitForLinkOpponentLoad::
 	tower_loadvaropponents
 	delay 1
-	goto_if_lt VAR_RESULT, 11, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
-	goto_if_eq VAR_RESULT, 12, LinkMultiBattle_EventScript_DoRegularBattle
+	goto_if_lt VAR_RESULT, 7, LinkMultiBattle_EventScript_WaitForLinkOpponentLoad
+	goto_if_eq VAR_RESULT, 8, LinkMultiBattle_EventScript_DoRegularBattle
 	goto_if_eq VAR_0x8009, TRUE, LinkMultiBattle_EventScript_SelectedDifferentTrainer
 	goto LinkMultiBattle_EventScript_DoLinkMultiBattle
 	end
@@ -42,9 +46,14 @@ LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	special DoLinkMultiBattle
 	waitstate
 	special SavePlayerParty
+	goto_if_set FLAG_NO_INTRO_MUTLI_BATTLE, LinkMultiBattle_EventScript_GoToPostBattleScript
 	gotobeatenscript
 	releaseall
 	end
+
+LinkMultiBattle_EventScript_GoToPostBattleScript::
+	clearflag FLAG_NO_INTRO_MUTLI_BATTLE
+	gotopostbattlescript
 
 EventScript_OpenLinkMenu::
 	delay 10

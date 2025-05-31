@@ -370,8 +370,10 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 
     if (MetatileBehavior_IsPlayerFacingTVScreen(metatileBehavior, direction) == TRUE)
         return EventScript_TV;
-    if (MetatileBehavior_IsPC(metatileBehavior) == TRUE)
+    if (MetatileBehavior_IsPC(metatileBehavior) == TRUE) {
+        FlagClear(FLAG_DISABLE_PC_GRAPHICS);
         return EventScript_PC;
+    }
     if (MetatileBehavior_IsClosedSootopolisDoor(metatileBehavior) == TRUE)
         return EventScript_ClosedSootopolisDoor;
     if (MetatileBehavior_IsSkyPillarClosedDoor(metatileBehavior) == TRUE)

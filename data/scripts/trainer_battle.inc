@@ -51,7 +51,7 @@ EventScript_DoNoIntroTrainerBattle::
 	goto_if_eq VAR_RESULT, FALSE, EventScript_DoNoIntroSoloBattle
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
-	case YES, LinkMultiBattle_EventScript_TryLinkMultiBattle
+	case YES, LinkMultiBattle_EventScript_TryNoIntroLinkMultiBattle
 	case NO, EventScript_InitiateNoIntroSoloBattle
 	case MULTI_B_PRESSED, EventScript_InitiateNoIntroSoloBattle
 

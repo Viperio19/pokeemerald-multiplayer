@@ -1,11 +1,15 @@
 EventScript_PC::
 	lockall
 	setvar VAR_0x8004, PC_LOCATION_OTHER
-	special DoPCTurnOnEffect
+	call_if_unset FLAG_DISABLE_PC_GRAPHICS, EventScript_DoPCTurnOnEffect
 	playse SE_PC_ON
 	msgbox Text_BootUpPC, MSGBOX_DEFAULT
 	goto EventScript_PCMainMenu
 	end
+
+EventScript_DoPCTurnOnEffect::
+	special DoPCTurnOnEffect
+	return
 
 EventScript_PCMainMenu::
 	message gText_WhichPCShouldBeAccessed
@@ -53,9 +57,13 @@ EventScript_AccessLanettesPC::
 EventScript_TurnOffPC::
 	setvar VAR_0x8004, PC_LOCATION_OTHER
 	playse SE_PC_OFF
-	special DoPCTurnOffEffect
+	call_if_unset FLAG_DISABLE_PC_GRAPHICS, EventScript_DoPCTurnOffEffect
 	releaseall
 	end
+
+EventScript_DoPCTurnOffEffect::
+	special DoPCTurnOffEffect
+	return
 
 EventScript_AccessHallOfFame::
 	goto_if_unset FLAG_SYS_GAME_CLEAR, EventScript_TurnOffPC

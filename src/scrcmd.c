@@ -1904,7 +1904,7 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
 
     if (species >= SPECIES_REGIROCK) {
         if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_SPECIAL) {
-            species = sLegendaryPokemon[((6 + item) * species ^ gSaveBlock2Ptr->playerTrainerId[0]) % (ARRAY_COUNT(sLegendaryPokemon) + 1)];
+            species = sLegendaryPokemon[((6 + item) * species ^ gSaveBlock2Ptr->randomizerSeed) % (ARRAY_COUNT(sLegendaryPokemon) + 1)];
         } else if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_YES) {
             species = GetRandomSpecies(species, item);
         }

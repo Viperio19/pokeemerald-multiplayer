@@ -1319,6 +1319,9 @@ extern const u8 gText_LinkMenuConnect[];
 extern const u8 gText_LinkMenuSoullink[];
 extern const u8 gText_LinkMenuRandomizer[];
 
+extern const u8 gText_HealParty[];
+extern const u8 gText_UsePC[];
+
 // Cable Club multichoice text
 extern const u8 CableClub_Text_TradeUsingLinkCable[];
 extern const u8 CableClub_Text_BattleUsingLinkCable[];

@@ -660,7 +660,38 @@ Common_EventScript_ShowPokemartSign::
 	end
 
 Common_EventScript_ShowPokemonCenterSign::
+	call_if_unset FLAG_GOT_BUGGED_CENTER_EXPLANATION, Common_EventScript_ExplainOutsidePokemonCenter
+	message gText_WhatWouldYouLikeToDo
+	waitmessage
+	multichoice 20, 0, MULTI_OUTSIDE_POKEMON_CENTER, FALSE
+	switch VAR_RESULT
+	case 0, Common_EventScript_HealParty
+	case 1, Common_EventScript_UsePC
+	case 2, Common_EventScript_CloseOutsidePokemonCenter
+	case MULTI_B_PRESSED, Common_EventScript_CloseOutsidePokemonCenter
+	end
+	special HealPlayerParty
 	msgbox gText_PokemonCenterSign, MSGBOX_SIGN
+	end
+
+Common_EventScript_ExplainOutsidePokemonCenter::
+	setflag FLAG_GOT_BUGGED_CENTER_EXPLANATION
+	msgbox gText_BuggedCenterExplanation, MSGBOX_DEFAULT
+	return
+
+Common_EventScript_HealParty::
+	special HealPlayerParty
+	msgbox gText_HealedParty, MSGBOX_DEFAULT
+	closemessage
+	end
+
+Common_EventScript_UsePC::
+	setflag FLAG_DISABLE_PC_GRAPHICS
+	goto EventScript_PC
+	end
+
+Common_EventScript_CloseOutsidePokemonCenter::
+	closemessage
 	end
 
 Common_ShowEasyChatScreen::
@@ -841,6 +872,16 @@ gText_PokemartSign::
 gText_PokemonCenterSign::
 	.string "“Rejuvenate your tired partners!”\n"
 	.string "POKéMON CENTER$"
+
+gText_BuggedCenterExplanation::
+	.string "The POKéMON CENTER is a dangerous\n"
+	.string "place for LINK CONNECTIONS.\p"
+	.string "That is why you can now heal your\n"
+	.string "party and use the PC without\l"
+	.string "entering the POKéMON CENTER!$"
+
+gText_HealedParty::
+	.string "Your party has been healed!$"
 
 gText_MomOrDadMightLikeThisProgram::
 	.string "{STR_VAR_1} might like this program.\n"
