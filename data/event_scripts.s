@@ -670,9 +670,6 @@ Common_EventScript_ShowPokemonCenterSign::
 	case 2, Common_EventScript_CloseOutsidePokemonCenter
 	case MULTI_B_PRESSED, Common_EventScript_CloseOutsidePokemonCenter
 	end
-	special HealPlayerParty
-	msgbox gText_PokemonCenterSign, MSGBOX_SIGN
-	end
 
 Common_EventScript_ExplainOutsidePokemonCenter::
 	setflag FLAG_GOT_BUGGED_CENTER_EXPLANATION
