@@ -38,7 +38,7 @@ void HealPlayerParty(void)
     {
         u16 maxHP = GetMonData(&gPlayerParty[i], MON_DATA_MAX_HP);
 
-        if (FlagGet(FLAG_SOULLINK_ENABLED) && GetMonDeadMetLocation(&gPlayerParty[i]))
+        if (FlagGet(FLAG_SOULLINK_ENABLED) && GetMonData(&gPlayerParty[i], MON_DATA_HP) == 0)
             continue;
 
         arg[0] = maxHP;

@@ -4696,7 +4696,7 @@ void CopyPlayerPartyMonToBattleData(u8 battlerId, u8 partyIndex)
 
 bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex)
 {
-    if (FlagGet(FLAG_SOULLINK_ENABLED) && GetMonDeadMetLocation(mon))
+    if (FlagGet(FLAG_SOULLINK_ENABLED) && GetMonData(mon, MON_DATA_HP, NULL) == 0)
         return TRUE;
 
     return PokemonUseItemEffects(mon, item, partyIndex, moveIndex, FALSE);
@@ -7159,22 +7159,4 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum)
 
         return gfx->spritePointers[spriteNum];
     }
-}
-
-void SetMonDeadMetLocation(struct Pokemon *mon) {
-    u8 metLocation = GetMonData(mon, MON_DATA_MET_LOCATION, NULL);
-    SetDeadMetLocation(metLocation);
-}
-
-void SetDeadMetLocation(u8 metLocation) {
-    gSaveBlock1Ptr->deadMetLocations[metLocation / 8] |= (1 << (metLocation % 8));
-}
-
-bool8 GetMonDeadMetLocation(struct Pokemon *mon) {
-    u8 metLocation = GetMonData(mon, MON_DATA_MET_LOCATION, NULL);
-    return GetDeadMetLocation(metLocation);
-}
-
-bool8 GetDeadMetLocation(u8 metLocation) {
-    return (gSaveBlock1Ptr->deadMetLocations[metLocation / 8] >> (metLocation % 8)) & 1;
 }
