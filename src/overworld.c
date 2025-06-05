@@ -1647,7 +1647,7 @@ static void CB2_ReturnToFieldLocal(void)
 static void CB2_ReturnToFieldLink(void)
 {
     StartSendingKeysToLink();
-    SetMainCallback1(CB1_OverworldLink);
+    // SetMainCallback1(CB1_OverworldLink);
     if (!Overworld_IsRecvQueueAtMax() && ReturnToFieldLink(&gMain.state))
         SetMainCallback2(CB2_Overworld);
 }
