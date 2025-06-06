@@ -15,7 +15,6 @@ LinkMultiBattle_EventScript_TryLinkMultiBattle::
 
 LinkMultiBattle_EventScript_PrepareParty::
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	special LoadPlayerParty
 	special SavePlayerParty
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_PARTY_ORDER
 	setvar VAR_0x8005, MULTI_PARTY_SIZE
