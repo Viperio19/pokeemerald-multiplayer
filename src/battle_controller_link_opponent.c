@@ -220,11 +220,11 @@ static bool32 IsValidForBattle(struct Pokemon *mon)
              && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
 }
 
-static bool32 TwoIntroMons(u32 battlerId) // Double battle with both opponent Pokémon active.
+static bool32 TwoIntroMons(u32 battler) // Double battle with both opponent Pokémon active.
 {
     return (IsDoubleBattle()
-            && IsValidForBattle(&gEnemyParty[gBattlerPartyIndexes[battlerId]])
-            && IsValidForBattle(&gEnemyParty[gBattlerPartyIndexes[BATTLE_PARTNER(battlerId)]]));
+            && IsValidForBattle(&gEnemyParty[gBattlerPartyIndexes[battler]])
+            && IsValidForBattle(&gEnemyParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]]));
 }
 
 static void Intro_WaitForShinyAnimAndHealthbox(void)

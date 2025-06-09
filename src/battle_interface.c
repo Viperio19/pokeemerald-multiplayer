@@ -1162,9 +1162,9 @@ void UpdateHpTextInHealthbox(u8 healthboxSpriteId, s16 value, u8 maxOrCurrent)
     u8 *windowTileData;
     u8 text[32];
     void *objVram;
-    u32 battlerId = gSprites[healthboxSpriteId].hMain_Battler;
+    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
 
-    if (GetBattlerSide(gSprites[healthboxSpriteId].hMain_Battler) == B_SIDE_PLAYER && !WhichBattleCoords(battlerId))
+    if (GetBattlerSide(gSprites[healthboxSpriteId].hMain_Battler) == B_SIDE_PLAYER && !WhichBattleCoords(battler))
     {
         spriteTileNum = gSprites[healthboxSpriteId].oam.tileNum * TILE_SIZE_4BPP;
         if (maxOrCurrent != HP_CURRENT) // singles, max
@@ -1197,7 +1197,7 @@ void UpdateHpTextInHealthbox(u8 healthboxSpriteId, s16 value, u8 maxOrCurrent)
 
         memcpy(text, sEmptyWhiteText_GrayHighlight, sizeof(sEmptyWhiteText_GrayHighlight));
         battler = gSprites[healthboxSpriteId].hMain_Battler;
-        if (WhichBattleCoords(battlerId) == TRUE || GetBattlerSide(battler) == B_SIDE_OPPONENT)
+        if (WhichBattleCoords(battler) == TRUE || GetBattlerSide(battler) == B_SIDE_OPPONENT)
         {
             UpdateHpTextInHealthboxInDoubles(healthboxSpriteId, value, maxOrCurrent);
         }
@@ -1490,7 +1490,7 @@ u8 CreatePartyStatusSummarySprites(u8 battler, struct HpAndStatus *partyInfo, bo
         {
             isOpponent = TRUE;
 
-            if (!skipPlayer || !WhichBattleCoords(battlerId))
+            if (!skipPlayer || !WhichBattleCoords(battler))
                 bar_X = 104, bar_Y = 40;
             else
                 bar_X = 104, bar_Y = 16;
@@ -2191,7 +2191,7 @@ void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elem
 
     if (GetBattlerSide(gSprites[healthboxSpriteId].hMain_Battler) == B_SIDE_PLAYER)
     {
-        u8 isDoubles = WhichBattleCoords(battlerId);
+        u8 isDoubles = WhichBattleCoords(battler);
 
         if (elementId == HEALTHBOX_LEVEL || elementId == HEALTHBOX_ALL)
             UpdateLvlInHealthbox(healthboxSpriteId, GetMonData(mon, MON_DATA_LEVEL));

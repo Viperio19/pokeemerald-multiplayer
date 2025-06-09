@@ -3032,7 +3032,7 @@ static void Cmd_tryfaintmon(void)
                  && gBattleMons[BATTLE_PARTNER(gActiveBattler)].hp != 0) {
                     gBattlerAttacker = BATTLE_PARTNER(gActiveBattler);
                     BattleScriptPush(gBattlescriptCurrInstr);
-                    gBattleMoveDamage = gBattleMons[battlerId].hp;
+                    gBattleMoveDamage = gBattleMons[battler].hp;
                     gBattlescriptCurrInstr = BattleScript_LinkedPokemonFaintsOnScreen;
                 } else {
                     u8 i;
@@ -3045,7 +3045,7 @@ static void Cmd_tryfaintmon(void)
                             GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, gBattleTextBuff1);
                             StringGet_Nickname(gBattleTextBuff1);
                             BattleScriptPush(gBattlescriptCurrInstr);
-                            gBattleMoveDamage = gBattleMons[battlerId].hp;
+                            gBattleMoveDamage = gBattleMons[battler].hp;
                             gBattlescriptCurrInstr = BattleScript_LinkedPokemonFaintsOffScreen;
                             break;
                         }
