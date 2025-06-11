@@ -660,6 +660,10 @@ Common_EventScript_ShowPokemartSign::
 	end
 
 Common_EventScript_ShowPokemonCenterSign::
+	msgbox gText_PokemonCenterSign, MSGBOX_SIGN
+	end
+
+Common_EventScript_ShowPokemonCenterOutsideMenu::
 	call_if_unset FLAG_GOT_BUGGED_CENTER_EXPLANATION, Common_EventScript_ExplainOutsidePokemonCenter
 	message gText_WhatWouldYouLikeToDo
 	waitmessage

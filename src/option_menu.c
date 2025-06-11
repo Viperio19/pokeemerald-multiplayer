@@ -30,6 +30,7 @@
 #define tRandomizeLegendaryPkmn data[3]
 #define tRandomizeStarterPkmn data[4]
 #define tRandomizeGiftPkmn data[5]
+#define tSoullink data[6]
 
 enum
 {
@@ -50,6 +51,7 @@ enum
     MENUITEM_RANDOMIZELEGENDARYPKMN,
     MENUITEM_RANDOMIZESTARTERPKMN,
     MENUITEM_RANDOMIZEGIFTPKMN,
+    MENUITEM_SOULLINK,
     MENUITEM_OPTIONS,
     MENUITEM_RANDOMIZERCOUNT,
 };
@@ -76,6 +78,7 @@ enum
 #define YPOS_LEGENDARY    (MENUITEM_RANDOMIZELEGENDARYPKMN * 16)
 #define YPOS_STARTER      (MENUITEM_RANDOMIZESTARTERPKMN * 16)
 #define YPOS_GIFT         (MENUITEM_RANDOMIZEGIFTPKMN * 16)
+#define YPOS_SOULLINK     (MENUITEM_SOULLINK * 16)
 #define YPOS_OPTIONS      (MENUITEM_OPTIONS * 16)
 
 static void CB2_InitRandomizerMenu(void);
@@ -113,6 +116,8 @@ static u8 RandomizeStarterPkmn_ProcessInput(u8 selection);
 static void RandomizeStarterPkmn_DrawChoices(u8 selection);
 static u8 RandomizeGiftPkmn_ProcessInput(u8 selection);
 static void RandomizeGiftPkmn_DrawChoices(u8 selection);
+static u8 Soullink_ProcessInput(u8 selection);
+static void Soullink_DrawChoices(u8 selection);
 static void DrawOptionHeaderText(void);
 static void DrawRandomizerHeaderText(void);
 static void DrawOptionMenuTexts(void);
@@ -143,6 +148,7 @@ static const u8 *const sRandomizerMenuItemsNames[MENUITEM_RANDOMIZERCOUNT] =
     [MENUITEM_RANDOMIZELEGENDARYPKMN] = gText_OptionMenuLegendary,
     [MENUITEM_RANDOMIZESTARTERPKMN]   = gText_OptionMenuStarters,
     [MENUITEM_RANDOMIZEGIFTPKMN]      = gText_OptionMenuGifts,
+    [MENUITEM_SOULLINK]               = gText_OptionMenuSoullink,
     [MENUITEM_OPTIONS]                = gText_Option,
 };
 
@@ -398,12 +404,14 @@ static void CB2_InitRandomizerMenu(void)
         gTasks[taskId].tRandomizeLegendaryPkmn = gSaveBlock2Ptr->randomizeLegendaryPkmn;
         gTasks[taskId].tRandomizeStarterPkmn = gSaveBlock2Ptr->randomizeStarterPkmn;
         gTasks[taskId].tRandomizeGiftPkmn = gSaveBlock2Ptr->randomizeGiftPkmn;
+        gTasks[taskId].tSoullink = gSaveBlock2Ptr->soullink;
 
         RandomizeTrainerPkmn_DrawChoices(gTasks[taskId].tRandomizeTrainerPkmn);
         RandomizeWildPkmn_DrawChoices(gTasks[taskId].tRandomizeWildPkmn);
         RandomizeLegendaryPkmn_DrawChoices(gTasks[taskId].tRandomizeLegendaryPkmn);
         RandomizeStarterPkmn_DrawChoices(gTasks[taskId].tRandomizeStarterPkmn);
         RandomizeGiftPkmn_DrawChoices(gTasks[taskId].tRandomizeGiftPkmn);
+        Soullink_DrawChoices(gTasks[taskId].tSoullink);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
 
         CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
@@ -621,6 +629,13 @@ static void Task_RandomizerMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tRandomizeGiftPkmn)
                 RandomizeGiftPkmn_DrawChoices(gTasks[taskId].tRandomizeGiftPkmn);
             break;
+        case MENUITEM_SOULLINK:
+            previousOption = gTasks[taskId].tSoullink;
+            gTasks[taskId].tSoullink = Soullink_ProcessInput(gTasks[taskId].tSoullink);
+
+            if (previousOption != gTasks[taskId].tSoullink)
+                Soullink_DrawChoices(gTasks[taskId].tSoullink);
+            break;
         default:
             return;
         }
@@ -640,6 +655,7 @@ static void Task_RandomizerMenuToOptionMenu(u8 taskId)
     gSaveBlock2Ptr->randomizeLegendaryPkmn = gTasks[taskId].tRandomizeLegendaryPkmn;
     gSaveBlock2Ptr->randomizeStarterPkmn = gTasks[taskId].tRandomizeStarterPkmn;
     gSaveBlock2Ptr->randomizeGiftPkmn = gTasks[taskId].tRandomizeGiftPkmn;
+    gSaveBlock2Ptr->soullink = gTasks[taskId].tSoullink;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_RandomizerMenuFadeToOptionMenu;
@@ -662,6 +678,7 @@ static void Task_RandomizerMenuSave(u8 taskId)
     gSaveBlock2Ptr->randomizeLegendaryPkmn = gTasks[taskId].tRandomizeLegendaryPkmn;
     gSaveBlock2Ptr->randomizeStarterPkmn = gTasks[taskId].tRandomizeStarterPkmn;
     gSaveBlock2Ptr->randomizeGiftPkmn = gTasks[taskId].tRandomizeGiftPkmn;
+    gSaveBlock2Ptr->soullink = gTasks[taskId].tSoullink;
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;
@@ -1130,6 +1147,33 @@ static void RandomizeGiftPkmn_DrawChoices(u8 selection)
 
     DrawOptionMenuChoice(gText_OptionMenuNo, XPOS_RANDOMIZERMENU, YPOS_GIFT, styles[0]);
     DrawOptionMenuChoice(gText_OptionMenuYes, xYes, YPOS_GIFT, styles[1]);
+}
+
+static u8 Soullink_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void Soullink_DrawChoices(u8 selection)
+{
+    s32 widthOff, xOn;
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    widthOff = GetStringWidth(FONT_NORMAL, gText_BattleSceneOff, 0);
+    xOn = XPOS_RANDOMIZERMENU + widthOff + X_SPACE;
+
+    DrawOptionMenuChoice(gText_BattleSceneOff, XPOS_RANDOMIZERMENU, YPOS_SOULLINK, styles[0]);
+    DrawOptionMenuChoice(gText_BattleSceneOn, xOn, YPOS_SOULLINK, styles[1]);
 }
 
 static void DrawOptionHeaderText(void)

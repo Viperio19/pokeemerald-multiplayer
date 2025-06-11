@@ -103,6 +103,7 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->randomizeLegendaryPkmn = OPTIONS_RANDOM_NO;
     gSaveBlock2Ptr->randomizeStarterPkmn = OPTIONS_RANDOM_NO;
     gSaveBlock2Ptr->randomizeGiftPkmn = OPTIONS_RANDOM_NO;
+    gSaveBlock2Ptr->soullink = FALSE;
 }
 
 static void ClearPokedexFlags(void)

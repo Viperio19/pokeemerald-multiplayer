@@ -47,8 +47,8 @@ EventScript_DoNoIntroTrainerBattle::
 	applymovement VAR_LAST_TALKED, Movement_RevealTrainer
 	waitmovement 0
 	special PlayTrainerEncounterMusic
-	specialvar VAR_RESULT, IsLinkConnectionEstablished
-	goto_if_eq VAR_RESULT, FALSE, EventScript_DoNoIntroSoloBattle
+@	specialvar VAR_RESULT, IsLinkConnectionEstablished
+@	goto_if_eq VAR_RESULT, FALSE, EventScript_DoNoIntroSoloBattle
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
 	case YES, LinkMultiBattle_EventScript_TryNoIntroLinkMultiBattle
@@ -119,11 +119,11 @@ EventScript_ShowTrainerIntroMsg::
 	waitbuttonpress
 	special TryPrepareSecondApproachingTrainer
 	goto_if_eq VAR_RESULT, TRUE, EventScript_TrainerApproach
-	specialvar VAR_RESULT, IsLinkConnectionEstablished
-	goto_if_eq VAR_RESULT, FALSE, EventScript_DoTrainerBattle
+@	specialvar VAR_RESULT, IsLinkConnectionEstablished
+@	goto_if_eq VAR_RESULT, FALSE, EventScript_DoTrainerBattle
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
-	case YES, LinkMultiBattle_EventScript_TryLinkMultiBattle
+	case YES, LinkMultiBattle_EventScript_TryConnectForLinkMultiBattle
 	case NO, EventScript_InitiateSoloBattle
 	case MULTI_B_PRESSED, EventScript_InitiateSoloBattle
 

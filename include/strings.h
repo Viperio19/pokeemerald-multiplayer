@@ -324,6 +324,7 @@ extern const u8 gText_OptionMenuLegendary[];
 extern const u8 gText_OptionMenuWild[];
 extern const u8 gText_OptionMenuStarters[];
 extern const u8 gText_OptionMenuGifts[];
+extern const u8 gText_OptionMenuSoullink[];
 extern const u8 gText_OptionMenuYes[];
 extern const u8 gText_OptionMenuNo[];
 extern const u8 gText_OptionMenuSimilarBST[];

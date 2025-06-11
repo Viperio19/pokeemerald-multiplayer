@@ -1487,6 +1487,7 @@ const u8 gText_OptionMenuLegendary[] = _("LEGENDARY {PKMN}");
 const u8 gText_OptionMenuWild[] = _("WILD {PKMN}");
 const u8 gText_OptionMenuStarters[] = _("STARTER {PKMN}");
 const u8 gText_OptionMenuGifts[] = _("GIFT {PKMN}");
+const u8 gText_OptionMenuSoullink[] = _("SOULLINK");
 const u8 gText_ButtonMode[] = _("BUTTON MODE");
 const u8 gText_TextSpeedSlow[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SLOW");
 const u8 gText_TextSpeedMid[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}MID");

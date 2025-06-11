@@ -884,7 +884,22 @@ void SetBattleEndCallbacks(void)
 {
     if (!gPaletteFade.active)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
+        if (gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI)
+        {
+            if (IsLinkTaskFinished())
+            {
+                if (gWirelessCommType == 0)
+                    SetCloseLinkCallback();
+                else
+                    SetLinkStandbyCallback();
+
+                m4aSongNumStop(SE_LOW_HEALTH);
+                gMain.inBattle = FALSE;
+                gMain.callback1 = gPreBattleCallback1;
+                SetMainCallback2(gMain.savedCallback);                    
+            }
+        }
+        else if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         {
             if (IsLinkTaskFinished())
             {

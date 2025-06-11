@@ -1,6 +1,9 @@
 LinkMultiBattle_EventScript_TryNoIntroLinkMultiBattle::
 	setflag FLAG_NO_INTRO_MUTLI_BATTLE
-	goto LinkMultiBattle_EventScript_TryLinkMultiBattle
+	goto LinkMultiBattle_EventScript_TryConnectForLinkMultiBattle
+
+LinkMultiBattle_EventScript_TryConnectForLinkMultiBattle::
+	goto LinkMenu_EventScript_SetUpConnection
 
 LinkMultiBattle_EventScript_TryLinkMultiBattle::
 	setvar VAR_FRONTIER_BATTLE_MODE, NOT_FRONTIER_MODE_LINK_MULTIS
@@ -10,7 +13,7 @@ LinkMultiBattle_EventScript_TryLinkMultiBattle::
 	special ChooseHalfPartyForBattle
 	waitstate
 	goto_if_eq VAR_RESULT, 0, LinkMultiBattle_EventScript_DoRegularBattle
-	special BattleTowerReconnectLink
+@	special BattleTowerReconnectLink
 	goto LinkMultiBattle_EventScript_PrepareParty
 
 LinkMultiBattle_EventScript_PrepareParty::
@@ -45,6 +48,7 @@ LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	special DoLinkMultiBattle
 	waitstate
 	special SavePlayerParty
+	tower_closelink
 	goto_if_set FLAG_NO_INTRO_MUTLI_BATTLE, LinkMultiBattle_EventScript_GoToPostBattleScript
 	gotobeatenscript
 	releaseall
@@ -106,9 +110,7 @@ LinkMenu_EventScript_CableLinkSuccessful::
 	message LinkMenu_Text_LinkConnectionEstablished
 	waitmessage
 	delay 60
-	closemessage
-	releaseall
-	end
+	goto LinkMultiBattle_EventScript_TryLinkMultiBattle
 
 LinkMenu_EventScript_CableLinkFailed::
 	message LinkMenu_Text_LinkConnectionFailed

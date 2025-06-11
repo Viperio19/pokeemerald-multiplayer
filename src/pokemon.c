@@ -4696,7 +4696,7 @@ void CopyPlayerPartyMonToBattleData(u8 battler, u8 partyIndex)
 
 bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex)
 {
-    if (FlagGet(FLAG_SOULLINK_ENABLED) && GetMonData(mon, MON_DATA_HP, NULL) == 0)
+    if (gSaveBlock2Ptr->soullink && GetMonData(mon, MON_DATA_HP, NULL) == 0)
         return TRUE;
 
     return PokemonUseItemEffects(mon, item, partyIndex, moveIndex, FALSE);
