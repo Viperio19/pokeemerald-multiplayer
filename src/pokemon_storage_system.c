@@ -1997,6 +1997,16 @@ static void CB2_PokeStorage(void)
 
 static void EnterPokeStorage(u8 boxOption)
 {
+    u8 i;
+
+    if (gSaveBlock2Ptr->soullink) {
+        for (i = 0; i < PARTY_SIZE; i++) {
+            struct Pokemon *mon = &gPlayerParty[i];
+            u8 fainted = GetMonData(mon, MON_DATA_HP) == 0;
+            SetBoxMonData(&mon->box, MON_DATA_IS_FAINTED, &fainted);
+        }
+    }
+    
     ResetTasks();
     sCurrentBoxOption = boxOption;
     sStorage = Alloc(sizeof(*sStorage));
@@ -6367,6 +6377,10 @@ static void SetPlacedMonData(u8 boxId, u8 position)
     if (boxId == TOTAL_BOXES_COUNT)
     {
         gPlayerParty[position] = sStorage->movingMon;
+        if (gSaveBlock2Ptr->soullink && GetBoxMonData(&sStorage->movingMon.box, MON_DATA_IS_FAINTED)) {
+            u16 zero = 0;
+            SetMonData(&gPlayerParty[position], MON_DATA_HP, &zero);
+        }
     }
     else
     {

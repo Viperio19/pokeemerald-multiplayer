@@ -3796,6 +3796,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
     case MON_DATA_SANITY_HAS_SPECIES:
         retVal = boxMon->hasSpecies;
         break;
+    case MON_DATA_IS_FAINTED:
+        retVal = boxMon->fainted;
+        break;
     case MON_DATA_SANITY_IS_EGG:
         retVal = boxMon->isEgg;
         break;
@@ -4171,6 +4174,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_SANITY_HAS_SPECIES:
         SET8(boxMon->hasSpecies);
+        break;
+    case MON_DATA_IS_FAINTED:
+        SET8(boxMon->fainted);
         break;
     case MON_DATA_SANITY_IS_EGG:
         SET8(boxMon->isEgg);

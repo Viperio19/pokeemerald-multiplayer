@@ -1926,7 +1926,7 @@ u8 GetMonAilment(struct Pokemon *mon)
 {
     u8 ailment;
 
-    if (GetMonData(mon, MON_DATA_HP) == 0)
+    if (GetMonData(mon, MON_DATA_HP) == 0 || (gSaveBlock2Ptr->soullink && GetBoxMonData(&mon->box, MON_DATA_IS_FAINTED)))
         return AILMENT_FNT;
     ailment = GetAilmentFromStatus(GetMonData(mon, MON_DATA_STATUS));
     if (ailment != AILMENT_NONE)

@@ -12,6 +12,7 @@ enum {
     MON_DATA_SANITY_IS_BAD_EGG,
     MON_DATA_SANITY_HAS_SPECIES,
     MON_DATA_SANITY_IS_EGG,
+    MON_DATA_IS_FAINTED,
     MON_DATA_OT_NAME,
     MON_DATA_MARKINGS,
     MON_DATA_CHECKSUM,
@@ -203,7 +204,8 @@ struct BoxPokemon
     u8 hasSpecies:1;
     u8 isEgg:1;
     u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set
-    u8 unused:4;
+    u8 fainted:1;
+    u8 unused:3;
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings;
     u16 checksum;
