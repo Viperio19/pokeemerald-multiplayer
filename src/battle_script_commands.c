@@ -3627,7 +3627,7 @@ static void Cmd_checkteamslost(void)
     // For link battles that haven't ended, count number of empty battler spots
     // In link multi battles, jump to pointer if more than 1 spot empty
     // In non-multi battles, jump to pointer if 1 spot is missing on both sides
-    if (gBattleOutcome == 0 && (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)))
+    if (gBattleOutcome == 0 && (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) && !(gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI))
     {
         s32 emptyPlayerSpots = 0;
         s32 emptyOpponentSpots;
