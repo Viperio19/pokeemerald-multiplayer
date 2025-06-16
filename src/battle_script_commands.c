@@ -3032,7 +3032,7 @@ static void Cmd_tryfaintmon(void)
                  && gBattleMons[BATTLE_PARTNER(gActiveBattler)].hp != 0) {
                     gBattlerAttacker = BATTLE_PARTNER(gActiveBattler);
                     BattleScriptPush(gBattlescriptCurrInstr);
-                    gBattleMoveDamage = gBattleMons[battler].hp;
+                    gBattleMoveDamage = gBattleMons[gBattlerAttacker].hp;
                     gBattlescriptCurrInstr = BattleScript_LinkedPokemonFaintsOnScreen;
                 } else {
                     u8 i;

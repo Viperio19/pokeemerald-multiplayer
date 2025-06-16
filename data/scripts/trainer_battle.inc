@@ -123,7 +123,7 @@ EventScript_ShowTrainerIntroMsg::
 @	goto_if_eq VAR_RESULT, FALSE, EventScript_DoTrainerBattle
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
-	case YES, LinkMultiBattle_EventScript_TryConnectForLinkMultiBattle
+	case YES, LinkMultiBattle_EventScript_ChoosePokemon
 	case NO, EventScript_InitiateSoloBattle
 	case MULTI_B_PRESSED, EventScript_InitiateSoloBattle
 

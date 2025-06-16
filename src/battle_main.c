@@ -2528,7 +2528,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
                 if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
                     species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
                 } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
-                    species = GetRandomSpecies(species, trainerNum + 1);
+                    species = GetRandomSpecies(species, trainerNum + i);
                 }
 
                 for (j = 0; gSpeciesNames[species][j] != EOS; j++)
