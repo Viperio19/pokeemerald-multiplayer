@@ -1700,6 +1700,10 @@ bool8 ScrCmd_giveegg(struct ScriptContext *ctx)
 {
     u16 species = VarGet(ScriptReadHalfword(ctx));
 
+    if (gSaveBlock2Ptr->randomizeGiftPkmn == OPTIONS_RANDOM_YES) {
+        species = GetRandomSpecies(species, species);
+    }
+
     gSpecialVar_Result = ScriptGiveEgg(species);
     return FALSE;
 }
