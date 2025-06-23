@@ -755,12 +755,6 @@
 	.endif
 	.endm
 
-	@ Viperio | Start a link multi battle instead of a single battle
-	.macro trainerbattle_multilink trainer:req, intro_text:req, lose_text:req, event_script=FALSE, music=TRUE
-	setvar VAR_0x8007 \trainer
-	call LinkMultiBattle_EventScript_TryEnterLinkMultisChallenge
-	.endm
-
 	@ Starts a double trainer battle. Takes a trainer, intro text, loss text, text for when you have too few pokemon
 	@ and an optional event script. When used with an event script you can pass in an optional flag to disable music
 	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=FALSE, music=TRUE

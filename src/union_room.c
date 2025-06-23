@@ -3295,9 +3295,6 @@ void InitUnionRoom(void)
 {
     struct WirelessLink_URoom *data;
 
-    if (IsLinkConnectionEstablished())
-        return;
-
     sUnionRoomPlayerName[0] = EOS;
     CreateTask(Task_InitUnionRoom, 0);
     sWirelessLinkMain.uRoom = sWirelessLinkMain.uRoom; // Needed to match.

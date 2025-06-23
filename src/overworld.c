@@ -1646,8 +1646,6 @@ static void CB2_ReturnToFieldLocal(void)
 
 static void CB2_ReturnToFieldLink(void)
 {
-    StartSendingKeysToLink();
-    // SetMainCallback1(CB1_OverworldLink);
     if (!Overworld_IsRecvQueueAtMax() && ReturnToFieldLink(&gMain.state))
         SetMainCallback2(CB2_Overworld);
 }
@@ -1655,9 +1653,9 @@ static void CB2_ReturnToFieldLink(void)
 void CB2_ReturnToFieldFromMultiplayer(void)
 {
     FieldClearVBlankHBlankCallbacks();
-    // StopMapMusic();
-    // SetMainCallback1(CB1_OverworldLink);
-    // ResetAllMultiplayerState();
+    StopMapMusic();
+    SetMainCallback1(CB1_OverworldLink);
+    ResetAllMultiplayerState();
 
     if (gWirelessCommType != 0)
         gFieldCallback = FieldCB_ReturnToFieldWirelessLink;
@@ -1760,8 +1758,8 @@ void CB2_ContinueSavedGame(void)
 
 static void FieldClearVBlankHBlankCallbacks(void)
 {
-    // if (UsedPokemonCenterWarp() == TRUE)
-    //     CloseLink();
+    if (UsedPokemonCenterWarp() == TRUE)
+        CloseLink();
 
     if (gWirelessCommType != 0)
     {
