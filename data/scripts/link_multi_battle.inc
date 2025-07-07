@@ -3,6 +3,7 @@ LinkMultiBattle_EventScript_TryNoIntroLinkMultiBattle::
 	goto LinkMultiBattle_EventScript_ChoosePokemon
 
 LinkMultiBattle_EventScript_ChoosePokemon::
+	special SavePlayerParty
 	setvar VAR_FRONTIER_BATTLE_MODE, NOT_FRONTIER_MODE_LINK_MULTIS
 	fadescreen FADE_TO_BLACK
 	setvar VAR_0x8004, FRONTIER_LVL_OPEN
@@ -14,7 +15,6 @@ LinkMultiBattle_EventScript_ChoosePokemon::
 
 LinkMultiBattle_EventScript_PrepareParty::
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	special SavePlayerParty
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_PARTY_ORDER
 	setvar VAR_0x8005, MULTI_PARTY_SIZE
 	special CallFrontierUtilFunc

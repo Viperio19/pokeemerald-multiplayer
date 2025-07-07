@@ -1912,7 +1912,13 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
         } else if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_YES) {
             species = GetRandomSpecies(species, item);
         }
-    } 
+    } else {
+        if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL) {
+            species = GetRandomSimilarStrengthSpecies(species, item, gSaveBlock1Ptr->location.mapGroup * gSaveBlock1Ptr->location.mapNum);
+        } else if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_YES) {
+            species = GetRandomSpecies(species, item + gSaveBlock1Ptr->location.mapGroup * gSaveBlock1Ptr->location.mapNum);
+        }
+    }
 
     CreateScriptedWildMon(species, level, item);
     return FALSE;
