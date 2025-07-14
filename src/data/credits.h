@@ -2,6 +2,8 @@ enum
 {
     PAGE_TITLE,
     PAGE_MODDED_BY, // Viperio | custom credits
+    PAGE_TESTED_BY_1,
+    PAGE_TESTED_BY_2,
     PAGE_DIRECTOR,
     PAGE_ART_DIRECTOR,
     PAGE_WORLD_DIRECTOR,
@@ -68,6 +70,12 @@ static const u8 sCreditsText_EmptyString[]                    = _("");
 // Viperio | custom credits
 static const u8 sCreditsText_ModdedBy[]                       = _("Modded By");
 static const u8 sCreditsText_Viperio[]                        = _("Viperio");
+static const u8 sCreditsText_TestedBy[]                       = _("Tested By");
+static const u8 sCreditsText_WOTDIY[]                         = _("WordOfTheDayIsYay");
+static const u8 sCreditsText_C2H6[]                           = _("C2H6");
+static const u8 sCreditsText_KeeperPlays[]                    = _("KeeperPlays");
+static const u8 sCreditsText_Jpalma[]                         = _("Jpalma");
+static const u8 sCreditsText_NerdyEdits[]                     = _("NerdyEdits");
 
 static const u8 sCreditsText_PkmnEmeraldVersion[]             = _("POKéMON EMERALD VERSION");
 static const u8 sCreditsText_Credits[]                        = _("Credits");
@@ -230,8 +238,14 @@ static const u8 sCreditsText_ErikJohnson[]                    = _("Erik Johnson"
 static const struct CreditsEntry sCreditsEntry_EmptyString                      = { 0, FALSE, sCreditsText_EmptyString};
 
 // Viperio | custom credits
-static const struct CreditsEntry sCreditsEntry_ModdedBy                         = { 7, TRUE, sCreditsText_ModdedBy};
+static const struct CreditsEntry sCreditsEntry_ModdedBy                         = { 7,  TRUE, sCreditsText_ModdedBy};
 static const struct CreditsEntry sCreditsEntry_Viperio                          = { 7, FALSE, sCreditsText_Viperio};
+static const struct CreditsEntry sCreditsEntry_TestedBy                         = { 7,  TRUE, sCreditsText_TestedBy};
+static const struct CreditsEntry sCreditsEntry_WOTDIY                           = { 7, FALSE, sCreditsText_WOTDIY};
+static const struct CreditsEntry sCreditsEntry_C2H6                             = { 7, FALSE, sCreditsText_C2H6};
+static const struct CreditsEntry sCreditsEntry_KeeperPlays                      = { 7, FALSE, sCreditsText_KeeperPlays};
+static const struct CreditsEntry sCreditsEntry_Jpalma                           = { 7, FALSE, sCreditsText_Jpalma};
+static const struct CreditsEntry sCreditsEntry_NerdyEdits                       = { 7, FALSE, sCreditsText_NerdyEdits};
 
 static const struct CreditsEntry sCreditsEntry_PkmnEmeraldVersion               = { 7,  TRUE, sCreditsText_PkmnEmeraldVersion};
 static const struct CreditsEntry sCreditsEntry_Credits                          = {11,  TRUE, sCreditsText_Credits};
@@ -407,6 +421,20 @@ static const struct CreditsEntry *const sCreditsEntryPointerTable[PAGE_COUNT][EN
         _,
         &sCreditsEntry_ModdedBy,
         &sCreditsEntry_Viperio,
+        _,
+        _,
+    },
+    [PAGE_TESTED_BY_1] = {
+        &sCreditsEntry_TestedBy,
+        &sCreditsEntry_WOTDIY,
+        &sCreditsEntry_C2H6,
+        &sCreditsEntry_KeeperPlays,
+        _,
+    },
+    [PAGE_TESTED_BY_2] = {
+        &sCreditsEntry_TestedBy,
+        &sCreditsEntry_NerdyEdits,
+        &sCreditsEntry_Jpalma,
         _,
         _,
     },
