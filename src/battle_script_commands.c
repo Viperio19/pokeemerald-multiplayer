@@ -3025,7 +3025,7 @@ static void Cmd_tryfaintmon(void)
                 gBattlescriptCurrInstr = BattleScript_DestinyBondTakesLife;
             }
 
-            if (gSaveBlock2Ptr->soullink && GetBattlerSide(gActiveBattler) == B_SIDE_PLAYER) {
+            if (gSaveBlock2Ptr->soullink && gBattleTypeFlags & BATTLE_TYPE_LINK_MULTI && GetBattlerSide(gActiveBattler) == B_SIDE_PLAYER) {
                 u8 metLocation = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_MET_LOCATION, FALSE);
 
                 if (metLocation == GetMonData(&gPlayerParty[gBattlerPartyIndexes[BATTLE_PARTNER(gActiveBattler)]], MON_DATA_MET_LOCATION, FALSE)

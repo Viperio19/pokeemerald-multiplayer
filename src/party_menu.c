@@ -5777,7 +5777,7 @@ static const u8 *GetFacilityCancelString(void)
 {
     u8 facilityNum = VarGet(VAR_FRONTIER_FACILITY);
 
-    if (VarGet(VAR_FRONTIER_BATTLE_MODE) == NOT_FRONTIER_MODE_LINK_MULTIS)
+    if (VarGet(VAR_FRONTIER_BATTLE_MODE) == NOT_FRONTIER_MODE_LINK_MULTIS && !FlagGet(FLAG_STEVEN_MULTI_BATTLE))
         return gText_BattleAlone;
     else if (!(facilityNum != FACILITY_UNION_ROOM && facilityNum != FACILITY_MULTI_OR_EREADER))
         return gText_CancelBattle;

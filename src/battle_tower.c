@@ -2180,11 +2180,26 @@ void DoLinkMultiBattle(void)
 {
     gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI | BATTLE_TYPE_TOWER_LINK_MULTI | BATTLE_TYPE_LINK_MULTI;
 
-    if (gNoOfApproachingTrainers == 2)
-        gBattleTypeFlags |= BATTLE_TYPE_TWO_OPPONENTS;
+    if (FlagGet(FLAG_STEVEN_MULTI_BATTLE))
+    {
+        gApproachingTrainerId = 0;
+        BattleSetup_ConfigureTrainerBattle(MossdeepCity_SpaceCenter_2F_EventScript_MaxieTrainer + 1);
+        gApproachingTrainerId = 1;
+        BattleSetup_ConfigureTrainerBattle(MossdeepCity_SpaceCenter_2F_EventScript_TabithaTrainer + 1);
 
-    BattleSetup_SetCBEndTrainerBattle();
-    DoTrainerBattle();
+        gBattleTypeFlags |= BATTLE_TYPE_TWO_OPPONENTS;
+        CreateTask(Task_StartBattleAfterTransition, 1);
+        PlayMapChosenOrBattleBGM(0);
+        BattleTransition_StartOnField(B_TRANSITION_MAGMA);
+    }
+    else
+    {
+        if (gNoOfApproachingTrainers == 2)
+            gBattleTypeFlags |= BATTLE_TYPE_TWO_OPPONENTS;
+
+        BattleSetup_SetCBEndTrainerBattle();
+        DoTrainerBattle();
+    }
 }
 
 void DoSpecialTrainerBattle(void)

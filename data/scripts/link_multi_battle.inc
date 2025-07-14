@@ -112,7 +112,13 @@ LinkMultiBattle_EventScript_SelectedDifferentTrainer::
 
 LinkMultiBattle_EventScript_DoRegularBattle::
 	special LoadPlayerParty
+	goto_if_set FLAG_STEVEN_MULTI_BATTLE, MossdeepCity_SpaceCenter_2F_EventScript_ReadyForBattlePrompt
+	goto_if_set FLAG_NO_INTRO_MUTLI_BATTLE, LinkMultiBattle_EventScript_DoRegularNoIntroBattle
 	goto EventScript_InitiateSoloBattle
+
+LinkMultiBattle_EventScript_DoRegularNoIntroBattle::
+	clearflag FLAG_NO_INTRO_MUTLI_BATTLE
+	goto EventScript_InitiateNoIntroSoloBattle
 
 LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	message LinkMultiBattle_Text_InitiatingLinkBattle
@@ -121,6 +127,7 @@ LinkMultiBattle_EventScript_DoLinkMultiBattle::
 	waitstate
 	special SavePlayerParty
 	tower_closelink
+	goto_if_set FLAG_STEVEN_MULTI_BATTLE, MossdeepCity_SpaceCenter_2F_EventScript_DefeatedMaxieTabitha
 	goto_if_set FLAG_NO_INTRO_MUTLI_BATTLE, LinkMultiBattle_EventScript_GoToPostBattleScript
 	gotobeatenscript
 	releaseall

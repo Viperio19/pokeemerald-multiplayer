@@ -48,8 +48,8 @@
 #define FLAG_NO_INTRO_MUTLI_BATTLE          0x22
 #define FLAG_GOT_BUGGED_CENTER_EXPLANATION  0x23
 #define FLAG_DISABLE_PC_GRAPHICS            0x24
+#define FLAG_STEVEN_MULTI_BATTLE            0x25
 
-#define FLAG_UNUSED_0x025    0x25 // Unused Flag
 #define FLAG_UNUSED_0x026    0x26 // Unused Flag
 #define FLAG_UNUSED_0x027    0x27 // Unused Flag
 #define FLAG_UNUSED_0x028    0x28 // Unused Flag

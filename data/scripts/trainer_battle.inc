@@ -121,6 +121,7 @@ EventScript_ShowTrainerIntroMsg::
 	goto_if_eq VAR_RESULT, TRUE, EventScript_TrainerApproach
 @	specialvar VAR_RESULT, IsLinkConnectionEstablished
 @	goto_if_eq VAR_RESULT, FALSE, EventScript_DoTrainerBattle
+	clearflag FLAG_STEVEN_MULTI_BATTLE
 	msgbox EventScript_Text_BattleWithOtherPlayer, MSGBOX_YESNO
 	switch VAR_RESULT
 	case YES, LinkMultiBattle_EventScript_ChoosePokemon
