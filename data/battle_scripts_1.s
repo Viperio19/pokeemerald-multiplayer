@@ -3000,7 +3000,7 @@ BattleScript_FrontierLinkBattleLostEnd::
 
 BattleScript_LinkMultiBattleWonOrLost::
 	jumpifbattletype BATTLE_TYPE_TWO_OPPONENTS, BattleScript_LinkMultiTwoTrainersDefeated
-	printstring STRINGID_PLAYERDEFEATEDTRAINER1
+	printstring STRINGID_PLAYERSDEFEATEDTRAINER1
 	goto BattleScript_LinkMultiBattleWonLoseTexts
 BattleScript_LinkMultiTwoTrainersDefeated::
 	printstring STRINGID_TWOENEMIESDEFEATED

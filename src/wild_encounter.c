@@ -455,11 +455,8 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, u8 ar
 
     species = wildMonInfo->wildPokemon[wildMonIndex].species;
 
-    if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL) {
-        species = GetRandomSimilarStrengthSpecies(species, wildMonIndex, GetCurrentMapWildMonHeaderId());
-    } else if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_YES) {
-        species = GetRandomSpecies(species, wildMonIndex + GetCurrentMapWildMonHeaderId());
-    }
+    if (gSaveBlock2Ptr->randomizeWildPkmn != OPTIONS_RANDOM_NO)
+        species = GetRandomSpecies(species, wildMonIndex, gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL);
 
     CreateWildMon(species, level);
     return TRUE;
@@ -472,11 +469,8 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
 
     u16 species = wildMonInfo->wildPokemon[wildMonIndex].species;
 
-    if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL) {
-        species = GetRandomSimilarStrengthSpecies(species, wildMonIndex, GetCurrentMapWildMonHeaderId());
-    } else if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_YES) {
-        species = GetRandomSpecies(species, wildMonIndex + GetCurrentMapWildMonHeaderId());
-    }
+    if (gSaveBlock2Ptr->randomizeWildPkmn != OPTIONS_RANDOM_NO)
+        species = GetRandomSpecies(species, wildMonIndex, gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL);
 
     CreateWildMon(species, level);
     return species;

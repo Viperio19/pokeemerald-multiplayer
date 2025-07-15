@@ -404,11 +404,10 @@ u16 GetStarterPokemon(u16 chosenStarterId)
 
     species = sStarterMon[chosenStarterId];
 
-    if (gSaveBlock2Ptr->randomizeStarterPkmn == OPTIONS_RANDOM_SPECIAL) {
+    if (gSaveBlock2Ptr->randomizeStarterPkmn == OPTIONS_RANDOM_SPECIAL)
         species = sThreeStageStarters[((6 + chosenStarterId) * species ^ gSaveBlock2Ptr->randomizerSeed) % (ARRAY_COUNT(sThreeStageStarters) + 1)];
-    } else if (gSaveBlock2Ptr->randomizeStarterPkmn == OPTIONS_RANDOM_YES) {
-        species = GetRandomSpecies(species, chosenStarterId);
-    }
+    else if (gSaveBlock2Ptr->randomizeStarterPkmn == OPTIONS_RANDOM_YES)
+        species = GetRandomSpecies(species, chosenStarterId, FALSE);
 
     return species;
 }

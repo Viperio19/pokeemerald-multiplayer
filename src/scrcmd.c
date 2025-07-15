@@ -1688,9 +1688,8 @@ bool8 ScrCmd_givemon(struct ScriptContext *ctx)
     u32 unkParam2 = ScriptReadWord(ctx);
     u8 unkParam3 = ScriptReadByte(ctx);
 
-    if (gSaveBlock2Ptr->randomizeGiftPkmn == OPTIONS_RANDOM_YES) {
-        species = GetRandomSpecies(species, item);
-    }
+    if (gSaveBlock2Ptr->randomizeGiftPkmn == OPTIONS_RANDOM_YES)
+        species = GetRandomSpecies(species, item, FALSE);
 
     gSpecialVar_Result = ScriptGiveMon(species, level, item, unkParam1, unkParam2, unkParam3);
     return FALSE;
@@ -1700,9 +1699,8 @@ bool8 ScrCmd_giveegg(struct ScriptContext *ctx)
 {
     u16 species = VarGet(ScriptReadHalfword(ctx));
 
-    if (gSaveBlock2Ptr->randomizeGiftPkmn == OPTIONS_RANDOM_YES) {
-        species = GetRandomSpecies(species, species);
-    }
+    if (gSaveBlock2Ptr->randomizeGiftPkmn == OPTIONS_RANDOM_YES)
+        species = GetRandomSpecies(species, species, FALSE);
 
     gSpecialVar_Result = ScriptGiveEgg(species);
     return FALSE;
@@ -1906,19 +1904,17 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
     u8 level = ScriptReadByte(ctx);
     u16 item = ScriptReadHalfword(ctx);
 
-    if (species >= SPECIES_REGIROCK) {
-        if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_SPECIAL) {
+    // legendary static pokemon
+    if (species >= SPECIES_REGIROCK)
+    {
+        if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_SPECIAL)
             species = sLegendaryPokemon[((6 + item) * species ^ gSaveBlock2Ptr->randomizerSeed) % (ARRAY_COUNT(sLegendaryPokemon) + 1)];
-        } else if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_YES) {
-            species = GetRandomSpecies(species, item);
-        }
-    } else {
-        if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL) {
-            species = GetRandomSimilarStrengthSpecies(species, item, gSaveBlock1Ptr->location.mapGroup * gSaveBlock1Ptr->location.mapNum);
-        } else if (gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_YES) {
-            species = GetRandomSpecies(species, item + gSaveBlock1Ptr->location.mapGroup * gSaveBlock1Ptr->location.mapNum);
-        }
+        else if (gSaveBlock2Ptr->randomizeLegendaryPkmn == OPTIONS_RANDOM_YES)
+            species = GetRandomSpecies(species, item, FALSE);
     }
+    // non legendary static pokemon
+    else if (gSaveBlock2Ptr->randomizeWildPkmn != OPTIONS_RANDOM_NO)
+        species = GetRandomSpecies(species, item, gSaveBlock2Ptr->randomizeWildPkmn == OPTIONS_RANDOM_SPECIAL);
 
     CreateScriptedWildMon(species, level, item);
     return FALSE;

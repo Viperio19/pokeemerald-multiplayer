@@ -77,7 +77,7 @@ static const u8 sCreditsText_KeeperPlays[]                    = _("KeeperPlays")
 static const u8 sCreditsText_Jpalma[]                         = _("Jpalma");
 static const u8 sCreditsText_NerdyEdits[]                     = _("NerdyEdits");
 
-static const u8 sCreditsText_PkmnEmeraldVersion[]             = _("POKéMON EMERALD VERSION");
+static const u8 sCreditsText_PkmnEmeraldVersion[]             = _("POKéMON EMERALDS VERSION");
 static const u8 sCreditsText_Credits[]                        = _("Credits");
 static const u8 sCreditsText_ExecutiveDirector[]              = _("Executive Director");
 static const u8 sCreditsText_Director[]                       = _("Director");

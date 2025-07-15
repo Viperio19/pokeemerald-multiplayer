@@ -2367,38 +2367,43 @@ static const u16 sSpeciesSortedByBST[NUM_KNOWN_SPECIES] =
    SPECIES_RAYQUAZA,
 };
 
-u16 GetRandomSimilarStrengthSpecies(u16 species, u16 randomNoise1, u16 randomNoise2)
+static u16 GetSimilarStrengthSpecies(u16 species, u16 random)
 {
     u16 sortedIndex;
     u16 offset;
 
-    for (sortedIndex = 0; sortedIndex < NUM_SPECIES; sortedIndex++) {
+    for (sortedIndex = 0; sortedIndex < NUM_SPECIES; sortedIndex++)
+    {
         if (sSpeciesSortedByBST[sortedIndex] == species)
             break;
     }
 
-    // get a range from 1 - 21
-    offset = ((((6 + randomNoise2) * randomNoise1) ^ (gSaveBlock2Ptr->randomizerSeed * (randomNoise1 + 1))) % 21) + 1;
-    
+    // get an offset in a range from 1 to 21
+    offset = random % 21 + 1;
+
     // 11 to 21 = +0 to +10
-    if (offset >= 11) {
+    if (offset >= 11)
+    {
         offset -= 11;
-        return offset <= (384 - sortedIndex) ? sSpeciesSortedByBST[sortedIndex + offset]
-                                                    : sSpeciesSortedByBST[sortedIndex - offset];
+        return offset <= (384 - sortedIndex) ? sSpeciesSortedByBST[sortedIndex + offset] : sSpeciesSortedByBST[sortedIndex - offset];
     }
+
     // 1 to 10 = -1 to -10
-    else
-        return (offset <= sortedIndex) ? sSpeciesSortedByBST[sortedIndex - offset]
-                                      : sSpeciesSortedByBST[sortedIndex + offset];
+    return offset <= sortedIndex ? sSpeciesSortedByBST[sortedIndex - offset] : sSpeciesSortedByBST[sortedIndex + offset];
 }
 
-u16 GetRandomSpecies(u16 species, u16 randomNoise)
+u16 GetRandomSpecies(u16 species, u16 randomNoise, bool8 similarStrength)
 {
-    u16 result = ((6 + randomNoise) * species ^ (gSaveBlock2Ptr->randomizerSeed * (randomNoise + 1))) % NUM_KNOWN_SPECIES + 1;
+    u16 result;
+    u16 random = ((6 + species + gSaveBlock1Ptr->location.mapNum) * (gSaveBlock1Ptr->location.mapGroup + 1)) ^ (gSaveBlock2Ptr->randomizerSeed * (randomNoise + 1));
 
-    if (result > SPECIES_CELEBI) {
+    if (similarStrength)
+        return GetSimilarStrengthSpecies(species, random);
+
+    result = random % NUM_KNOWN_SPECIES + 1;
+
+    if (result > SPECIES_CELEBI)
         result += (SPECIES_OLD_UNOWN_Z - SPECIES_CELEBI);
-    }
 
     return result;
 }
@@ -2455,11 +2460,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
 
                 species = partyData[i].species;
 
-                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
-                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
-                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
-                    species = GetRandomSpecies(species, trainerNum + i);
-                }
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn != OPTIONS_RANDOM_NO)
+                    species = GetRandomSpecies(species, trainerNum + i, gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL);
 
                 for (j = 0; gSpeciesNames[species][j] != EOS; j++)
                     nameHash += gSpeciesNames[species][j];
@@ -2475,11 +2477,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
 
                 species = partyData[i].species;
 
-                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
-                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
-                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
-                    species = GetRandomSpecies(species, trainerNum + i);
-                }
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn != OPTIONS_RANDOM_NO)
+                    species = GetRandomSpecies(species, trainerNum + i, gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL);
 
                 for (j = 0; gSpeciesNames[species][j] != EOS; j++)
                     nameHash += gSpeciesNames[species][j];
@@ -2503,11 +2502,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
 
                 species = partyData[i].species;
 
-                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
-                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
-                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
-                    species = GetRandomSpecies(species, trainerNum + i);
-                }
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn != OPTIONS_RANDOM_NO)
+                    species = GetRandomSpecies(species, trainerNum + i, gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL);
 
                 for (j = 0; gSpeciesNames[species][j] != EOS; j++)
                     nameHash += gSpeciesNames[species][j];
@@ -2525,11 +2521,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
 
                 species = partyData[i].species;
 
-                if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL) {
-                    species = GetRandomSimilarStrengthSpecies(species, trainerNum, i);
-                } else if (gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_YES) {
-                    species = GetRandomSpecies(species, trainerNum + i);
-                }
+                if (gSaveBlock2Ptr->randomizeTrainerPkmn != OPTIONS_RANDOM_NO)
+                    species = GetRandomSpecies(species, trainerNum + i, gSaveBlock2Ptr->randomizeTrainerPkmn == OPTIONS_RANDOM_SPECIAL);
 
                 for (j = 0; gSpeciesNames[species][j] != EOS; j++)
                     nameHash += gSpeciesNames[species][j];
