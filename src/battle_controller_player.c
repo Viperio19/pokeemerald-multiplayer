@@ -849,6 +849,42 @@ static void HandleMoveSwitching(void)
     }
 }
 
+static void SetMultiLinkBattleEndCallbacks(void)
+{
+    if (gWirelessCommType == 0)
+    {
+        if (gReceivedRemoteLinkPlayers == 0)
+        {
+            m4aSongNumStop(SE_LOW_HEALTH);
+            gMain.inBattle = FALSE;
+            gMain.callback1 = gPreBattleCallback1;
+            SetMainCallback2(gMain.savedCallback);
+
+            ResetSpriteData();
+            FreeAllWindowBuffers();
+            FreeMonSpritesGfx();
+            FreeBattleResources();
+            FreeBattleSpritesData();
+        }
+    }
+    else
+    {
+        if (IsLinkTaskFinished())
+        {
+            m4aSongNumStop(SE_LOW_HEALTH);
+            gMain.inBattle = FALSE;
+            gMain.callback1 = gPreBattleCallback1;
+            SetMainCallback2(gMain.savedCallback);
+
+            ResetSpriteData();
+            FreeAllWindowBuffers();
+            FreeMonSpritesGfx();
+            FreeBattleResources();
+            FreeBattleSpritesData();
+        }
+    }
+}
+
 static void SetLinkBattleEndCallbacks(void)
 {
     if (gWirelessCommType == 0)
@@ -893,10 +929,7 @@ void SetBattleEndCallbacks(void)
                 else
                     SetLinkStandbyCallback();
 
-                m4aSongNumStop(SE_LOW_HEALTH);
-                gMain.inBattle = FALSE;
-                gMain.callback1 = gPreBattleCallback1;
-                SetMainCallback2(gMain.savedCallback);                    
+                gBattlerControllerFuncs[gActiveBattler] = SetMultiLinkBattleEndCallbacks;
             }
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_LINK)
