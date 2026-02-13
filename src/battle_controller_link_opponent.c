@@ -52,7 +52,7 @@ static void LinkOpponentHandleYesNoBox(void);
 static void LinkOpponentHandleChooseMove(void);
 static void LinkOpponentHandleChooseItem(void);
 static void LinkOpponentHandleChoosePokemon(void);
-static void LinkOpponentHandleCmd23(void);
+static void LinkOpponentHandleFaintLinkedPokemon(void);
 static void LinkOpponentHandleHealthBarUpdate(void);
 static void LinkOpponentHandleExpUpdate(void);
 static void LinkOpponentHandleStatusIconUpdate(void);
@@ -124,7 +124,7 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = LinkOpponentHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = LinkOpponentHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = LinkOpponentHandleChoosePokemon,
-    [CONTROLLER_23]                       = LinkOpponentHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = LinkOpponentHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = LinkOpponentHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = LinkOpponentHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = LinkOpponentHandleStatusIconUpdate,
@@ -1528,7 +1528,7 @@ static void LinkOpponentHandleChoosePokemon(void)
     LinkOpponentBufferExecCompleted();
 }
 
-static void LinkOpponentHandleCmd23(void)
+static void LinkOpponentHandleFaintLinkedPokemon(void)
 {
     LinkOpponentBufferExecCompleted();
 }

@@ -55,7 +55,7 @@ static void LinkPartnerHandleYesNoBox(void);
 static void LinkPartnerHandleChooseMove(void);
 static void LinkPartnerHandleChooseItem(void);
 static void LinkPartnerHandleChoosePokemon(void);
-static void LinkPartnerHandleCmd23(void);
+static void LinkPartnerHandleFaintLinkedPokemon(void);
 static void LinkPartnerHandleHealthBarUpdate(void);
 static void LinkPartnerHandleExpUpdate(void);
 static void LinkPartnerHandleStatusIconUpdate(void);
@@ -126,7 +126,7 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = LinkPartnerHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = LinkPartnerHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = LinkPartnerHandleChoosePokemon,
-    [CONTROLLER_23]                       = LinkPartnerHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = LinkPartnerHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = LinkPartnerHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = LinkPartnerHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = LinkPartnerHandleStatusIconUpdate,
@@ -1338,8 +1338,21 @@ static void LinkPartnerHandleChoosePokemon(void)
     LinkPartnerBufferExecCompleted();
 }
 
-static void LinkPartnerHandleCmd23(void)
+static void LinkPartnerHandleFaintLinkedPokemon(void)
 {
+    u32 personality = gBattleBufferA[gActiveBattler][1] | (gBattleBufferA[gActiveBattler][2] << 8) | (gBattleBufferA[gActiveBattler][3] << 16) | (gBattleBufferA[gActiveBattler][4] << 24);
+    u8 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, FALSE) == personality)
+        {
+            u16 zero = 0;
+            SetMonData(&gPlayerParty[i], MON_DATA_HP, &zero);
+            break;
+        }
+    }
+
     LinkPartnerBufferExecCompleted();
 }
 

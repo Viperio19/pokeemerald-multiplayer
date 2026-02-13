@@ -47,7 +47,7 @@ static void SafariHandleYesNoBox(void);
 static void SafariHandleChooseMove(void);
 static void SafariHandleChooseItem(void);
 static void SafariHandleChoosePokemon(void);
-static void SafariHandleCmd23(void);
+static void SafariHandleFaintLinkedPokemon(void);
 static void SafariHandleHealthBarUpdate(void);
 static void SafariHandleExpUpdate(void);
 static void SafariHandleStatusIconUpdate(void);
@@ -111,7 +111,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = SafariHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = SafariHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = SafariHandleChoosePokemon,
-    [CONTROLLER_23]                       = SafariHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = SafariHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = SafariHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = SafariHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = SafariHandleStatusIconUpdate,
@@ -483,7 +483,7 @@ static void SafariHandleChoosePokemon(void)
     SafariBufferExecCompleted();
 }
 
-static void SafariHandleCmd23(void)
+static void SafariHandleFaintLinkedPokemon(void)
 {
     SafariBufferExecCompleted();
 }

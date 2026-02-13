@@ -56,7 +56,7 @@ static void WallyHandleYesNoBox(void);
 static void WallyHandleChooseMove(void);
 static void WallyHandleChooseItem(void);
 static void WallyHandleChoosePokemon(void);
-static void WallyHandleCmd23(void);
+static void WallyHandleFaintLinkedPokemon(void);
 static void WallyHandleHealthBarUpdate(void);
 static void WallyHandleExpUpdate(void);
 static void WallyHandleStatusIconUpdate(void);
@@ -125,7 +125,7 @@ static void (*const sWallyBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = WallyHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = WallyHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = WallyHandleChoosePokemon,
-    [CONTROLLER_23]                       = WallyHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = WallyHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = WallyHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = WallyHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = WallyHandleStatusIconUpdate,
@@ -1260,7 +1260,7 @@ static void WallyHandleChoosePokemon(void)
     WallyBufferExecCompleted();
 }
 
-static void WallyHandleCmd23(void)
+static void WallyHandleFaintLinkedPokemon(void)
 {
     WallyBufferExecCompleted();
 }

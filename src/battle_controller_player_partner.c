@@ -50,7 +50,7 @@ static void PlayerPartnerHandleYesNoBox(void);
 static void PlayerPartnerHandleChooseMove(void);
 static void PlayerPartnerHandleChooseItem(void);
 static void PlayerPartnerHandleChoosePokemon(void);
-static void PlayerPartnerHandleCmd23(void);
+static void PlayerPartnerHandleFaintLinkedPokemon(void);
 static void PlayerPartnerHandleHealthBarUpdate(void);
 static void PlayerPartnerHandleExpUpdate(void);
 static void PlayerPartnerHandleStatusIconUpdate(void);
@@ -126,7 +126,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = PlayerPartnerHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = PlayerPartnerHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = PlayerPartnerHandleChoosePokemon,
-    [CONTROLLER_23]                       = PlayerPartnerHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = PlayerPartnerHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = PlayerPartnerHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = PlayerPartnerHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = PlayerPartnerHandleStatusIconUpdate,
@@ -1561,7 +1561,7 @@ static void PlayerPartnerHandleChoosePokemon(void)
     PlayerPartnerBufferExecCompleted();
 }
 
-static void PlayerPartnerHandleCmd23(void)
+static void PlayerPartnerHandleFaintLinkedPokemon(void)
 {
     PlayerPartnerBufferExecCompleted();
 }

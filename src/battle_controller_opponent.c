@@ -57,7 +57,7 @@ static void OpponentHandleYesNoBox(void);
 static void OpponentHandleChooseMove(void);
 static void OpponentHandleChooseItem(void);
 static void OpponentHandleChoosePokemon(void);
-static void OpponentHandleCmd23(void);
+static void OpponentHandleFaintLinkedPokemon(void);
 static void OpponentHandleHealthBarUpdate(void);
 static void OpponentHandleExpUpdate(void);
 static void OpponentHandleStatusIconUpdate(void);
@@ -129,7 +129,7 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = OpponentHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = OpponentHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = OpponentHandleChoosePokemon,
-    [CONTROLLER_23]                       = OpponentHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = OpponentHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = OpponentHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = OpponentHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = OpponentHandleStatusIconUpdate,
@@ -1693,7 +1693,7 @@ static void OpponentHandleChoosePokemon(void)
     OpponentBufferExecCompleted();
 }
 
-static void OpponentHandleCmd23(void)
+static void OpponentHandleFaintLinkedPokemon(void)
 {
     OpponentBufferExecCompleted();
 }

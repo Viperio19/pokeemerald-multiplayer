@@ -59,7 +59,7 @@ static void PlayerHandleYesNoBox(void);
 static void PlayerHandleChooseMove(void);
 static void PlayerHandleChooseItem(void);
 static void PlayerHandleChoosePokemon(void);
-static void PlayerHandleCmd23(void);
+static void PlayerHandleFaintLinkedPokemon(void);
 static void PlayerHandleHealthBarUpdate(void);
 static void PlayerHandleExpUpdate(void);
 static void PlayerHandleStatusIconUpdate(void);
@@ -146,7 +146,7 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
     [CONTROLLER_CHOOSEMOVE]               = PlayerHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = PlayerHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = PlayerHandleChoosePokemon,
-    [CONTROLLER_23]                       = PlayerHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = PlayerHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = PlayerHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = PlayerHandleStatusIconUpdate,
@@ -2736,10 +2736,21 @@ static void PlayerHandleChoosePokemon(void)
     }
 }
 
-static void PlayerHandleCmd23(void)
+static void PlayerHandleFaintLinkedPokemon(void)
 {
-    BattleStopLowHpSound();
-    BeginNormalPaletteFade(PALETTES_ALL, 2, 0, 16, RGB_BLACK);
+    u32 personality = gBattleBufferA[gActiveBattler][1] | (gBattleBufferA[gActiveBattler][2] << 8) | (gBattleBufferA[gActiveBattler][3] << 16) | (gBattleBufferA[gActiveBattler][4] << 24);
+    u8 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, FALSE) == personality)
+        {
+            u16 zero = 0;
+            SetMonData(&gPlayerParty[i], MON_DATA_HP, &zero);
+            break;
+        }
+    }
+
     PlayerBufferExecCompleted();
 }
 

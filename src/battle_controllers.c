@@ -1251,13 +1251,14 @@ void BtlController_EmitChoosePokemon(u8 bufferId, u8 caseId, u8 slotId, u8 abili
     PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, 8);  // Only 7 bytes were written.
 }
 
-static void UNUSED BtlController_EmitCmd23(u8 bufferId)
+void BtlController_EmitFaintLinkedPokemon(u8 bufferId, u32 personality)
 {
-    sBattleBuffersTransferData[0] = CONTROLLER_23;
-    sBattleBuffersTransferData[1] = CONTROLLER_23;
-    sBattleBuffersTransferData[2] = CONTROLLER_23;
-    sBattleBuffersTransferData[3] = CONTROLLER_23;
-    PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, 4);
+    sBattleBuffersTransferData[0] = CONTROLLER_FAINTLINKEDPOKEMON;
+    sBattleBuffersTransferData[1] = personality;
+    sBattleBuffersTransferData[2] = (personality & 0x0000FF00) >> 8;
+    sBattleBuffersTransferData[3] = (personality & 0x00FF0000) >> 16;
+    sBattleBuffersTransferData[4] = (personality & 0xFF000000) >> 24;
+    PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, 5);
 }
 
 // why is the argument u16 if it's being cast to s16 anyway?

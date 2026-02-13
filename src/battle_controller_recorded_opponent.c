@@ -52,7 +52,7 @@ static void RecordedOpponentHandleYesNoBox(void);
 static void RecordedOpponentHandleChooseMove(void);
 static void RecordedOpponentHandleChooseItem(void);
 static void RecordedOpponentHandleChoosePokemon(void);
-static void RecordedOpponentHandleCmd23(void);
+static void RecordedOpponentHandleFaintLinkedPokemon(void);
 static void RecordedOpponentHandleHealthBarUpdate(void);
 static void RecordedOpponentHandleExpUpdate(void);
 static void RecordedOpponentHandleStatusIconUpdate(void);
@@ -124,7 +124,7 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(void
     [CONTROLLER_CHOOSEMOVE]               = RecordedOpponentHandleChooseMove,
     [CONTROLLER_OPENBAG]                  = RecordedOpponentHandleChooseItem,
     [CONTROLLER_CHOOSEPOKEMON]            = RecordedOpponentHandleChoosePokemon,
-    [CONTROLLER_23]                       = RecordedOpponentHandleCmd23,
+    [CONTROLLER_FAINTLINKEDPOKEMON]       = RecordedOpponentHandleFaintLinkedPokemon,
     [CONTROLLER_HEALTHBARUPDATE]          = RecordedOpponentHandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = RecordedOpponentHandleExpUpdate,
     [CONTROLLER_STATUSICONUPDATE]         = RecordedOpponentHandleStatusIconUpdate,
@@ -1439,7 +1439,7 @@ static void RecordedOpponentHandleChoosePokemon(void)
     RecordedOpponentBufferExecCompleted();
 }
 
-static void RecordedOpponentHandleCmd23(void)
+static void RecordedOpponentHandleFaintLinkedPokemon(void)
 {
     RecordedOpponentBufferExecCompleted();
 }

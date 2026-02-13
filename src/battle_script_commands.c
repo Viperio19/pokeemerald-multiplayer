@@ -3039,8 +3039,7 @@ static void Cmd_tryfaintmon(void)
                     for (i = 0; i < PARTY_SIZE; i++) {
                         if (i != gBattlerPartyIndexes[B_POSITION_PLAYER_LEFT] && i != gBattlerPartyIndexes[B_POSITION_PLAYER_RIGHT]
                          && metLocation == GetMonData(&gPlayerParty[i], MON_DATA_MET_LOCATION, FALSE)) {
-                            u16 zero = 0;
-                            SetMonData(&gPlayerParty[i], MON_DATA_HP, &zero);
+                            BtlController_EmitFaintLinkedPokemon(B_COMM_TO_CONTROLLER, GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, FALSE));
 
                             GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, gBattleTextBuff1);
                             StringGet_Nickname(gBattleTextBuff1);
